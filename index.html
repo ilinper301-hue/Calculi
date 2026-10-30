@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculi: cálculo mental</title>
+<meta name="description" content="Aprende trucos de cálculo mental y practícalos jugando.">
+<meta name="theme-color" content="#EA580C">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>@font-face{font-family:'Fredoka';src:url(fonts/fredoka.woff) format('woff');font-weight:400 700;font-display:swap}
+@font-face{font-family:'Fredoka';src:url(fonts/fredoka-ext.woff) format('woff');font-weight:400 600;font-display:swap;unicode-range:U+0131,U+0152-0153,U+2122,U+2212}
+@font-face{font-family:'Inter';src:url(fonts/inter-400.woff) format('woff');font-weight:400;font-display:swap}
+@font-face{font-family:'Inter';src:url(fonts/inter-500.woff) format('woff');font-weight:500;font-display:swap}
+@font-face{font-family:'Inter';src:url(fonts/inter-600.woff) format('woff');font-weight:600 700;font-display:swap}
+
+/* ===== Colores: naranja propio de Calculi (Lectori: verde azulado · Barri: morado) ===== */
+:root{
+  --bg:#FFF7ED;--card:#fff;--soft:#FFEDD5;--tx:#1F1A17;--mu:#6B5E55;--ln:#F3D9C2;--sh:#EBD3BD;
+  --ac:#C2410C;--ac2:#EA580C;--on:#fff;--acx:#9A3412;
+  --ok:#15803D;--okbg:#DCFCE7;--no:#B91C1C;--nobg:#FEE2E2;--warn:#B45309;--warnbg:#FEF3C7;
+  --f1:#2563EB;--f2:#EA580C;--vacio:#F5EDE6;--marco:#57534E;
+  --md:linear-gradient(135deg,#7C3AED,#14B8A6);
+  --fd:'Fredoka',system-ui,sans-serif;--fi:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --r:20px;
+}
+:root[data-theme="dark"]{
+  --bg:#1A1411;--card:#2A211C;--soft:#3A2C23;--tx:#FBEFE6;--mu:#C9B6A8;--ln:#4A3A2F;--sh:#0E0A08;
+  --ac:#FB923C;--ac2:#FB923C;--on:#1A1411;--acx:#FDBA74;
+  --ok:#4ADE80;--okbg:#14321F;--no:#FCA5A5;--nobg:#3B1A1A;--warn:#FCD34D;--warnbg:#3A3020;
+  --f1:#60A5FA;--f2:#FB923C;--vacio:#3A2E26;--marco:#D6C7BB;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);overscroll-behavior-y:none}
+body{margin:0;min-height:100dvh;background:var(--bg);color:var(--tx);font-family:var(--fd);font-size:18px;line-height:1.35;-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+#app{max-width:980px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+
+/* ===== Barra superior ===== */
+.top{display:flex;align-items:center;gap:10px;padding:12px 16px}
+.top h1{flex:1;margin:0;font-size:1.35rem;font-weight:600;text-align:center}
+.ib{width:52px;height:52px;border-radius:16px;border:0;background:var(--card);box-shadow:0 3px 0 var(--sh);font-size:1.5rem;display:grid;place-items:center;flex:none}
+.ib:active{transform:translateY(2px);box-shadow:0 1px 0 var(--sh)}
+.ib.hid{visibility:hidden}
+.est{font-weight:600;background:var(--card);border-radius:999px;padding:8px 14px;box-shadow:0 3px 0 var(--sh);white-space:nowrap}
+.main{flex:1;display:flex;flex-direction:column;padding:4px 16px 20px;gap:14px}
+
+/* ===== Botones ===== */
+.bt{border:0;border-radius:var(--r);padding:16px 24px;font-size:1.3rem;font-weight:600;background:var(--ac);color:var(--on);box-shadow:0 5px 0 var(--acx);min-height:64px}
+.bt:active{transform:translateY(3px);box-shadow:0 2px 0 var(--acx)}
+.bt.sec{background:var(--card);color:var(--tx);box-shadow:0 5px 0 var(--sh)}
+.bt:disabled{opacity:.45;pointer-events:none}
+.fila{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.voz{border:0;background:var(--soft);color:var(--acx);border-radius:14px;width:48px;height:48px;font-size:1.4rem;flex:none}
+
+/* ===== Splash / inicio ===== */
+.splash{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:20px}
+.logo{font-size:clamp(2.6rem,9vw,4rem);font-weight:700;color:var(--ac);letter-spacing:.5px}
+.logo small{display:block;font-size:.35em;color:var(--mu);font-weight:500;letter-spacing:0}
+.piedras{display:flex;gap:8px;justify-content:center}
+.piedras i{width:26px;height:22px;border-radius:50% 50% 46% 54%/60% 55% 45% 40%;background:var(--ac2);display:block}
+.piedras i:nth-child(2n){background:var(--f1)}
+.perfiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;width:100%;max-width:640px}
+.pf{border:0;background:var(--card);border-radius:var(--r);padding:18px 10px;box-shadow:0 5px 0 var(--sh);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:1.15rem;font-weight:600}
+.pf .av{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:1.7rem;color:#fff}
+.pf.nuevo{border:3px dashed var(--ln);box-shadow:none;background:transparent;color:var(--mu)}
+.pf.md{background:var(--md);color:#fff;box-shadow:0 5px 0 #4C1D95}
+.inp{font:inherit;font-size:1.3rem;padding:14px 16px;border-radius:16px;border:3px solid var(--ln);background:var(--card);color:var(--tx);width:100%;max-width:360px;text-align:center;-webkit-user-select:text;user-select:text}
+.inp:focus{outline:0;border-color:var(--ac2)}
+
+/* ===== Mapa de estrategias ===== */
+.tri{margin:4px 0 0;font-size:1.05rem;color:var(--mu);font-weight:600}
+.mapa{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.es{border:0;background:var(--card);border-radius:var(--r);padding:14px;box-shadow:0 5px 0 var(--sh);display:flex;gap:12px;align-items:center;text-align:left;position:relative;min-height:84px}
+.es .ic{width:54px;height:54px;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:1.45rem;font-weight:700;color:var(--acx);flex:none}
+.es b{display:block;font-size:1.08rem;font-weight:600}
+.es small{display:block;color:var(--mu);font-size:.86rem;font-family:var(--fi);margin-top:2px}
+.es .st{position:absolute;top:8px;right:10px;font-size:.85rem;letter-spacing:-1px}
+.es.lock{opacity:.5}
+.es.lock .ic{filter:grayscale(1)}
+.es.sug{outline:4px solid var(--ac2);outline-offset:2px}
+.sem{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:4px}
+.sem.r{background:#DC2626}.sem.a{background:#F59E0B}.sem.v{background:#16A34A}.sem.g{background:var(--ln)}
+.repaso{display:flex;align-items:center;gap:14px;background:var(--md);color:#fff;border:0;border-radius:var(--r);padding:16px 18px;box-shadow:0 5px 0 #4C1D95;text-align:left;font-size:1.15rem;font-weight:600}
+.repaso span{font-size:1.9rem}
+.repaso small{display:block;font-weight:400;font-size:.88rem;opacity:.92;font-family:var(--fi)}
+
+/* ===== Menú de una estrategia ===== */
+.fases{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.fase{border:0;background:var(--card);border-radius:var(--r);padding:20px 16px;box-shadow:0 5px 0 var(--sh);display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.fase .n{font-size:2.3rem}
+.fase b{font-size:1.25rem}
+.fase small{color:var(--mu);font-family:var(--fi);font-size:.9rem}
+.fase .ok{color:var(--ok);font-weight:600}
+
+/* ===== Tutorial ===== */
+.tut{flex:1;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;text-align:center}
+.tut .txt{font-size:clamp(1.25rem,4.2vw,1.7rem);font-weight:500;max-width:680px;display:flex;align-items:center;gap:10px}
+.puntos-n{display:flex;gap:8px;justify-content:center}
+.puntos-n i{width:12px;height:12px;border-radius:50%;background:var(--ln)}
+.puntos-n i.on{background:var(--ac2)}
+
+/* ===== Ejercicio ===== */
+.ej{flex:1;display:flex;flex-direction:column;align-items:center;gap:14px}
+.prog{width:100%;height:14px;background:var(--card);border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 2px var(--ln)}
+.prog i{display:block;height:100%;background:var(--ac2);border-radius:999px;transition:width .3s}
+.enun{font-size:1.15rem;color:var(--mu);text-align:center;display:flex;align-items:center;gap:8px;justify-content:center}
+.op{font-size:clamp(2.6rem,11vw,4.4rem);font-weight:600;letter-spacing:1px;text-align:center;line-height:1.1}
+.op .hueco{display:inline-block;min-width:1.3em;border-bottom:6px solid var(--ac2);color:var(--ac);padding:0 .1em}
+.op .hueco.ok{color:var(--ok);border-color:var(--ok)}
+.op .hueco.no{color:var(--no);border-color:var(--no)}
+.vis{display:flex;justify-content:center;width:100%}
+.vis svg{max-width:100%;height:auto}
+.ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:12px;width:100%;max-width:520px}
+.opc{border:0;border-radius:var(--r);background:var(--card);box-shadow:0 5px 0 var(--sh);font-size:2.2rem;font-weight:600;padding:14px 0;min-height:80px}
+.opc:active{transform:translateY(3px);box-shadow:0 2px 0 var(--sh)}
+.opc.ok{background:var(--okbg);color:var(--ok);box-shadow:0 5px 0 var(--ok)}
+.opc.no{background:var(--nobg);color:var(--no);box-shadow:0 5px 0 var(--no)}
+.teclado{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px}
+.teclado button{border:0;border-radius:18px;background:var(--card);box-shadow:0 4px 0 var(--sh);font-size:1.9rem;font-weight:600;min-height:62px}
+.teclado button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sh)}
+.teclado .okb{background:var(--ac);color:var(--on);box-shadow:0 4px 0 var(--acx)}
+.fb{min-height:34px;font-size:1.25rem;font-weight:600;text-align:center}
+.fb.ok{color:var(--ok)}.fb.no{color:var(--no)}
+.ayuda{border:0;background:var(--warnbg);color:var(--warn);border-radius:14px;padding:10px 16px;font-weight:600}
+.paso{background:var(--soft);border-radius:16px;padding:8px 14px;font-size:1.05rem;color:var(--acx);font-weight:600}
+.pasos-ok{display:flex;flex-direction:column;gap:4px;align-items:center;font-size:1.25rem;color:var(--mu)}
+.pasos-ok div{opacity:.85}
+
+/* ===== Juego de parejas ===== */
+.tablero{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:560px}
+.carta{border:0;aspect-ratio:1/1;border-radius:18px;background:var(--card);box-shadow:0 5px 0 var(--sh);font-size:clamp(1.6rem,7vw,2.6rem);font-weight:600;display:grid;place-items:center;transition:transform .15s,opacity .3s}
+.carta.sel{background:var(--soft);outline:4px solid var(--ac2);transform:scale(1.04)}
+.carta.hecha{background:var(--okbg);color:var(--ok);box-shadow:none;opacity:.55;pointer-events:none}
+.carta.mal{animation:temb .35s}
+@keyframes temb{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.meta{font-size:1.3rem;font-weight:600;background:var(--card);border-radius:16px;padding:10px 18px;box-shadow:0 3px 0 var(--sh)}
+
+/* ===== Resultado ===== */
+.res{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center}
+.estrellas{font-size:clamp(3rem,13vw,5rem);letter-spacing:6px}
+.estrellas .off{filter:grayscale(1);opacity:.3}
+.res h2{margin:0;font-size:1.8rem}
+.res p{margin:0;color:var(--mu);font-size:1.15rem}
+
+/* ===== Animaciones suaves ===== */
+.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.85);opacity:.4}100%{transform:scale(1);opacity:1}}
+.fichas-anim circle.f{animation:caer .35s ease both}
+@keyframes caer{from{transform:translateY(-14px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== Zona adulta (sobria, Inter) ===== */
+.adulto{font-family:var(--fi);font-size:16px}
+.adulto .tarj{background:var(--card);border-radius:14px;border:1px solid var(--ln);padding:14px 16px}
+.adulto table{width:100%;border-collapse:collapse;font-size:.92rem}
+.adulto th,.adulto td{padding:7px 6px;border-bottom:1px solid var(--ln);text-align:left}
+.adulto .bt{font-family:var(--fi);font-size:1rem;min-height:46px;padding:10px 16px;box-shadow:none;border-radius:12px}
+
+/* Horizontal (tableta / móvil girado): visual y respuesta lado a lado */
+@media (orientation:landscape) and (min-width:700px){
+  .ej.lado{display:grid;grid-template-columns:1fr 1fr;align-items:center;column-gap:24px}
+  .ej.lado>.prog,.ej.lado>.enun{grid-column:1/-1}
+}
+@media (max-height:560px){.op{font-size:2.4rem}.opc{min-height:62px;font-size:1.8rem}.teclado button{min-height:50px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>/* ---- js/00-util.js ---- */
+'use strict';
+/* ===== Utilidades comunes ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/** Entero aleatorio entre a y b (ambos incluidos). */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const hoy = () => new Date().toISOString().slice(0, 10);
+const nid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+
+/**
+ * Opciones de respuesta: la correcta + distractores cercanos y plausibles (sin repetir, >= 0).
+ * extra: distractores típicos que la estrategia sabe que aparecen (p. ej. contar uno de más).
+ */
+function opciones(r, n = 3, extra = [], max = 100) {
+  const set = new Set([r]);
+  for (const e of shuffle(extra)) if (set.size < n && Number.isInteger(e) && e >= 0 && e <= max) set.add(e);
+  const cerca = shuffle([r - 1, r + 1, r - 2, r + 2, r + 10, r - 10, r - 3, r + 3]);
+  for (const c of cerca) if (set.size < n && c >= 0 && c <= max) set.add(c);
+  let k = 4; while (set.size < n) { const c = r + k++; if (c <= max) set.add(c); else set.add(Math.max(0, r - k)); }
+  return shuffle([...set]);
+}
+
+/* ===== Voz (como Lectori: voz del navegador en español) ===== */
+const VOZ = {
+  ok: 'speechSynthesis' in window, v: null,
+  elegir() { if (!this.ok) return; const vs = speechSynthesis.getVoices(); this.v = vs.find(v => /^es[-_]ES/i.test(v.lang)) || vs.find(v => /^es/i.test(v.lang)) || null; },
+  decir(t) {
+    if (!this.ok || !t || !EST.ajustes.voz) return;
+    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(String(t).replace(/[–−]/g, ' menos ').replace(/\+/g, ' más ').replace(/=/g, ' es igual a ').replace(/\?/g, ' cuánto ')); u.lang = 'es-ES'; if (this.v) u.voice = this.v; u.rate = .92; speechSynthesis.speak(u); } catch (e) {}
+  },
+  callar() { try { this.ok && speechSynthesis.cancel(); } catch (e) {} }
+};
+if (VOZ.ok) { VOZ.elegir(); speechSynthesis.onvoiceschanged = () => VOZ.elegir(); }
+
+/* ===== Sonidos cortos (sin archivos) ===== */
+const SON = {
+  ctx: null,
+  tono(f, d = .12, t = 'sine', vol = .12, delay = 0) {
+    if (!EST.ajustes.sonido) return;
+    try { this.ctx = this.ctx || new (window.AudioContext || window.webkitAudioContext)(); const c = this.ctx, o = c.createOscillator(), g = c.createGain(), t0 = c.currentTime + delay;
+      o.type = t; o.frequency.value = f; g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + d); o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0 + d); } catch (e) {}
+  },
+  bien() { this.tono(660, .1); this.tono(880, .16, 'sine', .12, .09); },
+  mal() { this.tono(220, .18, 'triangle', .1); },
+  fin() { [523, 659, 784, 1046].forEach((f, i) => this.tono(f, .18, 'sine', .11, i * .11)); }
+};
+
+/* ---- js/10-datos.js ---- */
+/* ===== Datos guardados (solo claves con prefijo calc.: comparte dominio con Lectori y Barri) ===== */
+const KEY = 'calc.v1', VERSION_DATOS = 1;
+const AVATARES = [['🦊','#EA580C'],['🐢','#15803D'],['🐼','#475569'],['🦁','#B45309'],['🐸','#16A34A'],['🐙','#9333EA'],['🐳','#2563EB'],['🦉','#78350F'],['🐝','#CA8A04'],['🐞','#DC2626'],['🦄','#DB2777'],['🐨','#64748B']];
+
+/** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
+function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '' }, gmt: 0 }; }
+
+const ss = (s, n) => String(s ?? '').replace(/[<>&"'`]/g, '').trim().slice(0, n);
+function limpiarAlu(a) {
+  a = a && typeof a === 'object' ? a : {};
+  const e = {};
+  for (const [k, v] of Object.entries(a.e && typeof a.e === 'object' ? a.e : {})) {
+    if (!/^[a-z0-9]{2,20}$/.test(k) || !v || typeof v !== 'object') continue;
+    e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0) };
+  }
+  return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400) };
+}
+/** Migraciones: nunca se pierde el progreso. Añadir aquí un paso por cada cambio de VERSION_DATOS. */
+function migrar(d) {
+  if (!d || typeof d !== 'object') return estadoVacio();
+  const base = estadoVacio();
+  const out = { v: VERSION_DATOS, alu: (Array.isArray(d.alu) ? d.alu : []).map(limpiarAlu).slice(0, 60), act: d.act || null, ajustes: Object.assign(base.ajustes, d.ajustes || {}), gmt: +d.gmt || 0 };
+  if (!out.alu.some(a => a.id === out.act)) out.act = null;
+  return out;
+}
+let EST = estadoVacio();
+function cargar() { try { EST = migrar(JSON.parse(localStorage.getItem(KEY) || 'null')); } catch (e) { EST = estadoVacio(); } }
+function guardar() { if (MODO_DOCENTE) return; try { localStorage.setItem(KEY, JSON.stringify(EST)); } catch (e) {} }
+
+/** Modo Docente: todo abierto, no se guarda nada (como en Lectori y Barri). */
+let MODO_DOCENTE = false;
+const ALU_DOCENTE = limpiarAlu({ id: 'docente00', n: 'Docente', av: 5 });
+const alumno = () => MODO_DOCENTE ? ALU_DOCENTE : EST.alu.find(a => a.id === EST.act) || null;
+
+function crearAlumno(nombre, av) { const a = limpiarAlu({ n: nombre, av, mt: Date.now() }); EST.alu.push(a); EST.act = a.id; guardar(); return a; }
+function progreso(a, id) { return a.e[id] || (a.e[id] = { tut: false, est: 0, h: [], ult: '', n: 0 }); }
+
+/** Registra un resultado (1 acierto sin ayuda, 0 fallo o con ayuda) para el dominio y el repaso. */
+function registrar(id, ok) {
+  const a = alumno(); if (!a) return;
+  const p = progreso(a, id); p.h.push(ok ? 1 : 0); p.h = p.h.slice(-20); p.ult = hoy(); p.n++;
+  if (!a.dias.includes(hoy())) a.dias.push(hoy());
+  a.mt = Date.now(); guardar();
+}
+/** Dominio 0..1 con los últimos 10 resultados; null si aún hay pocos datos. */
+function dominio(a, id) { const h = (a.e[id] || {}).h || []; if (h.length < 5) return null; const u = h.slice(-10); return u.reduce((s, x) => s + x, 0) / u.length; }
+/** Semáforo: v (≥80 %), a (≥50 %), r (<50 %), g (sin datos). */
+function semaforo(a, id) { const d = dominio(a, id); return d === null ? 'g' : d >= .8 ? 'v' : d >= .5 ? 'a' : 'r'; }
+
+/** Importar alumnos de Lectori (ar2) y Barri (barri.v1) del mismo dispositivo: solo lectura. */
+function alumnosDeOtrasApps() {
+  const out = [];
+  try { const L = JSON.parse(localStorage.getItem('ar2') || 'null'); (L && Array.isArray(L.ps) ? L.ps : []).forEach(p => p && p.n && out.push({ n: ss(p.n, 20), de: 'Lectori' })); } catch (e) {}
+  try { const B = JSON.parse(localStorage.getItem('barri.v1') || 'null'), pr = B && (B.profs || B.stu || {}); Object.values(pr && typeof pr === 'object' ? pr : {}).forEach(p => p && p.name && out.push({ n: ss(p.name, 20), de: 'Barri' })); } catch (e) {}
+  const ya = new Set(EST.alu.map(a => a.n.toLowerCase())), vistos = new Set();
+  return out.filter(x => { const k = x.n.toLowerCase(); if (ya.has(k) || vistos.has(k)) return false; vistos.add(k); return true; });
+}
+
+/* ---- js/20-visual.js ---- */
+/* ===== Modelos visuales (SVG). Cada estrategia los pide con un objeto {t:'tipo', ...}. =====
+  marco   {t:'marco', a, b=0, tam=10|20, tachar=0}  Marco del 10 (o doble marco del 20). a fichas azules + b naranjas; tachar = últimas fichas tachadas (restar).
+  puntos  {t:'puntos', n}                            Constelación de puntos (como en un dado) para reconocer sin contar (n ≤ 10).
+  parte   {t:'parte', total, a, b, oculto}           Vínculo parte-todo (Singapur). oculto: 'total' | 'a' | 'b' | null → se ve «?».
+  recta   {t:'recta', desde, hasta, inicio, saltos}  Recta numérica; saltos: lista de saltos (+1, -1, +10…) dibujados como arcos desde inicio.
+  decenas {t:'decenas', grupos:[{d,u}], tachar=0}     Barras de 10 y cubitos sueltos; varios grupos = varios sumandos (colores alternos). tachar = últimas barras tachadas (restar decenas).
+  dedos   {t:'dedos', n}                             Manos con n dedos levantados (n ≤ 10).
+*/
+const VIS = {
+  ficha(cx, cy, r, color, cls = 'f', i = 0) { return `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}" style="fill:var(${color});animation-delay:${i * 45}ms"/>`; },
+
+  marco({ a = 0, b = 0, tam = 10, tachar = 0 }) {
+    const c = 56, nM = tam > 10 ? 2 : 1, W = nM * 5 * c + (nM - 1) * 18 + 8, H = 2 * c + 8;
+    let s = `<svg class="fichas-anim" viewBox="0 0 ${W} ${H}" width="${Math.min(W, 640)}" role="img" aria-label="Marco con ${a + b} fichas">`;
+    for (let m = 0; m < nM; m++) {
+      const ox = 4 + m * (5 * c + 18);
+      s += `<rect x="${ox}" y="4" width="${5 * c}" height="${2 * c}" rx="8" style="fill:var(--vacio);stroke:var(--marco);stroke-width:4"/>`;
+      for (let i = 1; i < 5; i++) s += `<line x1="${ox + i * c}" y1="4" x2="${ox + i * c}" y2="${4 + 2 * c}" style="stroke:var(--marco);stroke-width:2.5"/>`;
+      s += `<line x1="${ox}" y1="${4 + c}" x2="${ox + 5 * c}" y2="${4 + c}" style="stroke:var(--marco);stroke-width:2.5"/>`;
+    }
+    const total = a + b;
+    for (let k = 0; k < Math.min(total, tam); k++) {
+      const m = Math.floor(k / 10), j = k % 10, fila = Math.floor(j / 5), col = j % 5;
+      const cx = 4 + m * (5 * c + 18) + col * c + c / 2, cy = 4 + fila * c + c / 2;
+      s += this.ficha(cx, cy, c * .36, k < a ? '--f1' : '--f2', 'f', k);
+      if (k >= total - tachar) s += `<path d="M${cx - 16} ${cy - 16}L${cx + 16} ${cy + 16}M${cx + 16} ${cy - 16}L${cx - 16} ${cy + 16}" style="stroke:var(--tx);stroke-width:5;stroke-linecap:round"/>`;
+    }
+    return s + '</svg>';
+  },
+
+  puntos({ n = 5 }) {
+    // Posiciones de dado (1-6) y combinaciones 5+x para 7-10, en una rejilla 3x3 (o dos dados).
+    const D = { 1: [[1, 1]], 2: [[0, 0], [2, 2]], 3: [[0, 0], [1, 1], [2, 2]], 4: [[0, 0], [2, 0], [0, 2], [2, 2]], 5: [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]], 6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]] };
+    const dados = n <= 6 ? [n] : [5, n - 5].filter(x => x > 0);
+    const c = 40, L = 3 * c + 20, W = dados.length * L + (dados.length - 1) * 20;
+    let s = `<svg class="fichas-anim" viewBox="0 0 ${W} ${L}" width="${Math.min(W, 420)}" role="img" aria-label="${n} puntos">`, i = 0;
+    dados.forEach((d, k) => {
+      const ox = k * (L + 20);
+      s += `<rect x="${ox + 2}" y="2" width="${L - 4}" height="${L - 4}" rx="22" style="fill:var(--card);stroke:var(--marco);stroke-width:4"/>`;
+      D[d].forEach(([x, y]) => { s += this.ficha(ox + 10 + x * c + c / 2, 10 + y * c + c / 2, 14, k ? '--f2' : '--f1', 'f', i++); });
+    });
+    return s + '</svg>';
+  },
+
+  parte({ total, a, b, oculto = null }) {
+    const v = (k, x) => oculto === k ? '?' : x;
+    const nodo = (cx, cy, r, txt, k) => `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill:${oculto === k ? 'var(--soft)' : 'var(--card)'};stroke:var(${k === 'total' ? '--ac2' : '--f1'});stroke-width:5"/><text x="${cx}" y="${cy + 14}" text-anchor="middle" style="font:600 40px var(--fd);fill:${oculto === k ? 'var(--ac)' : 'var(--tx)'}">${v(k, txt)}</text>`;
+    return `<svg viewBox="0 0 300 220" width="300" role="img" aria-label="Parte y todo"><line x1="150" y1="60" x2="70" y2="160" style="stroke:var(--marco);stroke-width:4"/><line x1="150" y1="60" x2="230" y2="160" style="stroke:var(--marco);stroke-width:4"/>${nodo(150, 56, 48, total, 'total')}${nodo(70, 162, 46, a, 'a')}${nodo(230, 162, 46, b, 'b')}</svg>`;
+  },
+
+  recta({ desde = 0, hasta = 20, inicio = null, saltos = [] }) {
+    const n = hasta - desde, W = 640, m = 26, paso = (W - 2 * m) / n, X = v => m + (v - desde) * paso, y = 120;
+    let s = `<svg viewBox="0 0 ${W} 170" width="${W}" role="img" aria-label="Recta numérica"><line x1="${m - 10}" y1="${y}" x2="${W - m + 10}" y2="${y}" style="stroke:var(--marco);stroke-width:4;stroke-linecap:round"/>`;
+    const cada = n > 30 ? 10 : n > 20 ? 5 : 1;
+    for (let v = desde; v <= hasta; v++) {
+      const g = v % 10 === 0, lab = (v - desde) % cada === 0 || g || v === inicio;
+      s += `<line x1="${X(v)}" y1="${y - (g ? 14 : 9)}" x2="${X(v)}" y2="${y + (g ? 14 : 9)}" style="stroke:var(--marco);stroke-width:${g ? 4 : 2.5}"/>`;
+      if (lab) s += `<text x="${X(v)}" y="${y + 40}" text-anchor="middle" style="font:${g ? 600 : 500} 22px var(--fd);fill:var(--tx)">${v}</text>`;
+    }
+    if (inicio !== null) {
+      let p = inicio;
+      s += `<circle cx="${X(p)}" cy="${y}" r="9" style="fill:var(--f1)"/>`;
+      saltos.forEach((d, i) => {
+        const q = p + d, x1 = X(p), x2 = X(q), h = Math.min(70, 26 + Math.abs(x2 - x1) * .35), col = d > 0 ? '--f2' : '--f1';
+        s += `<path d="M${x1} ${y - 6}Q${(x1 + x2) / 2} ${y - 6 - 2 * h} ${x2} ${y - 6}" style="fill:none;stroke:var(${col});stroke-width:4;stroke-dasharray:420;stroke-dashoffset:420;animation:trazo .5s ${i * .45}s ease forwards"/>`;
+        s += `<text x="${(x1 + x2) / 2}" y="${y - 12 - h}" text-anchor="middle" style="font:600 20px var(--fd);fill:var(${col});opacity:0;animation:aparece .3s ${i * .45 + .3}s forwards">${d > 0 ? '+' : '−'}${Math.abs(d)}</text>`;
+        p = q;
+      });
+      s += `<circle cx="${X(p)}" cy="${y}" r="9" style="fill:var(--f2);opacity:0;animation:aparece .3s ${saltos.length * .45}s forwards"/>`;
+    }
+    return s + '<style>@keyframes trazo{to{stroke-dashoffset:0}}@keyframes aparece{to{opacity:1}}</style></svg>';
+  },
+
+  decenas({ grupos = [], tachar = 0 }) {
+    const u = 18, gap = 6, cols = ['--f1', '--f2'], totD = grupos.reduce((s, g) => s + (g.d || 0), 0);
+    let x = 6, partes = '', nb = 0;
+    grupos.forEach((g, k) => {
+      const col = cols[k % 2];
+      for (let i = 0; i < (g.d || 0); i++) { partes += `<rect x="${x}" y="6" width="${u}" height="${10 * u}" rx="4" style="fill:var(${col});stroke:var(--card);stroke-width:2"/>`; for (let j = 1; j < 10; j++) partes += `<line x1="${x}" y1="${6 + j * u}" x2="${x + u}" y2="${6 + j * u}" style="stroke:var(--card);stroke-width:1.5"/>`; if (++nb > totD - tachar) partes += `<path d="M${x - 3} 10L${x + u + 3} ${10 * u + 2}" style="stroke:var(--tx);stroke-width:4;stroke-linecap:round"/>`; x += u + gap; }
+      for (let i = 0; i < (g.u || 0); i++) { const fila = i % 5, col2 = Math.floor(i / 5); partes += `<rect x="${x + col2 * (u + 4)}" y="${6 + 10 * u - (fila + 1) * (u + 4) + 4}" width="${u}" height="${u}" rx="4" style="fill:var(${col})"/>`; }
+      if (g.u) x += Math.ceil(g.u / 5) * (u + 4);
+      x += 22;
+    });
+    const W = Math.max(60, x - 10);
+    return `<svg viewBox="0 0 ${W} ${10 * u + 12}" width="${Math.min(W * 1.4, 640)}" role="img" aria-label="Decenas y unidades">${partes}</svg>`;
+  },
+
+  dedos({ n = 5 }) {
+    const mano = (ox, k, color) => { let s = `<path d="M${ox + 10} 150 Q${ox} 110 ${ox + 12} 92 L${ox + 108} 92 Q${ox + 120} 110 ${ox + 110} 150 Z" style="fill:var(--soft);stroke:var(--marco);stroke-width:3"/>`;
+      for (let i = 0; i < 5; i++) { const up = i < k, h = up ? 70 : 18, x = ox + 14 + i * 19; s += `<rect x="${x}" y="${92 - h}" width="16" height="${h + 6}" rx="8" style="fill:${up ? `var(${color})` : 'var(--vacio)'};stroke:var(--marco);stroke-width:2.5"/>`; }
+      return s; };
+    return `<svg viewBox="0 0 260 160" width="300" role="img" aria-label="${n} dedos">${mano(5, Math.min(5, n), '--f1')}${mano(135, Math.max(0, n - 5), '--f2')}</svg>`;
+  },
+
+  dibujar(v) { return v && this[v.t] ? this[v.t](v) : ''; }
+};
+
+/* ---- js/30-motor.js ---- */
+/* ===== Motor de estrategias =====
+Cada archivo de src/js/estrategias/ registra UNA estrategia con ESTR.add({...}). Contrato:
+
+  id:       'amigos10'           identificador único [a-z0-9]
+  orden:    4                    posición en el curso (1..16); marca el orden de desbloqueo
+  tri:      1                    trimestre (1, 2, 3)
+  n:        'Amigos del 10'      nombre para el niño (corto)
+  ic:       '10'                 icono: emoji o texto de 1-3 caracteres
+  desc:     'Parejas que suman 10'  subtítulo (corto)
+  truco:    'Busco el amigo del 10'  frase para «¿Qué truco usarías?» (repaso mixto)
+  tutorial: [{txt, vis}, …]      3-6 pantallas: frase corta (se lee en voz alta) + modelo visual (ver 20-visual.js)
+  guiada(): {pasos:[{txt?, q, r, vis?, ops?}], final:{txt?, q, r, vis?}}
+            Práctica guiada: 2-3 pasos pequeños que llevan al resultado. q usa «?» para el hueco: '8 + ? = 10'.
+            txt = instrucción corta encima (p. ej. '¿Cuánto le falta al 8 para llegar a 10?') con q:'?' o q:'8 + ? = 10'.
+            Pasos y final se responden con 3 botones (opciones automáticas, o ops propias); teclado:true en un paso fuerza teclado.
+  item(nivel): {q, r, txt?, vis?, ops?, voz?, extra?}
+            nivel 1: con modelo visual y 3 opciones · nivel 2: sin visual (se puede pedir ayuda), 3 opciones · nivel 3: sin visual, teclado.
+            vis se usa en nivel 1 y como «ayuda» en 2 y 3. extra = distractores típicos (errores frecuentes) para las opciones.
+            visSiempre:true → el visual se ve en todos los niveles (cuando el visual ES la pregunta, p. ej. «¿Cuántos hay?»).
+  juego:    {tipo:'parejas', meta:'Suman 10', pares(): [[a,b]×6]}   (tarjetas que hay que emparejar; a y b son textos o números)
+            {tipo:'rapido'}  (10 operaciones seguidas de nivel 2, sin cronómetro visible)
+*/
+const ESTR = {
+  lista: [],
+  add(e) {
+    if (!e || !/^[a-z0-9]{2,20}$/.test(e.id) || this.lista.some(x => x.id === e.id)) { console.error('Estrategia no válida o repetida', e && e.id); return; }
+    this.lista.push(e); this.lista.sort((a, b) => a.orden - b.orden);
+  },
+  get(id) { return this.lista.find(e => e.id === id); }
+};
+
+/** Desbloqueo: la primera siempre; las demás cuando la anterior tiene al menos 1 estrella (o todo abierto / Modo Docente). */
+function abierta(a, e) {
+  if (MODO_DOCENTE || EST.ajustes.abierto) return true;
+  const i = ESTR.lista.indexOf(e); if (i <= 0) return true;
+  const prev = ESTR.lista[i - 1]; return ((a.e[prev.id] || {}).est || 0) >= 1;
+}
+/** Sugerida: la primera abierta sin estrellas, o la de peor dominio. */
+function sugerida(a) {
+  const ab = ESTR.lista.filter(e => abierta(a, e));
+  return ab.find(e => !((a.e[e.id] || {}).est)) || ab.slice().sort((x, y) => (dominio(a, x.id) ?? 1) - (dominio(a, y.id) ?? 1))[0];
+}
+
+/** Normaliza un ítem: opciones si faltan, enteros, hueco presente. */
+function prepararItem(it, nivel) {
+  it = Object.assign({}, it); it.r = Number(it.r);
+  if (!String(it.q).includes('?')) it.q = it.q + ' = ?';
+  if (nivel < 3 && !it.ops) it.ops = opciones(it.r, 3, it.extra || []);
+  if (it.ops && !it.ops.includes(it.r)) it.ops = shuffle([it.r, ...it.ops.slice(0, it.ops.length - 1)]);
+  return it;
+}
+
+/** Repaso mixto: estrategias ya trabajadas, más peso a las de menos dominio y a las que hace más que no se practican. */
+function itemsRepaso(a, n = 10) {
+  const vistas = ESTR.lista.filter(e => abierta(a, e) && (a.e[e.id] || {}).n > 0);
+  if (!vistas.length) return [];
+  const peso = e => { const d = dominio(a, e.id) ?? .5, ult = (a.e[e.id] || {}).ult || '2000-01-01', dias = Math.min(14, (Date.now() - new Date(ult)) / 864e5); return .3 + (1 - d) * 2 + dias / 7; };
+  const out = [];
+  for (let k = 0; k < n; k++) {
+    let tot = vistas.reduce((s, e) => s + peso(e), 0), x = Math.random() * tot, e = vistas[0];
+    for (const v of vistas) { x -= peso(v); if (x <= 0) { e = v; break; } }
+    const nivel = (dominio(a, e.id) ?? 0) >= .8 ? 3 : 2;
+    // Cada 4.º ítem (si hay ≥3 estrategias): «¿Qué truco usarías?»
+    const it = e.item(2);
+    if (k % 4 === 3 && vistas.length >= 3 && e.truco && !it.visSiempre && /\d/.test(it.q)) {
+      const otras = shuffle(vistas.filter(v => v !== e && v.truco)).slice(0, 2);
+      out.push({ id: e.id, nivel, truco: true, q: it.q, voz: it.voz, ops: shuffle([e, ...otras].map(v => v.truco)), r: e.truco });
+    } else out.push(Object.assign({ id: e.id, nivel }, prepararItem(e.item(nivel), nivel)));
+  }
+  return out;
+}
+
+/** Estrellas de un reto de 10: 9-10 → 3 · 7-8 → 2 · 5-6 → 1. */
+const estrellasDe = (ok, n) => { const p = ok / n; return p >= .9 ? 3 : p >= .7 ? 2 : p >= .5 ? 1 : 0; };
+
+/* ---- js/40-pantallas.js ---- */
+/* ===== Pantallas ===== */
+let scr = 'inicio', EID = null, SES = null, TUT = 0, NUEVO = { n: '', av: 0 }, AJ_OK = false, AJ_Q = null;
+const SC = {};
+const est = () => ESTR.get(EID);
+
+function aplicarTema() {
+  const t = EST.ajustes.tema, osc = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme = osc ? 'dark' : 'light';
+}
+function go(s) { scr = s; VOZ.callar(); pintar(); window.scrollTo(0, 0); }
+function pintar() { aplicarTema(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; }
+const barra = (titulo, atras, der = '') => `<div class="top"><button class="ib${atras ? '' : ' hid'}" onclick="${atras || ''}" aria-label="Volver">←</button><h1>${titulo}</h1>${der || '<span class="ib hid"></span>'}</div>`;
+const avatar = a => { const [e, c] = AVATARES[a.av] || AVATARES[0]; return `<span class="av" style="background:${c}">${e}</span>`; };
+const totalEstrellas = a => Object.values(a.e).reduce((s, p) => s + (p.est || 0), 0);
+const decir = t => VOZ.decir(t);
+
+/* ---------- Inicio: elegir alumno ---------- */
+SC.inicio = () => {
+  const pf = EST.alu.map(a => `<button class="pf" onclick="entrar('${a.id}')">${avatar(a)}${esc(a.n)}</button>`).join('');
+  return `${barra('', '', '<button class="ib" onclick="abrirAjustes()" aria-label="Zona adultos">⚙️</button>')}
+  <div class="splash"><div class="piedras"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="logo">Calculi<small>Trucos de cálculo mental</small></div>
+  <div class="perfiles">${pf}<button class="pf nuevo" onclick="NUEVO={n:'',av:${EST.alu.length % AVATARES.length}};go('nuevo')"><span style="font-size:2rem">＋</span>Nuevo</button>
+  <button class="pf md" onclick="MODO_DOCENTE=true;go('mapa')"><span style="font-size:2rem">🧑‍🏫</span>Modo Docente</button></div></div>`;
+};
+function entrar(id) { MODO_DOCENTE = false; EST.act = id; guardar(); go('mapa'); }
+
+SC.nuevo = () => {
+  const avs = AVATARES.map(([e, c], i) => `<button class="pf${NUEVO.av === i ? ' sel' : ''}" style="padding:8px;${NUEVO.av === i ? 'outline:4px solid var(--ac2)' : ''}" onclick="NUEVO.av=${i};pintar()"><span class="av" style="background:${c}">${e}</span></button>`).join('');
+  const imp = alumnosDeOtrasApps().slice(0, 30).map(x => `<button class="bt sec" style="font-size:1rem;min-height:48px;padding:8px 14px" onclick="crearAlumno('${esc(x.n)}',${EST.alu.length % AVATARES.length});pintar()">＋ ${esc(x.n)} <small style="color:var(--mu)">(${x.de})</small></button>`).join('');
+  return `${barra('Nuevo alumno', "go('inicio')")}<div class="main" style="align-items:center;text-align:center">
+  <input class="inp" id="nom" maxlength="20" placeholder="Nombre" value="${esc(NUEVO.n)}" oninput="NUEVO.n=this.value" autocomplete="off">
+  <div class="perfiles" style="grid-template-columns:repeat(6,1fr);max-width:520px">${avs}</div>
+  <button class="bt" onclick="if(NUEVO.n.trim()){crearAlumno(NUEVO.n,NUEVO.av);go('mapa')}else $('#nom').focus()">Crear</button>
+  ${imp ? `<p style="color:var(--mu);margin:10px 0 0">Alumnos de tus otras apps en este dispositivo:</p><div class="fila">${imp}</div>` : ''}</div>`;
+};
+
+/* ---------- Mapa de estrategias ---------- */
+SC.mapa = () => {
+  const a = alumno(); if (!a) { scr = 'inicio'; return SC.inicio(); }
+  const sug = sugerida(a), hayRepaso = ESTR.lista.some(e => (a.e[e.id] || {}).n > 0);
+  const tri = [1, 2, 3].map(t => {
+    const cs = ESTR.lista.filter(e => e.tri === t).map(e => {
+      const p = a.e[e.id] || {}, ab = abierta(a, e), s = semaforo(a, e.id);
+      return `<button class="es${ab ? '' : ' lock'}${e === sug && !MODO_DOCENTE ? ' sug' : ''}" onclick="${ab ? `EID='${e.id}';go('estr')` : 'SON.mal()'}">
+      <span class="ic">${ab ? esc(e.ic) : '🔒'}</span><span><b>${esc(e.n)}</b><small>${s !== 'g' ? `<i class="sem ${s}"></i>` : ''}${esc(e.desc)}</small></span>
+      <span class="st">${'⭐'.repeat(p.est || 0)}</span></button>`;
+    }).join('');
+    return cs ? `<p class="tri">${['', 'Primer', 'Segundo', 'Tercer'][t]} trimestre</p><div class="mapa">${cs}</div>` : '';
+  }).join('');
+  return `${barra(`${MODO_DOCENTE ? '🧑‍🏫' : AVATARES[a.av][0]} ${esc(a.n)}`, "MODO_DOCENTE=false;go('inicio')", `<span class="est">⭐ ${totalEstrellas(a)}</span>`)}
+  <div class="main">${hayRepaso ? `<button class="repaso" onclick="empezar('repaso')"><span>🔁</span><span>Repaso del día<small>Mezcla de los trucos que ya conoces</small></span></button>` : ''}${tri}</div>`;
+};
+
+/* ---------- Menú de una estrategia ---------- */
+SC.estr = () => {
+  const e = est(), a = alumno(), p = a.e[e.id] || {};
+  const f = (n, t, s, act, extra = '') => `<button class="fase" onclick="${act}"><span class="n">${n}</span><b>${t}</b><small>${s}</small>${extra}</button>`;
+  return `${barra(esc(e.n), "go('mapa')")}<div class="main">
+  <div class="fases">
+  ${f('📖', 'Aprender', 'Mira cómo funciona el truco', 'TUT=0;go(\'tut\')', p.tut ? '<small class="ok">✓ Visto</small>' : '')}
+  ${f('✏️', 'Practicar', 'Paso a paso, con ayuda', "empezar('guiada')")}
+  ${f('🏆', 'Reto', '10 operaciones', "empezar('reto')", `<small>${p.est ? '⭐'.repeat(p.est) : 'Consigue estrellas'}</small>`)}
+  ${f('🎲', 'Jugar', e.juego && e.juego.tipo === 'parejas' ? esc(e.juego.meta) : 'Operaciones rápidas', 'empezarJuego()')}
+  </div></div>`;
+};
+
+/* ---------- Tutorial ---------- */
+SC.tut = () => {
+  const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1;
+  setTimeout(() => decir(s.txt), 250);
+  return `${barra(esc(e.n), "go('estr')")}<div class="main"><div class="tut pop">
+  <div class="vis">${VIS.dibujar(s.vis)}</div>
+  <div class="txt"><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">🔊</button><span>${esc(s.txt)}</span></div>
+  <div class="puntos-n">${e.tutorial.map((_, i) => `<i class="${i <= TUT ? 'on' : ''}"></i>`).join('')}</div>
+  <div class="fila">${TUT ? '<button class="bt sec" onclick="TUT--;pintar()">← Atrás</button>' : ''}
+  ${ult ? `<button class="bt" onclick="finTutorial()">¡A practicar!</button>` : '<button class="bt" onclick="TUT++;pintar()">Siguiente →</button>'}</div></div></div>`;
+};
+function finTutorial() { const a = alumno(); progreso(a, EID).tut = true; a.mt = Date.now(); guardar(); empezar('guiada'); }
+
+/* ---------- Sesiones de ejercicios ---------- */
+function empezar(tipo) {
+  const a = alumno(), e = est();
+  SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now() };
+  if (tipo === 'guiada') { SES.items = Array.from({ length: 4 }, () => e.guiada()); SES.n = 4; }
+  else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('mapa'); }
+  else { const p = a.e[e.id] || {}; SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
+  go('ej');
+}
+function nuevoItem() { const e = est(); return Object.assign({ id: e.id, nivel: SES.nivel }, prepararItem(e.item(SES.nivel), SES.nivel)); }
+/** Pregunta actual: en la guiada, el paso actual (o la operación final con opciones). */
+function actual() {
+  const it = SES.items[SES.i];
+  if (SES.tipo !== 'guiada') return it;
+  if (SES.paso < it.pasos.length) { const ps = it.pasos[SES.paso]; return ps._p || (ps._p = prepararItem(ps, ps.teclado ? 3 : 1)); }
+  return it._final || (it._final = prepararItem(it.final, 1));
+}
+const huecoHTML = (q, val, cls = '') => esc(q).split('?').join(`<span class="hueco ${cls}">${val === '' || val === undefined ? '&nbsp;' : esc(val)}</span>`);
+
+SC.ej = () => {
+  const c = actual(), it = SES.items[SES.i], nivel = it.nivel || 1, guiada = SES.tipo === 'guiada';
+  const titulo = { guiada: 'Practicar', reto: 'Reto', repaso: 'Repaso', rapido: 'Rápido' }[SES.tipo];
+  const verVis = c.vis && (c.visSiempre || guiada || nivel === 1 || SES.ayuda || SES.fallos > 0);
+  const usarTeclado = !c.ops;
+  let cuerpo;
+  if (c.truco) cuerpo = `<div class="enun">¿Qué truco usarías?</div><div class="op">${esc(c.q)}</div>
+    <div class="ops" style="grid-template-columns:1fr">${c.ops.map(o => `<button class="opc" style="font-size:1.3rem" onclick="responder(this.dataset.v,this)" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
+  else cuerpo = `${guiada && SES.hechos.length ? `<div class="pasos-ok">${SES.hechos.map(h => `<div>✓ ${esc(h)}</div>`).join('')}</div>` : ''}
+    ${guiada && SES.paso < it.pasos.length ? `<div class="paso">Paso ${SES.paso + 1}</div>` : ''}
+    <div class="op pop">${huecoHTML(c.q, usarTeclado ? SES.resp : '')}</div>
+    ${verVis ? `<div class="vis">${VIS.dibujar(c.vis)}</div>` : ''}
+    <div class="fb" id="fb"></div>
+    ${usarTeclado ? teclado() : `<div class="ops">${c.ops.map(o => `<button class="opc" onclick="responder(${o},this)">${o}</button>`).join('')}</div>`}
+    ${!guiada && c.vis && !verVis ? '<button class="ayuda" onclick="SES.ayuda=true;pintar()">💡 Ayuda</button>' : ''}`;
+  return `${barra(titulo, SES.tipo === 'repaso' ? "SES=null;go('mapa')" : "SES=null;go('estr')")}
+  <div class="main"><div class="ej"><div class="prog"><i style="width:${(SES.i / SES.n) * 100}%"></i></div>
+  <div class="enun"><button class="voz" onclick="decir(${esc(JSON.stringify(c.voz || c.txt || c.q))})" aria-label="Escuchar">🔊</button>${c.txt ? `<span>${esc(c.txt)}</span>` : ''}</div>${cuerpo}</div></div>`;
+};
+function teclado() {
+  const k = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="tecla('${n}')">${n}</button>`).join('');
+  return `<div class="teclado">${k}<button onclick="tecla('b')" aria-label="Borrar">⌫</button><button onclick="tecla('0')">0</button><button class="okb" onclick="tecla('ok')">OK</button></div>`;
+}
+function tecla(t) {
+  if (SES.bloq) return;
+  if (t === 'b') SES.resp = SES.resp.slice(0, -1);
+  else if (t === 'ok') { if (SES.resp !== '') responder(+SES.resp); return; }
+  else if (SES.resp.length < 3) SES.resp += t;
+  const h = document.querySelector('.op .hueco'); if (h) h.innerHTML = SES.resp || '&nbsp;';
+}
+const BIEN = ['¡Muy bien!', '¡Genial!', '¡Eso es!', '¡Perfecto!', '¡Bravo!'], CASI = ['Casi. Mira la ayuda y prueba otra vez.', 'Uy, otra vez. Fíjate en el dibujo.'];
+function feedback(txt, ok) { const f = $('#fb'); if (f) { f.className = 'fb ' + (ok ? 'ok' : 'no'); f.textContent = txt; } }
+
+function responder(v, btn) {
+  if (SES.bloq) return;
+  const c = actual(), it = SES.items[SES.i], bien = String(v) === String(c.r);
+  const hueco = document.querySelector('.op .hueco');
+  if (bien) {
+    SES.bloq = true; SON.bien(); if (btn) btn.classList.add('ok');
+    if (hueco) { hueco.textContent = c.r; hueco.classList.add('ok'); }
+    feedback(pick(BIEN), true);
+    if (SES.tipo === 'guiada') {
+      setTimeout(() => {
+        if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; SES.bloq = false; SES.resp = ''; SES.fallos = 0; pintar(); }
+        else { SES.ok++; siguiente(); }
+      }, 750);
+      return;
+    }
+    const limpio = SES.fallos === 0 && !SES.ayuda;
+    registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++;
+    if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
+    setTimeout(siguiente, 800);
+  } else {
+    SON.mal(); SES.fallos++; if (btn) { btn.classList.add('no'); btn.disabled = true; }
+    if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 500); }
+    SES.resp = '';
+    if (SES.fallos >= 2 || c.truco) {
+      SES.bloq = true;
+      if (SES.tipo !== 'guiada') { registrar(it.id, false); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
+      if (hueco) { hueco.textContent = c.r; hueco.classList.add('ok'); }
+      feedback(c.truco ? `Era: ${c.r}` : `Era ${c.r}. ¡La próxima sale!`, false);
+      setTimeout(() => { if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; } else { siguiente(); return; } SES.bloq = false; SES.fallos = 0; pintar(); } else siguiente(); }, 1900);
+    } else if (SES.fallos === 1 && !SES.ayuda && c.vis && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1)) { SES.ayuda = true; pintar(); feedback(pick(CASI), false); }
+    else feedback('Prueba otra vez.', false);
+  }
+}
+function siguiente() {
+  SES.i++; SES.paso = 0; SES.fallos = 0; SES.ayuda = false; SES.bloq = false; SES.resp = ''; SES.hechos = [];
+  if (SES.i >= SES.n) return terminar();
+  if (SES.tipo === 'reto' || SES.tipo === 'rapido') SES.items.push(nuevoItem());
+  pintar();
+}
+function terminar() {
+  const a = alumno(); let estrellas;
+  if (SES.tipo === 'guiada') estrellas = 3;
+  else estrellas = estrellasDe(SES.ok, SES.n);
+  if (SES.tipo === 'reto') { const p = progreso(a, SES.id); if (estrellas > p.est) p.est = estrellas; a.mt = Date.now(); guardar(); }
+  RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, seg: Math.round((Date.now() - SES.t0) / 1000) };
+  SON.fin(); go('res');
+}
+
+/* ---------- Juego de parejas ---------- */
+let JG = null, RES = null;
+function empezarJuego() {
+  const e = est();
+  if (!e.juego || e.juego.tipo !== 'parejas') return empezar('rapido');
+  const pares = e.juego.pares().slice(0, 6);
+  JG = { cartas: shuffle(pares.flatMap((p, k) => [{ t: String(p[0]), k }, { t: String(p[1]), k }])), sel: null, hechas: new Set(), err: 0, t0: Date.now() };
+  go('juego');
+}
+SC.juego = () => {
+  const e = est();
+  return `${barra('Jugar', "go('estr')")}<div class="main" style="align-items:center"><div class="meta">${esc(e.juego.meta)}</div>
+  <div class="tablero">${JG.cartas.map((c, i) => `<button class="carta${JG.hechas.has(i) ? ' hecha' : ''}${JG.sel === i ? ' sel' : ''}" onclick="carta(${i},this)">${esc(c.t)}</button>`).join('')}</div>
+  <p style="color:var(--mu);margin:0">Toca dos tarjetas que vayan juntas</p></div>`;
+};
+function carta(i, el) {
+  if (JG.hechas.has(i)) return;
+  if (JG.sel === null) { JG.sel = i; el.classList.add('sel'); return; }
+  if (JG.sel === i) { JG.sel = null; el.classList.remove('sel'); return; }
+  const a = JG.cartas[JG.sel], b = JG.cartas[i];
+  if (a.k === b.k) { JG.hechas.add(JG.sel).add(i); JG.sel = null; SON.bien(); if (JG.hechas.size === JG.cartas.length) { RES = { estrellas: JG.err <= 1 ? 3 : JG.err <= 3 ? 2 : 1, tipo: 'juego', err: JG.err, seg: Math.round((Date.now() - JG.t0) / 1000) }; SON.fin(); setTimeout(() => go('res'), 500); } else pintar(); }
+  else { JG.err++; SON.mal(); el.classList.add('mal'); setTimeout(() => { JG.sel = null; pintar(); }, 380); }
+}
+
+/* ---------- Resultado ---------- */
+SC.res = () => {
+  const r = RES, s = [1, 2, 3].map(k => `<span class="${k <= r.estrellas ? '' : 'off'}">⭐</span>`).join('');
+  const titulo = r.estrellas === 3 ? '¡Fantástico!' : r.estrellas === 2 ? '¡Muy bien!' : r.estrellas === 1 ? '¡Buen trabajo!' : '¡Sigue practicando!';
+  const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.`;
+  setTimeout(() => decir(titulo), 300);
+  const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`;
+  const sig = r.tipo === 'guiada' ? `<button class="bt" onclick="empezar('reto')">🏆 Hacer el reto</button>` : '';
+  return `${barra('', '')}<div class="res pop"><div class="estrellas">${s}</div><h2>${titulo}</h2><p>${det}</p>
+  <div class="fila"><button class="bt sec" onclick="${otra}">↻ Otra vez</button>${sig}<button class="bt${sig ? ' sec' : ''}" onclick="go(${r.tipo === 'repaso' ? "'mapa'" : "'estr'"})">Seguir</button></div></div>`;
+};
+
+/* ---------- Zona de adultos (sencilla; la Zona del tutor con PIN llegará en la fase 3) ---------- */
+function abrirAjustes() { AJ_OK = false; AJ_Q = [rnd(6, 9), rnd(6, 9)]; go('ajustes'); }
+SC.ajustes = () => {
+  if (!AJ_OK) return `${barra('Zona de adultos', "go('inicio')")}<div class="main adulto" style="align-items:center;text-align:center">
+  <p>Para entrar, responde: ¿cuánto es ${AJ_Q[0]} × ${AJ_Q[1]}?</p><input class="inp" id="aj" inputmode="numeric" autocomplete="off">
+  <button class="bt" onclick="if(+$('#aj').value===${AJ_Q[0] * AJ_Q[1]}){AJ_OK=true;pintar()}else{$('#aj').value='';SON.mal()}">Entrar</button></div>`;
+  const A = EST.ajustes, sw = (k, t) => `<label style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">${t}<input type="checkbox" ${A[k] ? 'checked' : ''} onchange="EST.ajustes.${k}=this.checked;guardar()" style="width:24px;height:24px"></label>`;
+  const filas = EST.alu.map(a => `<tr><td>${esc(a.n)}</td>${ESTR.lista.map(e => `<td title="${esc(e.n)}"><i class="sem ${semaforo(a, e.id)}"></i></td>`).join('')}<td><button class="bt sec" style="min-height:32px;padding:4px 10px" onclick="if(confirm('¿Borrar a ${esc(a.n)} y su progreso?')){EST.alu=EST.alu.filter(x=>x.id!=='${a.id}');guardar();pintar()}">Borrar</button></td></tr>`).join('');
+  return `${barra('Zona de adultos', "go('inicio')")}<div class="main adulto">
+  <div class="tarj"><b>Ajustes</b>${sw('voz', 'Voz')}${sw('sonido', 'Sonidos')}${sw('abierto', 'Todas las estrategias abiertas')}
+  <label style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">Tema<select onchange="EST.ajustes.tema=this.value;guardar();pintar()" style="font:inherit;padding:6px">${[['auto', 'Automático'], ['light', 'Claro'], ['dark', 'Oscuro']].map(([v, t]) => `<option value="${v}" ${A.tema === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label></div>
+  <div class="tarj" style="overflow-x:auto"><b>Dominio por estrategia</b> <small style="color:var(--mu)">(<i class="sem v"></i>≥80 % · <i class="sem a"></i>≥50 % · <i class="sem r"></i>menos · <i class="sem g"></i>sin datos)</small>
+  <table><tr><th>Alumno</th>${ESTR.lista.map(e => `<th title="${esc(e.n)}">${esc(e.ic)}</th>`).join('')}<th></th></tr>${filas || '<tr><td>Aún no hay alumnos.</td></tr>'}</table></div>
+  <div class="tarj fila" style="justify-content:flex-start"><button class="bt sec" onclick="exportar()">⬇ Copia de seguridad</button><button class="bt sec" onclick="importar()">⬆ Restaurar copia</button></div></div>`;
+};
+function exportar() { const b = new Blob([JSON.stringify(EST, null, 1)], { type: 'application/json' }), u = URL.createObjectURL(b), l = document.createElement('a'); l.href = u; l.download = `calculi-copia-${hoy()}.json`; l.click(); setTimeout(() => URL.revokeObjectURL(u), 2000); }
+function importar() {
+  const i = document.createElement('input'); i.type = 'file'; i.accept = '.json,application/json';
+  i.onchange = () => { const f = i.files[0]; if (!f) return; f.text().then(t => { try { const d = migrar(JSON.parse(t)); if (confirm(`La copia tiene ${d.alu.length} alumnos. ¿Sustituir los datos actuales?`)) { EST = d; guardar(); pintar(); } } catch (e) { alert('Ese archivo no es una copia de Calculi.'); } }); };
+  i.click();
+}
+
+/* ---- js/estrategias/01-versincontar.js ---- */
+/* Estrategia 1 · Ver sin contar (subitización) */
+ESTR.add({
+  id: 'versincontar', orden: 1, tri: 1,
+  n: 'Ver sin contar', ic: '👀', desc: 'Lo veo de un vistazo',
+  truco: 'Lo veo de un vistazo',
+  tutorial: [
+    { txt: 'Mira este dado. ¿Ves cuántos puntos hay sin contar uno a uno?', vis: { t: 'puntos', n: 4 } },
+    { txt: 'Con los puntos del dado, el 3, el 4 y el 5 se reconocen enseguida.', vis: { t: 'puntos', n: 5 } },
+    { txt: 'Para el 7, mira un dado de 5 y otro de 2. ¡5 y 2 son 7!', vis: { t: 'puntos', n: 7 } },
+    { txt: 'En el marco del 10 también: una fila llena son 5 y las fichas de abajo se suman.', vis: { t: 'marco', a: 8 } },
+    { txt: 'Y con los dedos: una mano es 5. Mano y tres dedos más, ¡8!', vis: { t: 'dedos', n: 8 } }
+  ],
+  guiada() {
+    const n = rnd(6, 9);
+    return {
+      pasos: [
+        { txt: '¿Cuántos puntos tiene el dado azul?', q: '?', r: 5, vis: { t: 'puntos', n }, extra: [4, 6] },
+        { txt: '¿Cuántos puntos tiene el dado naranja?', q: '?', r: n - 5, vis: { t: 'puntos', n } }
+      ],
+      final: { txt: '5 y ' + (n - 5) + '. ¿Cuántos hay en total?', q: '?', r: n, vis: { t: 'puntos', n }, extra: [n - 1, n + 1] }
+    };
+  },
+  item(nivel) {
+    let n, t;
+    if (nivel === 1) { n = rnd(1, 6); t = 'puntos'; }
+    else if (nivel === 2) { n = rnd(2, 10); t = pick(n <= 10 ? ['puntos', 'marco', 'dedos'] : ['puntos']); }
+    else { n = rnd(3, 10); t = pick(['marco', 'dedos', 'puntos']); }
+    const vis = t === 'marco' ? { t: 'marco', a: n } : { t, n };
+    return { visSiempre: true, txt: '¿Cuántos hay?', q: '?', r: n, vis, extra: [n - 1, n + 1, n + 2] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Une cada número con su palabra',
+    pares() {
+      const P = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
+      return shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(0, 6).map(n => [String(n), P[n]]);
+    }
+  }
+});
+
+/* ---- js/estrategias/02-masmenos1.js ---- */
+/* Estrategia 2 · Uno más, uno menos */
+ESTR.add({
+  id: 'masmenos1', orden: 2, tri: 1,
+  n: 'Uno más, uno menos', ic: '↔️', desc: 'El vecino de cada número',
+  truco: 'Doy un paso en la recta',
+  tutorial: [
+    { txt: 'Los números están en fila. Cada número tiene un vecino a cada lado.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 5 } },
+    { txt: 'Uno más es dar un paso a la derecha. 5 + 1 = 6.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 5, saltos: [1] } },
+    { txt: 'Uno menos es dar un paso a la izquierda. 5 − 1 = 4.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 5, saltos: [-1] } },
+    { txt: 'Y si sumo o resto 0, me quedo donde estoy. ¡No me muevo!', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 7 } },
+    { txt: 'Truco: uno más es el número que viene después. Uno menos, el de antes.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 8, saltos: [1] } }
+  ],
+  guiada() {
+    const n = rnd(2, 8), mas = rnd(0, 1) === 0, r = mas ? n + 1 : n - 1;
+    return {
+      pasos: [
+        { txt: mas ? `¿Qué número viene justo después del ${n}?` : `¿Qué número viene justo antes del ${n}?`, q: '?', r, vis: { t: 'recta', desde: 0, hasta: 10, inicio: n }, extra: [n] }
+      ],
+      final: { txt: 'Ahora la cuenta:', q: mas ? `${n} + 1` : `${n} − 1`, r, vis: { t: 'recta', desde: 0, hasta: 10, inicio: n, saltos: [mas ? 1 : -1] }, extra: [n, mas ? n - 1 : n + 1] }
+    };
+  },
+  item(nivel) {
+    const max = nivel === 3 ? 20 : 10;
+    let mas = rnd(0, 1) === 0;
+    const cero = nivel >= 2 && rnd(0, 7) === 0;
+    let n, d;
+    if (cero) { d = 0; n = rnd(0, max); }
+    else { d = mas ? 1 : -1; n = mas ? rnd(0, max - 1) : rnd(1, max); }
+    const r = n + d;
+    const op = d === 1 ? '+ 1' : d === -1 ? '− 1' : '+ 0';
+    const q = (d !== -1 && nivel >= 2 && rnd(0, 3) === 0) ? `${d === 1 ? 1 : 0} + ${n}` : `${n} ${op}`;
+    const vis = { t: 'recta', desde: 0, hasta: max, inicio: n, saltos: d ? [d] : [] };
+    return { q, r, vis, extra: [n, r + 1, r - 1, n + (d === 1 ? 2 : -2)] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Une la cuenta con su resultado',
+    pares() {
+      return shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(0, 6).map(r => {
+        const menos = r < 10 && rnd(0, 1) === 0;
+        return [menos ? `${r + 1} − 1` : `${r - 1} + 1`, String(r)];
+      });
+    }
+  }
+});
+
+/* ---- js/estrategias/03-descomponer.js ---- */
+/* Estrategia 3 · Descomponer hasta 10 */
+ESTR.add({
+  id: 'descomponer', orden: 3, tri: 1,
+  n: 'Descomponer hasta 10', ic: '✂️', desc: 'Un número en dos partes',
+  truco: 'Parto el número en dos',
+  tutorial: [
+    { txt: 'Un número se puede partir en dos trocitos. Mira el 7.', vis: { t: 'parte', total: 7, a: 5, b: 2 } },
+    { txt: '7 es 5 y 2. Las fichas azules son 5 y las naranjas son 2.', vis: { t: 'marco', a: 5, b: 2 } },
+    { txt: 'Pero 7 también es 4 y 3. ¡Hay muchas formas de partirlo!', vis: { t: 'marco', a: 4, b: 3 } },
+    { txt: 'Si sé el todo y una parte, me falta la otra. 7 = 5 + ?', vis: { t: 'parte', total: 7, a: 5, b: 2, oculto: 'b' } },
+    { txt: 'Truco: del todo quito la parte que veo y lo que queda es la otra.', vis: { t: 'marco', a: 6, b: 2 } }
+  ],
+  guiada() {
+    const t = rnd(5, 10), a = rnd(1, t - 1), b = t - a;
+    return {
+      pasos: [
+        { txt: `Tengo ${t} fichas en total. ¿Cuántas son azules?`, q: '?', r: a, vis: { t: 'marco', a, b }, extra: [b] },
+        { txt: '¿Cuántas son naranjas?', q: '?', r: b, vis: { t: 'marco', a, b }, extra: [a] }
+      ],
+      final: { txt: 'Ahora la operación:', q: `${t} = ${a} + ?`, r: b, vis: { t: 'parte', total: t, a, b, oculto: 'b' }, extra: [a, t] }
+    };
+  },
+  item(nivel) {
+    const t = nivel === 1 ? rnd(4, 10) : rnd(3, 10);
+    let a = rnd(nivel === 1 ? 1 : 0, nivel === 1 ? t - 1 : t);
+    if (nivel === 1 && t > 5 && rnd(0, 1) === 0) a = 5;
+    const b = t - a, forma = rnd(0, nivel === 1 ? 1 : 3);
+    let q, r = b, oculto = 'b', aa = a, bb = b;
+    if (forma === 0) q = `${t} = ${a} + ?`;
+    else if (forma === 1) q = `${a} + ? = ${t}`;
+    else if (forma === 2) { q = `${t} = ? + ${b}`; r = a; oculto = 'a'; }
+    else { q = `? + ${b} = ${t}`; r = a; oculto = 'a'; }
+    return { q, r, vis: { t: 'parte', total: t, a: aa, b: bb, oculto }, extra: [t, a === r ? b : a, r + 1, r - 1] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Une cada número con su descomposición',
+    pares() {
+      return shuffle([4, 5, 6, 7, 8, 9, 10]).slice(0, 6).map(t => {
+        const a = rnd(1, t - 1), b = t - a;
+        return [String(t), `${a} + ${b}`];
+      });
+    }
+  }
+});
+
+/* ---- js/estrategias/04-amigos10.js ---- */
+/* Estrategia 4 · Amigos del 10 (plantilla de referencia para las demás) */
+ESTR.add({
+  id: 'amigos10', orden: 4, tri: 1,
+  n: 'Amigos del 10', ic: '🤝', desc: 'Parejas que suman 10',
+  truco: 'Busco el amigo del 10',
+  tutorial: [
+    { txt: 'Este es el marco del 10. Tiene 10 casillas.', vis: { t: 'marco', a: 0 } },
+    { txt: 'Aquí hay 7 fichas azules. ¿Cuántas casillas quedan vacías?', vis: { t: 'marco', a: 7 } },
+    { txt: 'Quedan 3. Con 3 fichas naranjas, el marco se llena: 7 y 3 son amigos del 10.', vis: { t: 'marco', a: 7, b: 3 } },
+    { txt: 'Los amigos del 10 siempre llenan el marco: 6 y 4, 8 y 2, 5 y 5…', vis: { t: 'marco', a: 6, b: 4 } },
+    { txt: 'Truco: mira los huecos vacíos y sabrás el amigo del 10.', vis: { t: 'parte', total: 10, a: 8, b: 2, oculto: 'b' } }
+  ],
+  guiada() {
+    const a = rnd(1, 9), b = 10 - a;
+    return {
+      pasos: [
+        { txt: '¿Cuántas fichas azules hay?', q: '?', r: a, vis: { t: 'marco', a } },
+        { txt: '¿Cuántos huecos vacíos hay?', q: '?', r: b, vis: { t: 'marco', a } }
+      ],
+      final: { txt: 'Ahora la operación:', q: `${a} + ? = 10`, r: b, vis: { t: 'marco', a, b } }
+    };
+  },
+  item(nivel) {
+    const a = rnd(nivel === 1 ? 1 : 0, nivel === 1 ? 9 : 10), b = 10 - a;
+    const forma = rnd(0, 2);
+    if (forma === 2) return { q: `10 = ${a} + ?`, r: b, vis: { t: 'marco', a }, extra: [a, b + 1, b - 1] };
+    if (forma === 1) return { q: `? + ${a} = 10`, r: b, vis: { t: 'marco', a }, extra: [a, b + 1, b - 1] };
+    return { q: `${a} + ? = 10`, r: b, vis: { t: 'marco', a }, extra: [a, b + 1, b - 1] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Busca parejas que sumen 10',
+    pares() { return shuffle([[1, 9], [2, 8], [3, 7], [4, 6], [5, 5], [0, 10]]).slice(0, 6); }
+  }
+});
+
+/* ---- js/estrategias/05-orden.js ---- */
+/* Estrategia 5 · El orden no importa (conmutativa) */
+ESTR.add({
+  id: 'orden', orden: 5, tri: 1,
+  n: 'El orden no importa', ic: '🔄', desc: 'Empiezo por el grande',
+  truco: 'Empiezo por el número grande',
+  tutorial: [
+    { txt: 'Tengo 2 fichas azules y 7 naranjas. ¿Cuántas hay en total?', vis: { t: 'marco', a: 2, b: 7 } },
+    { txt: 'Si giro el marco, tengo 7 azules y 2 naranjas. ¡Siguen siendo 9!', vis: { t: 'marco', a: 7, b: 2 } },
+    { txt: '2 + 7 = 7 + 2. Da igual el orden: la suma es la misma.', vis: { t: 'parte', total: 9, a: 2, b: 7 } },
+    { txt: 'Es más fácil empezar por el grande: 7 y dos más… ¡8, 9!', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 7, saltos: [1, 1] } },
+    { txt: 'Truco: en 2 + 7 empiezo por el 7 y sumo 2 más.', vis: { t: 'marco', a: 7, b: 2 } }
+  ],
+  guiada() {
+    const a = rnd(1, 4), b = rnd(a + 1, Math.min(9, 10 - a)), t = a + b;
+    return {
+      pasos: [
+        { txt: `${a} + ${b} es lo mismo que ${b} + ${a}. ¿Cuál es el número grande?`, q: '?', r: b, vis: { t: 'marco', a: b, b: a }, extra: [a, t] }
+      ],
+      final: { txt: `Empiezo por el ${b} y sumo ${a}:`, q: `${b} + ${a}`, r: t, vis: { t: 'marco', a: b, b: a }, extra: [b, t - 1, t + 1] }
+    };
+  },
+  item(nivel) {
+    const a = rnd(1, 4), b = rnd(a + 1, Math.min(9, 10 - a)), t = a + b;
+    const forma = nivel === 1 ? rnd(0, 1) : rnd(0, 2);
+    const vis = { t: 'marco', a: b, b: a };
+    if (forma === 1) return { q: `${a} + ${b} = ${b} + ?`, r: a, vis, extra: [b, t, a + 1] };
+    if (forma === 2) return { q: `${a} + ${b} = ? + ${a}`, r: b, vis, extra: [a, t, b + 1] };
+    return { q: `${a} + ${b}`, r: t, vis, extra: [b, t - 1, t + 1] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Une las sumas que dan igual',
+    pares() {
+      const C = [[1, 4], [2, 7], [3, 6], [1, 8], [2, 5], [3, 4], [1, 6], [4, 5], [2, 8], [3, 5], [1, 9], [2, 6]];
+      return shuffle(C).slice(0, 6).map(([a, b]) => rnd(0, 1) ? [`${a} + ${b}`, `${b} + ${a}`] : [`${b} + ${a}`, `${a} + ${b}`]);
+    }
+  }
+});
+
+/* ---- js/estrategias/06-desdemayor.js ---- */
+/* Estrategia 6 · Contar desde el mayor */
+ESTR.add({
+  id: 'desdemayor', orden: 6, tri: 2,
+  n: 'Contar desde el mayor', ic: '👣', desc: 'Empiezo por el número grande',
+  truco: 'Empiezo por el mayor',
+  tutorial: [
+    { txt: 'Vamos a sumar 3 + 8. ¿Con qué número es más fácil empezar?', vis: { t: 'marco', a: 3, b: 8, tam: 20 } },
+    { txt: 'Con el mayor. Empiezo en el 8 y no hace falta contarlo desde el 1.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 8, saltos: [] } },
+    { txt: 'Ahora cuento 3 más: 9, 10, 11.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 8, saltos: [1, 1, 1] } },
+    { txt: 'Termino en 11. Entonces 3 + 8 = 11.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 8, saltos: [1, 1, 1] } },
+    { txt: 'Truco: busco el número mayor, empiezo ahí y cuento los pasos que faltan.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 12, saltos: [1, 1] } }
+  ],
+  guiada() {
+    const p = rnd(2, 4), m = rnd(6, 20 - p), pri = rnd(0, 1);
+    const q = pri ? `${p} + ${m}` : `${m} + ${p}`;
+    const vis = { t: 'recta', desde: 0, hasta: 20, inicio: m, saltos: Array(p).fill(1) };
+    return {
+      pasos: [
+        { txt: `En ${q}, ¿cuál es el mayor?`, q: '?', r: m, ops: shuffle([m, p, m + p]), vis: { t: 'marco', a: m, b: p, tam: 20 } },
+        { txt: `Empiezo en ${m} y cuento 1 más. ¿Qué número viene?`, q: '?', r: m + 1, vis: { t: 'recta', desde: 0, hasta: 20, inicio: m, saltos: [1] } }
+      ],
+      final: { txt: `Cuento ${p} pasos desde el ${m}:`, q: `${q} = ?`, r: m + p, vis }
+    };
+  },
+  item(nivel) {
+    const p = rnd(1, 4), m = rnd(5, nivel === 1 ? 10 : nivel === 2 ? 14 : 20 - p);
+    const mm = Math.min(m, 20 - p), r = mm + p;
+    const q = rnd(0, 1) ? `${p} + ${mm}` : `${mm} + ${p}`;
+    return { q, r, vis: { t: 'recta', desde: 0, hasta: 20, inicio: mm, saltos: Array(p).fill(1) }, extra: [mm, r - 1, r + 1, mm + p + 2] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Empieza por el mayor',
+    pares() {
+      return shuffle([9, 10, 11, 12, 13, 14, 15, 16, 17, 18]).slice(0, 6).map(r => { const p = rnd(1, 4); return [`${p} + ${r - p}`, r]; });
+    }
+  }
+});
+
+/* ---- js/estrategias/07-haciaatras.js ---- */
+/* Estrategia 7 · Contar hacia atrás */
+ESTR.add({
+  id: 'haciaatras', orden: 7, tri: 2,
+  n: 'Contar hacia atrás', ic: '⏪', desc: 'Restar 1, 2 o 3',
+  truco: 'Cuento hacia atrás',
+  tutorial: [
+    { txt: 'Restar es quitar. Vamos a hacer 9 − 2. Empiezo en el 9.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [] } },
+    { txt: 'Quito 2, así que doy 2 pasos hacia atrás: 8, 7.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [-1, -1] } },
+    { txt: 'Aquí se ve igual: hay 9 fichas y tacho las 2 últimas.', vis: { t: 'marco', a: 9, tam: 10, tachar: 2 } },
+    { txt: 'Me quedo en el 7. Entonces 9 − 2 = 7.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [-1, -1] } },
+    { txt: 'Truco: para quitar 1, 2 o 3, cuento hacia atrás sin contar el número donde empiezo.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 15, saltos: [-1, -1, -1] } }
+  ],
+  guiada() {
+    const s = rnd(2, 3), a = rnd(5, 20);
+    const pasos = [{ txt: `Empiezo en ${a}. Doy un paso atrás. ¿Dónde estoy?`, q: '?', r: a - 1, vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1] } }];
+    if (s === 3) pasos.push({ txt: 'Otro paso atrás. ¿Y ahora?', q: '?', r: a - 2, vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1, -1] } });
+    return { pasos, final: { txt: `Quito ${s} en total:`, q: `${a} − ${s} = ?`, r: a - s, vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) } } };
+  },
+  item(nivel) {
+    const s = rnd(1, 3), a = rnd(s + 1, nivel === 1 ? 10 : 20), r = a - s;
+    const vis = nivel === 1 && rnd(0, 1) ? { t: 'marco', a, tam: a > 10 ? 20 : 10, tachar: s } : { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) };
+    return { q: `${a} − ${s}`, r, vis, extra: [a, r + 1, r - 1, a + s] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Cuenta hacia atrás',
+    pares() {
+      const out = [], vistos = new Set();
+      for (const [a, s] of shuffle([[8, 1], [10, 2], [12, 3], [15, 2], [17, 1], [20, 3], [11, 2], [14, 3], [9, 2], [13, 1]])) {
+        if (vistos.has(a - s)) continue;
+        vistos.add(a - s); out.push([`${a} − ${s}`, a - s]);
+        if (out.length === 6) break;
+      }
+      return out;
+    }
+  }
+});
+
+/* ---- js/estrategias/08-usar5.js ---- */
+/* Estrategia 8 · Usar el 5 */
+ESTR.add({
+  id: 'usar5', orden: 8, tri: 2,
+  n: 'Usar el 5', ic: '🖐️', desc: 'Un 5 y lo que sobra',
+  truco: 'Separo el 5 y sumo',
+  tutorial: [
+    { txt: 'Una mano tiene 5 dedos. El 6 es una mano y un dedo más.', vis: { t: 'dedos', n: 6 } },
+    { txt: 'En el marco se ve igual: 6 es una fila de 5 y 1 más.', vis: { t: 'marco', a: 6, tam: 10 } },
+    { txt: 'Para 6 + 7 separo los cincos: 5 + 1 y 5 + 2.', vis: { t: 'marco', a: 6, b: 7, tam: 20 } },
+    { txt: 'Junto los dos cincos y hacen 10. Me sobran 1 y 2, que son 3.', vis: { t: 'parte', total: 13, a: 10, b: 3 } },
+    { txt: 'Truco: 6 + 7 = 10 + 3 = 13. Siempre saco el 5 de cada número.', vis: { t: 'marco', a: 10, b: 3, tam: 20 } }
+  ],
+  guiada() {
+    const a = rnd(6, 9), b = rnd(6, 9);
+    return {
+      pasos: [
+        { txt: `El ${a} es una mano y ¿cuántos dedos más?`, q: `${a} = 5 + ?`, r: a - 5, vis: { t: 'dedos', n: a } },
+        { txt: `Y el ${b}, ¿cuántos más que 5?`, q: `${b} = 5 + ?`, r: b - 5, vis: { t: 'dedos', n: b } },
+        { txt: 'Junto las dos manos:', q: '5 + 5 = ?', r: 10, vis: { t: 'marco', a: 5, b: 5, tam: 10 } }
+      ],
+      final: { txt: 'Ahora sumo todo:', q: `${a} + ${b} = ?`, r: a + b, vis: { t: 'marco', a, b, tam: 20 } }
+    };
+  },
+  item(nivel) {
+    if (nivel === 1) {
+      const a = rnd(6, 9);
+      return { q: `${a} = 5 + ?`, r: a - 5, vis: rnd(0, 1) ? { t: 'marco', a, tam: 10 } : { t: 'dedos', n: a }, extra: [a, a - 4, a - 6, 5] };
+    }
+    const a = rnd(5, 9), b = rnd(5, 9), r = a + b, vis = { t: 'marco', a, b, tam: 20 };
+    if (nivel === 2 && rnd(0, 2) === 0) return { q: `5 + ${a - 5} + 5 + ${b - 5}`, r, vis, extra: [10, r + 1, r - 1, r + 10] };
+    return { q: `${a} + ${b}`, r, vis, extra: [10, r + 1, r - 1, r - 5] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Separa el 5 y suma',
+    pares() {
+      const ps = shuffle([[5, 5], [6, 5], [6, 6], [7, 5], [7, 6], [7, 7], [8, 5], [8, 6], [9, 5], [9, 6], [8, 7], [9, 8]]);
+      const out = [], vistos = new Set();
+      for (const [a, b] of ps) { if (vistos.has(a + b)) continue; vistos.add(a + b); out.push([`${a} + ${b}`, a + b]); if (out.length === 6) break; }
+      return out;
+    }
+  }
+});
+
+/* ---- js/estrategias/09-dobles.js ---- */
+/* Estrategia 9 · Dobles */
+ESTR.add({
+  id: 'dobles', orden: 9, tri: 2,
+  n: 'Dobles', ic: '👯', desc: 'El mismo número dos veces',
+  truco: 'Me sé los dobles',
+  tutorial: [
+    { txt: 'Un doble es sumar un número consigo mismo. 3 + 3 es el doble de 3.', vis: { t: 'dedos', n: 6 } },
+    { txt: '3 + 3 = 6. Hay dos grupos iguales de 3 fichas.', vis: { t: 'marco', a: 3, b: 3, tam: 10 } },
+    { txt: 'El doble de 5 es 10: dos manos llenas.', vis: { t: 'dedos', n: 10 } },
+    { txt: 'El doble de 8 es 16. 8 + 8 = 16.', vis: { t: 'marco', a: 8, b: 8, tam: 20 } },
+    { txt: 'Truco: si me sé los dobles, ¡me ayudan a hacer muchas sumas!', vis: { t: 'marco', a: 10, b: 10, tam: 20 } }
+  ],
+  guiada() {
+    const n = rnd(2, 9);
+    return {
+      pasos: [
+        { txt: `Hay ${n} fichas azules. ¿Cuántas naranjas hay para hacer un doble?`, q: '?', r: n, vis: { t: 'marco', a: n, b: n, tam: 20 } }
+      ],
+      final: { txt: 'Junto las dos partes iguales:', q: `${n} + ${n} = ?`, r: 2 * n, vis: { t: 'marco', a: n, b: n, tam: 20 } }
+    };
+  },
+  item(nivel) {
+    const n = rnd(1, nivel === 1 ? 6 : 10), r = 2 * n;
+    const vis = { t: 'marco', a: n, b: n, tam: 20 };
+    const forma = nivel === 3 ? rnd(0, 2) : 0;
+    if (forma === 1) return { q: `${n} + ? = ${r}`, r: n, vis, extra: [r, n + 1, n - 1] };
+    if (forma === 2) return { q: `${r} = ${n} + ?`, r: n, vis, extra: [r, n + 1, n - 1] };
+    return { q: `${n} + ${n}`, r, vis, extra: [r + 1, r - 1, n, n + 1] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Une cada doble con su resultado',
+    pares() { return shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(0, 6).map(n => [`${n} + ${n}`, 2 * n]); }
+  }
+});
+
+/* ---- js/estrategias/10-casidobles.js ---- */
+/* Estrategia 10 · Casi dobles */
+ESTR.add({
+  id: 'casidobles', orden: 10, tri: 2,
+  n: 'Casi dobles', ic: '🪞', desc: 'Un doble y uno más',
+  truco: 'Busco el doble y sumo 1',
+  tutorial: [
+    { txt: 'Mira 6 + 7. Los números son casi iguales: se parecen mucho.', vis: { t: 'marco', a: 6, b: 7, tam: 20 } },
+    { txt: 'Conozco el doble: 6 + 6 = 12.', vis: { t: 'marco', a: 6, b: 6, tam: 20 } },
+    { txt: 'Pero en 6 + 7 hay una ficha más. Entonces sumo 1.', vis: { t: 'marco', a: 6, b: 7, tam: 20 } },
+    { txt: '12 y 1 más son 13. Entonces 6 + 7 = 13.', vis: { t: 'parte', total: 13, a: 12, b: 1 } },
+    { txt: 'Truco: busco el doble del número pequeño y le sumo 1.', vis: { t: 'marco', a: 8, b: 9, tam: 20 } }
+  ],
+  guiada() {
+    const n = rnd(3, 9), arriba = rnd(0, 1), m = n + 1;
+    const q = arriba ? `${m} + ${n}` : `${n} + ${m}`, vis = { t: 'marco', a: n, b: m, tam: 20 };
+    return {
+      pasos: [
+        { txt: `En ${q}, ¿qué número doblo? (el pequeño)`, q: '?', r: n, ops: shuffle([n, m, n + m]), vis },
+        { txt: 'Hago el doble:', q: `${n} + ${n} = ?`, r: 2 * n, vis: { t: 'marco', a: n, b: n, tam: 20 } },
+        { txt: 'Y sumo la ficha que sobra:', q: `${2 * n} + 1 = ?`, r: 2 * n + 1, vis: { t: 'parte', total: 2 * n + 1, a: 2 * n, b: 1 } }
+      ],
+      final: { txt: 'Ahora la suma completa:', q: `${q} = ?`, r: n + m, vis }
+    };
+  },
+  item(nivel) {
+    const dif = nivel === 3 && rnd(0, 2) === 0 ? 2 : 1;
+    const n = rnd(nivel === 1 ? 3 : 4, nivel === 1 ? 7 : 9), m = n + dif, r = n + m;
+    const q = rnd(0, 1) ? `${n} + ${m}` : `${m} + ${n}`;
+    return { q, r, vis: { t: 'marco', a: n, b: m, tam: 20 }, extra: [2 * n, 2 * m, r + 1, r - 1] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Casi dobles y su resultado',
+    pares() { return shuffle([3, 4, 5, 6, 7, 8, 9]).slice(0, 6).map(n => [`${n} + ${n + 1}`, 2 * n + 1]); }
+  }
+});
+
+/* ---- js/estrategias/11-familias.js ---- */
+/* Estrategia 11 · Familias de operaciones */
+(function () {
+  // Devuelve {a, b, t} con a + b = t; a y b distintos si dist
+  function suma(nivel, dist) {
+    const max = nivel === 3 ? 20 : 10, min = nivel === 3 ? 11 : 3;
+    for (;;) {
+      const t = rnd(min, max), a = rnd(1, t - 1), b = t - a;
+      if (!dist || a !== b) return { a, b, t };
+    }
+  }
+  ESTR.add({
+    id: 'familias', orden: 11, tri: 2,
+    n: 'Familias de operaciones', ic: '👨‍👩‍👧', desc: 'Sumas y restas hermanas',
+    truco: 'Uso la suma para restar',
+    tutorial: [
+      { txt: 'Los números 3, 4 y 7 son una familia.', vis: { t: 'parte', total: 7, a: 3, b: 4 } },
+      { txt: 'Juntos: 3 + 4 = 7. Y también 4 + 3 = 7.', vis: { t: 'marco', a: 3, b: 4, tam: 10 } },
+      { txt: 'Si quito las 4 naranjas, quedan 3. Entonces 7 − 4 = 3.', vis: { t: 'marco', a: 3, b: 4, tam: 10, tachar: 4 } },
+      { txt: 'Y si quito las 3 azules, quedan 4. Entonces 7 − 3 = 4.', vis: { t: 'parte', total: 7, a: 3, b: 4, oculto: 'b' } },
+      { txt: 'Truco: si no sé restar, pienso en la suma de su familia.', vis: { t: 'parte', total: 9, a: 5, b: 4, oculto: 'a' } }
+    ],
+    guiada() {
+      const { a, b, t } = suma(2, true);
+      return {
+        pasos: [
+          { txt: `Sé que ${a} + ${b} = ${t}. ¿Cuánto es ${b} + ${a}?`, q: `${b} + ${a} = ?`, r: t, vis: { t: 'parte', total: t, a, b } },
+          { txt: `Si de ${t} quito ${b}, ¿cuántos quedan?`, q: `${t} − ${b} = ?`, r: a, vis: { t: 'parte', total: t, a, b, oculto: 'a' } }
+        ],
+        final: { txt: 'Ahora la otra resta de la familia:', q: `${t} − ${a} = ?`, r: b, vis: { t: 'parte', total: t, a, b, oculto: 'b' } }
+      };
+    },
+    item(nivel) {
+      const { a, b, t } = suma(nivel, false);
+      const quitar = rnd(0, 1), x = quitar ? a : b, r = quitar ? b : a;
+      return {
+        txt: `Si ${a} + ${b} = ${t}…`, q: `${t} − ${x} = ?`, r,
+        vis: { t: 'parte', total: t, a, b, oculto: quitar ? 'b' : 'a' },
+        extra: [t, x, t + x > 20 ? r + 2 : t + x, r + 1]
+      };
+    },
+    juego: {
+      tipo: 'parejas', meta: 'Une la suma con su resta',
+      pares() {
+        const ts = shuffle([5, 6, 7, 8, 9, 10, 11, 12]).slice(0, 6);
+        return ts.map(t => { const a = rnd(1, Math.floor((t - 1) / 2)), b = t - a; return [`${a} + ${b} = ${t}`, `${t} − ${a} = ${b}`]; });
+      }
+    }
+  });
+})();
+
+/* ---- js/estrategias/12-completar10.js ---- */
+/* Estrategia 12 · Completar la decena (8 + 5 = 8 + 2 + 3) */
+ESTR.add({
+  id: 'completar10', orden: 12, tri: 3,
+  n: 'Completar la decena', ic: '🧩', desc: 'Primero lleno el 10',
+  truco: 'Primero lleno la decena',
+  tutorial: [
+    { txt: 'Quiero sumar 8 + 5. Pongo 8 fichas azules en el marco.', vis: { t: 'marco', a: 8, tam: 20 } },
+    { txt: 'Al 8 le faltan 2 para llegar a 10. Las cojo del 5.', vis: { t: 'marco', a: 8, b: 2, tam: 20 } },
+    { txt: 'Ya tengo un 10 lleno. Del 5 me sobran 3.', vis: { t: 'marco', a: 8, b: 5, tam: 20 } },
+    { txt: '10 y 3 son 13. Así 8 + 5 = 13.', vis: { t: 'marco', a: 10, b: 3, tam: 20 } },
+    { txt: 'Truco: primero lleno la decena y después sumo lo que sobra.', vis: { t: 'marco', a: 9, b: 4, tam: 20 } }
+  ],
+  guiada() {
+    const a = rnd(6, 9), f = 10 - a, b = rnd(Math.max(f + 1, 11 - a), Math.min(9, 18 - a)), s = b - f;
+    return {
+      pasos: [
+        { txt: `¿Cuánto le falta al ${a} para llegar a 10?`, q: `${a} + ? = 10`, r: f, vis: { t: 'marco', a, tam: 20 } },
+        { txt: `Del ${b} cojo ${f}. ¿Cuántos me sobran?`, q: `${b} = ${f} + ?`, r: s, vis: { t: 'marco', a, b, tam: 20 } },
+        { txt: 'Ahora sumo 10 y lo que sobra:', q: `10 + ${s} = ?`, r: 10 + s, vis: { t: 'marco', a: 10, b: s, tam: 20 } }
+      ],
+      final: { txt: 'Y ya tengo la suma:', q: `${a} + ${b} = ?`, r: a + b, vis: { t: 'marco', a, b, tam: 20 } }
+    };
+  },
+  item(nivel) {
+    let a, b;
+    if (nivel === 1) { a = rnd(8, 9); b = rnd(Math.max(3, 11 - a), 6); }
+    else if (nivel === 2) { a = rnd(6, 9); b = rnd(Math.max(2, 11 - a), Math.min(9, 18 - a)); }
+    else { a = rnd(6, 9); b = rnd(Math.max(5, 11 - a), 9); }
+    const r = a + b, f = 10 - a;
+    return { q: `${a} + ${b} = ?`, r, vis: { t: 'marco', a, b, tam: 20 }, extra: [10 + b, r + 1, r - 1, a + f] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Busca cada suma con su resultado',
+    pares() {
+      const rs = shuffle([11, 12, 13, 14, 15, 16, 17, 18]).slice(0, 6);
+      return rs.map(r => { const a = pick([6, 7, 8, 9].filter(x => r - x >= 2 && r - x <= 9 && r - x > 10 - x)); return [`${a} + ${r - a}`, String(r)]; });
+    }
+  }
+});
+
+/* ---- js/estrategias/13-sumar9.js ---- */
+/* Estrategia 13 · Sumar 9 (sumo 10 y quito 1) */
+const _rectaS9 = (n) => { if (n < 20) return { desde: 0, hasta: 30 }; const d = Math.floor(n / 10) * 10; return { desde: d, hasta: d + 20 }; };
+ESTR.add({
+  id: 'sumar9', orden: 13, tri: 3,
+  n: 'Sumar 9', ic: '9️⃣', desc: 'Sumo 10 y quito 1',
+  truco: 'Sumo 10 y quito 1',
+  tutorial: [
+    { txt: 'El 9 es casi un 10. Le falta solo 1.', vis: { t: 'marco', a: 9 } },
+    { txt: 'Quiero sumar 6 + 9. Empiezo en el 6 de la recta.', vis: { t: 'recta', desde: 0, hasta: 30, inicio: 6, saltos: [] } },
+    { txt: 'Sumar 10 es fácil: salto de 6 a 16.', vis: { t: 'recta', desde: 0, hasta: 30, inicio: 6, saltos: [10] } },
+    { txt: 'Pero solo quería sumar 9, así que quito 1: 16 − 1 = 15.', vis: { t: 'recta', desde: 0, hasta: 30, inicio: 6, saltos: [10, -1] } },
+    { txt: 'Truco: para sumar 9, sumo 10 y quito 1.', vis: { t: 'recta', desde: 0, hasta: 30, inicio: 8, saltos: [10, -1] } }
+  ],
+  guiada() {
+    const n = rnd(4, 9);
+    return {
+      pasos: [
+        { txt: `Primero sumo 10 al ${n}:`, q: `${n} + 10 = ?`, r: n + 10, vis: { t: 'recta', desde: 0, hasta: 30, inicio: n, saltos: [10] } },
+        { txt: `Me pasé 1, así que lo quito:`, q: `${n + 10} − 1 = ?`, r: n + 9, vis: { t: 'recta', desde: 0, hasta: 30, inicio: n, saltos: [10, -1] } }
+      ],
+      final: { txt: 'Y ya tengo la suma:', q: `${n} + 9 = ?`, r: n + 9, vis: { t: 'recta', desde: 0, hasta: 30, inicio: n, saltos: [10, -1] } }
+    };
+  },
+  item(nivel) {
+    const n = nivel === 1 ? rnd(4, 9) : nivel === 2 ? rnd(11, 29) : rnd(21, 40);
+    const r = n + 9, rc = _rectaS9(n);
+    const q = nivel > 1 && rnd(0, 1) ? `9 + ${n} = ?` : `${n} + 9 = ?`;
+    return { q, r, vis: { t: 'recta', desde: rc.desde, hasta: rc.hasta, inicio: n, saltos: [10, -1] }, extra: [n + 10, n + 8, r + 2, n + 11] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Busca cada suma con su resultado',
+    pares() {
+      const ns = shuffle([4, 5, 6, 7, 8, 9, 12, 14, 15, 17, 23, 25]).slice(0, 6);
+      return ns.map(n => [`${n} + 9`, String(n + 9)]);
+    }
+  }
+});
+
+/* ---- js/estrategias/14-restarsumando.js ---- */
+/* Estrategia 14 · Restar pensando en sumar (12 − 9: ¿cuánto falta de 9 a 12?) */
+const _recRS = (s, t) => ({ t: 'recta', desde: 0, hasta: 20, inicio: s, saltos: [10 - s, t - 10] });
+ESTR.add({
+  id: 'restarsumando', orden: 14, tri: 3,
+  n: 'Restar sumando', ic: '🔁', desc: '¿Cuánto falta para llegar?',
+  truco: 'Cuento lo que falta para llegar',
+  tutorial: [
+    { txt: 'Quiero restar 12 − 9. Puedo pensar: ¿cuánto falta de 9 a 12?', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [] } },
+    { txt: 'De 9 a 10 falta 1. Es un saltito.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [1] } },
+    { txt: 'De 10 a 12 faltan 2. Es otro salto.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [1, 2] } },
+    { txt: 'Junto los saltos: 1 + 2 = 3. Entonces 12 − 9 = 3.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [1, 2] } },
+    { txt: 'Truco: para restar, cuento cuánto falta para llegar.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 8, saltos: [2, 4] } }
+  ],
+  guiada() {
+    const s = rnd(7, 9), t = rnd(11, 18), a = 10 - s, b = t - 10;
+    return {
+      pasos: [
+        { txt: `¿Cuánto falta del ${s} al 10?`, q: `${s} + ? = 10`, r: a, vis: { t: 'recta', desde: 0, hasta: 20, inicio: s, saltos: [a] } },
+        { txt: `¿Y cuánto falta del 10 al ${t}?`, q: `10 + ? = ${t}`, r: b, vis: { t: 'recta', desde: 0, hasta: 20, inicio: s, saltos: [a, b] } }
+      ],
+      final: { txt: `Junto los saltos y sé cuánto es:`, q: `${t} − ${s} = ?`, r: t - s, vis: _recRS(s, t) }
+    };
+  },
+  item(nivel) {
+    const s = nivel === 1 ? rnd(8, 9) : rnd(7, 9), t = nivel === 1 ? rnd(11, 14) : rnd(11, 18), r = t - s;
+    const q = nivel > 1 && rnd(0, 2) === 0 ? `${s} + ? = ${t}` : `${t} − ${s} = ?`;
+    return { q, r, vis: _recRS(s, t), extra: [r + 1, r - 1, t - 10, 10 - s, t - s + 2].filter(x => x > 0) };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Busca cada resta con su resultado',
+    pares() {
+      return shuffle([2, 3, 4, 5, 6, 7, 8, 9, 10, 11]).slice(0, 6).map(r => {
+        const s = pick([7, 8, 9].filter(x => r + x >= 11 && r + x <= 18));
+        return [`${r + s} − ${s}`, String(r)];
+      });
+    }
+  }
+});
+
+/* ---- js/estrategias/15-masmenos10.js ---- */
+/* Estrategia 15 · Sumar y restar 10 (solo cambia la decena) */
+const _recMM = (a) => { const d = Math.floor(a / 10) * 10; return { t: 'recta', desde: d - 10, hasta: d + 10, inicio: a, saltos: [-10] }; };
+const _visMM = (a, suma) => suma ? { t: 'decenas', grupos: [{ d: Math.floor(a / 10), u: a % 10 }, { d: 1, u: 0 }] } : _recMM(a);
+ESTR.add({
+  id: 'masmenos10', orden: 15, tri: 3,
+  n: 'Sumar y restar 10', ic: '🔟', desc: 'Solo cambia la decena',
+  truco: 'Cambio solo las decenas',
+  tutorial: [
+    { txt: 'El 34 son 3 barras de diez y 4 cubitos.', vis: { t: 'decenas', grupos: [{ d: 3, u: 4 }] } },
+    { txt: 'Si sumo 10, añado una barra más.', vis: { t: 'decenas', grupos: [{ d: 3, u: 4 }, { d: 1, u: 0 }] } },
+    { txt: 'Ahora hay 4 barras y los mismos 4 cubitos: 34 + 10 = 44.', vis: { t: 'decenas', grupos: [{ d: 4, u: 4 }] } },
+    { txt: 'Si resto 10, quito una barra. 57 − 10 = 47. ¡Los cubitos no cambian!', vis: { t: 'recta', desde: 40, hasta: 60, inicio: 57, saltos: [-10] } },
+    { txt: 'Truco: al sumar o restar 10, solo cambia el número de las decenas.', vis: { t: 'decenas', grupos: [{ d: 2, u: 6 }, { d: 1, u: 0 }] } }
+  ],
+  guiada() {
+    const suma = rnd(0, 1) === 1, a = suma ? rnd(11, 89) : rnd(21, 99), d = Math.floor(a / 10), u = a % 10, r = suma ? a + 10 : a - 10;
+    return {
+      pasos: [
+        { txt: `¿Cuántas decenas tiene el ${a}?`, q: '?', r: d, vis: { t: 'decenas', grupos: [{ d, u }] } },
+        { txt: suma ? 'Sumo una decena más:' : 'Quito una decena:', q: suma ? `${d} + 1 = ?` : `${d} − 1 = ?`, r: suma ? d + 1 : d - 1, vis: _visMM(a, suma) }
+      ],
+      final: { txt: `Las unidades siguen siendo ${u}:`, q: suma ? `${a} + 10 = ?` : `${a} − 10 = ?`, r, vis: _visMM(a, suma) }
+    };
+  },
+  item(nivel) {
+    const suma = rnd(0, 1) === 1, a = nivel === 1 ? (suma ? rnd(11, 69) : rnd(21, 69)) : nivel === 2 ? (suma ? rnd(11, 89) : rnd(21, 89)) : (suma ? rnd(12, 89) : rnd(22, 99));
+    const r = suma ? a + 10 : a - 10;
+    const q = suma ? (nivel === 3 && rnd(0, 1) ? `10 + ${a} = ?` : `${a} + 10 = ?`) : `${a} − 10 = ?`;
+    return { q, r, vis: _visMM(a, suma), extra: suma ? [a + 1, a + 20, r + 1, r - 1] : [a - 1, a - 20, r + 1, r - 1] };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Busca cada cuenta con su resultado',
+    pares() {
+      const out = [], usados = new Set();
+      while (out.length < 6) {
+        const suma = rnd(0, 1) === 1, a = suma ? rnd(11, 89) : rnd(21, 99), r = suma ? a + 10 : a - 10;
+        if (usados.has(r) || usados.has(a)) continue;
+        usados.add(r); usados.add(a); out.push([`${a} ${suma ? '+' : '−'} 10`, String(r)]);
+      }
+      return out;
+    }
+  }
+});
+
+/* ---- js/estrategias/16-decenas.js ---- */
+/* Estrategia 16 · Decenas completas (30 + 20 = 3 decenas + 2 decenas) */
+ESTR.add({
+  id: 'decenas', orden: 16, tri: 3,
+  n: 'Decenas completas', ic: '🧱', desc: 'Sumo y resto decenas',
+  truco: 'Cuento decenas como si fueran unidades',
+  tutorial: [
+    { txt: 'El 30 son 3 barras de diez. Son 3 decenas.', vis: { t: 'decenas', grupos: [{ d: 3 }] } },
+    { txt: 'El 20 son 2 barras de diez. Son 2 decenas.', vis: { t: 'decenas', grupos: [{ d: 2 }] } },
+    { txt: 'Para sumar 30 + 20, junto las barras: 3 decenas y 2 decenas.', vis: { t: 'decenas', grupos: [{ d: 3 }, { d: 2 }] } },
+    { txt: '3 + 2 = 5, así que son 5 decenas. ¡30 + 20 = 50!', vis: { t: 'decenas', grupos: [{ d: 5 }] } },
+    { txt: 'Con las restas pasa igual: 70 − 30 es 7 decenas menos 3 decenas: 4 decenas, 40.', vis: { t: 'decenas', grupos: [{ d: 7 }], tachar: 3 } }
+  ],
+  guiada() {
+    const suma = rnd(0, 1) === 1;
+    let x, y;
+    if (suma) { x = rnd(1, 7); y = rnd(1, 9 - x); } else { x = rnd(3, 9); y = rnd(1, x - 1); }
+    const r = suma ? x + y : x - y, vis = suma ? { t: 'decenas', grupos: [{ d: x }, { d: y }] } : { t: 'decenas', grupos: [{ d: x }], tachar: y };
+    return {
+      pasos: [
+        { txt: 'Cuento las barras de diez:', q: `${x * 10} son ? decenas`, r: x, vis: { t: 'decenas', grupos: [{ d: x }] } },
+        { txt: suma ? `${y * 10} son ${y} decenas. Las junto:` : `${y * 10} son ${y} decenas. Las quito:`, q: suma ? `${x} + ${y} = ?` : `${x} − ${y} = ?`, r, vis }
+      ],
+      final: { txt: 'Ahora lo digo en decenas completas:', q: suma ? `${x * 10} + ${y * 10} = ?` : `${x * 10} − ${y * 10} = ?`, r: r * 10, vis }
+    };
+  },
+  item(nivel) {
+    const suma = rnd(0, 1) === 1;
+    let x, y;
+    if (nivel === 1) { if (suma) { x = rnd(1, 4); y = rnd(1, 5 - x); } else { x = rnd(3, 6); y = rnd(1, x - 1); } }
+    else if (suma) { x = rnd(1, 7); y = rnd(1, 9 - x); } else { x = rnd(3, 9); y = rnd(1, x - 1); }
+    const r = (suma ? x + y : x - y) * 10;
+    const vis = suma ? { t: 'decenas', grupos: [{ d: x }, { d: y }] } : { t: 'decenas', grupos: [{ d: x }], tachar: y };
+    let q = suma ? `${x * 10} + ${y * 10} = ?` : `${x * 10} − ${y * 10} = ?`;
+    if (nivel === 3 && rnd(0, 2) === 0) q = suma ? `${x * 10} + ? = ${r}` : `${x * 10} − ? = ${r}`;
+    const rr = nivel === 3 && q.includes('? =') ? y * 10 : r;
+    return { q, r: rr, vis, extra: suma ? [x + y, rr + 10, rr - 10, rr + 1].filter(v => v > 0) : [x - y, rr + 10, rr - 10, rr + 1].filter(v => v > 0) };
+  },
+  juego: {
+    tipo: 'parejas', meta: 'Busca cada cuenta con su resultado',
+    pares() {
+      return shuffle([2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 6).map(t => {
+        if (t <= 8 && rnd(0, 1)) { const y = rnd(1, 9 - t); return [`${(t + y) * 10} − ${y * 10}`, String(t * 10)]; }
+        const x = rnd(1, t - 1); return [`${x * 10} + ${(t - x) * 10}`, String(t * 10)];
+      });
+    }
+  }
+});
+
+/* ---- js/zz-arranque.js ---- */
+/* ===== Arranque ===== */
+cargar();
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => pintar());
+pintar();
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
