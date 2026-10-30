@@ -5,7 +5,7 @@ SC.tut = () => {
   const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1;
   setTimeout(() => decir(s.txt), 300);
   return `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button>
-  <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--acx)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
+  <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--aci)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
   <div class="card pop"><div class="enun"><span>${esc(e.n)}</span><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>
   <div class="vis">${VIS.dibujar(s.vis)}</div></div>
   <div class="say">${mascota(66)}<div class="bub tutt" style="text-align:left">${esc(s.txt)}</div></div>

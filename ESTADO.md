@@ -25,6 +25,7 @@
 - [x] Mascota piedrecita animada (flota, parpadea, cierra los ojos al alegrarse)
 - [x] Inicio, bienvenida, mapa, truco, ejercicios y resultados al estilo de Lectori y Barri
 - [x] Iconos de línea y glifos propios por estrategia; barras del móvil del color del fondo
+- [x] Paleta «Sol»: mascota amarilla, interfaz gris azulada y azul marino; icono nuevo
 - [ ] Nombre de la mascota
 
 ## Fase 3 · Aula

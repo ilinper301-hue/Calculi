@@ -8,7 +8,7 @@ function temaOscuro() { const t = EST.ajustes.tema; return t === 'dark' || (t ==
 function aplicarTema() {
   document.documentElement.dataset.theme = temaOscuro() ? 'dark' : 'light';
   // Barras del sistema (arriba y abajo en el móvil) del mismo color que el fondo: así no se ven bandas.
-  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#FFF8F2';
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#F6F7FB';
   let m = document.querySelector('meta[name="theme-color"]'); if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
   m.content = bg; document.body.style.background = bg;
 }

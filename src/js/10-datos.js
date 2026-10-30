@@ -1,7 +1,7 @@
 /* ===== Datos guardados (solo claves con prefijo calc.: comparte dominio con Lectori y Barri) ===== */
 const KEY = 'calc.v1', VERSION_DATOS = 1;
 /* Colores de avatar (inicial del nombre sobre color, como en Barri) */
-const AVATARES = [['', '#EA580C'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#475569']];
+const AVATARES = [['', '#1E2A5A'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#EA580C']];
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
 function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false }, gmt: 0 }; }

@@ -22,13 +22,14 @@ Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/Calculi/` (lo q
    - Colección `calculo` → documento `{uid}` (`meta`, `ts`) → subcolección `alu` (un documento por alumno: `{d: JSON, mt}`). Mismo patrón y misma lógica de fusión (`syncNow`, `syncSoon` a los 15 s, `cleanX` al leer, `del` para borrados) que Lectori/Barri.
    - Las reglas de Firestore deben permitir `calculo/{uid}/**` solo al propio `uid`.
 3. **Diseño**: zona infantil con Fredoka, botones grandes y textos cortos; Zona del tutor sobria con Inter (mismo estilo que las otras dos). Tema claro y oscuro.
-   - Color propio: naranja (`--ac:#EA580C`, oscuro `#FB923C`), distinto del verde azulado de Lectori y el morado de Barri.
+   - Paleta «Sol»: mascota piedrecita amarilla (`--m1:#FBBF24`, punto azul `#3B82F6`), interfaz gris azulada con botones azul marino (`--ac:#1E2A5A`) y tarjeta principal amarilla. En oscuro, los botones pasan a amarillo. Distinta del verde azulado de Lectori y el morado de Barri.
+   - Colores de la mascota en variables `--m1…--mlengua`: se cambian en un solo sitio.
    - Modo Docente con el degradado común del ecosistema.
 4. **Mismas piezas**: perfiles (Familias / Docente), Zona del tutor con PIN, Modo Docente (todo abierto, sin guardar), copia de seguridad JSON, modo proyector.
 5. **Datos de menores**: no se envía nada a servicios nuevos sin preguntarme. Si cambia la estructura de datos, añade una migración: nunca se pierde el progreso.
 
 ## Estructura
-- `src/estilos.css` y `src/js/`: `00-util.js` (ayudas, voz, sonidos), `10-datos.js` (guardado y migraciones), `20-visual.js` (dibujos SVG: marco, puntos, parte, recta, decenas, dedos), `30-motor.js` (contrato de una estrategia, desbloqueo, repaso), `40-pantallas.js`, `zz-arranque.js`.
+- `src/estilos.css` y `src/js/`: `00-util.js` (ayudas, voz, sonidos), `10-datos.js` (guardado y migraciones), `20-visual.js` (dibujos SVG: marco, puntos, parte, recta, decenas, dedos), `15-iconos.js` (iconos de línea, glifos y mascota), `30-motor.js` (contrato de una estrategia, desbloqueo, repaso), `40-inicio.js` (cabecera, bienvenida, inicio, mapa, logros), `45-ejercicio.js` (tutorial, ejercicios, juego, resultado), `50-tutor.js` (PIN y Zona del tutor), `zz-arranque.js`.
 - `src/js/estrategias/NN-id.js`: una estrategia por archivo; `04-amigos10.js` es la plantilla de referencia.
 - `tools/build.py` une todo en `index.html` (raíz, la que publica Pages). No editar `index.html` a mano.
 - `sw.js`, `manifest.webmanifest`, `icon-192.png`, `icon-512.png`, `fonts/` (copiadas de Barri).

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Calculi: cálculo mental</title>
 <meta name="description" content="Aprende trucos de cálculo mental y practícalos jugando.">
-<meta name="theme-color" content="#FFF8F2">
+<meta name="theme-color" content="#F6F7FB">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,20 +19,21 @@
 
 /* ================= Colores (naranja propio de Calculi) ================= */
 :root{
-  --bg:#FFF8F2;--card:#fff;--soft:#FFF1E6;--bd:#F1E1D2;--bd2:#E7CFBA;--tx:#2A1C14;--mu:#7C6758;
-  --ac:#EA580C;--acx:#C2410C;--acs:#FFEDD5;--on:#fff;--hero1:#F97316;--hero2:#FB923C;--onhero:#2A1406;
-  --pill:#F59E0B;--onpill:#2A1C14;--ok:#15803D;--okbg:#DCFCE7;--no:#DC2626;--nobg:#FEE2E2;--warn:#B45309;--warnbg:#FEF3C7;
-  --f1:#2563EB;--f2:#EA580C;--vacio:#F7EEE6;--marco:#6B5A4E;
+  --bg:#F6F7FB;--card:#fff;--soft:#EEF0F7;--bd:#E0E4EF;--bd2:#CBD1E1;--tx:#151A2E;--mu:#5C6380;
+  --ac:#1E2A5A;--acx:#141D45;--acs:#FEF3C7;--aci:#B45309;--on:#fff;--hero1:#FBBF24;--hero2:#FCD34D;--onhero:#1E1A0A;
+  --pill:#FBBF24;--onpill:#1E1A0A;--ok:#15803D;--okbg:#DCFCE7;--no:#DC2626;--nobg:#FEE2E2;--warn:#B45309;--warnbg:#FEF3C7;
+  --f1:#2563EB;--f2:#F59E0B;--vacio:#F1F3F9;--marco:#4D546E;
   --t1:#1D4ED8;--t1b:#DBEAFE;--t2:#15803D;--t2b:#DCFCE7;--t3:#7C3AED;--t3b:#EDE9FE;
   --md:linear-gradient(135deg,#7C3AED,#14B8A6);
   --fd:'Fredoka',system-ui,sans-serif;--fi:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  --sh:0 1px 2px rgba(74,40,16,.05),0 4px 14px rgba(74,40,16,.05);
+  --sh:0 1px 2px rgba(21,26,46,.04),0 4px 14px rgba(21,26,46,.05);
+  /* Mascota «Sol»: piedrecita amarilla con punto azul */ --m1:#FBBF24;--m2:#FDE68A;--m3:#D97706;--mdot:#3B82F6;--mboca:#78350F;--mlengua:#FCA5A5;
 }
 :root[data-theme="dark"]{
-  --bg:#17110D;--card:#221913;--soft:#2C211A;--bd:#3A2C22;--bd2:#4A382B;--tx:#F7ECE3;--mu:#BCA594;
-  --ac:#FB923C;--acx:#FDBA74;--acs:rgba(251,146,60,.15);--on:#1A120D;--hero1:#F97316;--hero2:#FB923C;--onhero:#1A0E05;
+  --bg:#0F1324;--card:#1A1F35;--soft:#232945;--bd:#2C3352;--bd2:#3A4266;--tx:#EEF0F8;--mu:#A5ADCB;
+  --ac:#FBBF24;--acx:#D97706;--acs:rgba(251,191,36,.14);--aci:#FCD34D;--on:#1E1A0A;--hero1:#FBBF24;--hero2:#FCD34D;--onhero:#1E1A0A;
   --ok:#4ADE80;--okbg:rgba(74,222,128,.14);--no:#F87171;--nobg:rgba(248,113,113,.14);--warn:#FCD34D;--warnbg:rgba(252,211,77,.12);
-  --f1:#60A5FA;--f2:#FB923C;--vacio:#2E231B;--marco:#D2C1B3;
+  --f1:#60A5FA;--f2:#FBBF24;--vacio:#232945;--marco:#B9C0DA;
   --t1:#93C5FD;--t1b:rgba(96,165,250,.14);--t2:#86EFAC;--t2b:rgba(74,222,128,.13);--t3:#C4B5FD;--t3b:rgba(167,139,250,.15);
   --sh:none;
 }
@@ -56,7 +57,7 @@ h1,h2,h3{margin:0;font-weight:500}
 .rnd:active,.lc:active,.mw:active,.lvr:active,.opc:active,.kp button:active,.bt:active,.row:active{transform:scale(.97)}
 .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font:600 1.05rem var(--fd);box-shadow:0 2px 6px rgba(0,0,0,.12);flex:none}
 .pill{display:flex;align-items:center;gap:6px;height:42px;padding:0 14px;border-radius:21px;background:var(--pill);color:var(--onpill);font-weight:600;font-size:1.05rem}
-.back{display:flex;align-items:center;gap:4px;color:var(--acx);font-size:1.1rem;padding:6px 2px;align-self:flex-start}
+.back{display:flex;align-items:center;gap:4px;color:var(--ac);font-size:1.1rem;padding:6px 2px;align-self:flex-start}
 
 /* ================= Mascota ================= */
 .mas{overflow:visible;color:var(--tx)}
@@ -83,17 +84,17 @@ h1,h2,h3{margin:0;font-weight:500}
 .gcard{background:var(--card);border:2px solid var(--bd);border-radius:28px;padding:22px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;box-shadow:var(--sh)}
 .gcard p{margin:0}
 .lc{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:26px;border:2px solid var(--bd);background:var(--card);box-shadow:var(--sh);transition:transform .08s}
-.lc .ico{width:54px;height:54px;border-radius:16px;background:var(--acs);color:var(--acx);display:grid;place-items:center;flex:none;font-weight:600;font-size:1.25rem}
+.lc .ico{width:54px;height:54px;border-radius:16px;background:var(--acs);color:var(--aci);display:grid;place-items:center;flex:none;font-weight:600;font-size:1.25rem}
 .lc .tx2{flex:1;min-width:0;display:flex;flex-direction:column}
 .lc b{font-weight:500;font-size:1.28rem;line-height:1.15}
 .lc small{font-size:.97rem;color:var(--mu);line-height:1.3;margin-top:2px}
 .lc.hero{background:linear-gradient(135deg,var(--hero1),var(--hero2));border-color:transparent;color:var(--onhero)}
-.lc.hero .ico{background:rgba(42,20,6,.14);color:var(--onhero)}
-.lc.hero small{color:rgba(42,20,6,.78)}
+.lc.hero .ico{background:rgba(30,26,10,.12);color:var(--onhero)}
+.lc.hero small{color:rgba(30,26,10,.75)}
 .lc.md{background:var(--md);border-color:transparent;color:#fff}.lc.md .ico{background:rgba(255,255,255,.2);color:#fff}.lc.md small{color:rgba(255,255,255,.88)}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .hc{display:flex;align-items:center;gap:10px;padding:14px;border-radius:22px;border:2px solid var(--bd);background:var(--card);font-size:1.05rem;text-align:left;box-shadow:var(--sh)}
-.hc .i{color:var(--acx)}
+.hc .i{color:var(--aci)}
 .tzb{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:24px;border:2px dashed var(--bd2);color:var(--mu);font-size:1.05rem}
 
 /* ================= Inicio ================= */
@@ -116,7 +117,7 @@ h1,h2,h3{margin:0;font-weight:500}
 .mw.t2{background:var(--t2b)}.mw.t2 .gl{background:#16A34A}.mw.t2 .br i{background:#16A34A}
 .mw.t3{background:var(--t3b)}.mw.t3 .gl{background:#7C3AED}.mw.t3 .br i{background:#7C3AED}
 .mw.lock{opacity:.5}.mw.lock .gl{background:var(--mu)!important}
-.mw.sug{outline:3px solid var(--ac);outline-offset:2px}
+.mw.sug{outline:3px solid var(--pill);outline-offset:2px}
 .mw .lk{position:absolute;top:10px;right:10px;color:var(--mu)}
 :root[data-theme="dark"] .mw .br{background:rgba(255,255,255,.1)}
 
@@ -128,7 +129,7 @@ h1,h2,h3{margin:0;font-weight:500}
 .shead small{color:var(--mu);font-size:1rem}
 .gl.t1{background:#2563EB}.gl.t2{background:#16A34A}.gl.t3{background:#7C3AED}
 .lvr{display:flex;align-items:center;gap:14px;padding:14px 14px 14px 16px;border-radius:24px;border:2px solid var(--bd);background:var(--card);text-align:left;width:100%;box-shadow:var(--sh)}
-.lvr .n{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--acs);color:var(--acx);font-weight:600;flex:none}
+.lvr .n{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--acs);color:var(--aci);font-weight:600;flex:none}
 .lvr .n.ok{background:var(--ok);color:#fff}
 .lvr .tx2{flex:1;min-width:0}.lvr b{font-weight:500;font-size:1.15rem;display:block}.lvr small{color:var(--mu);font-size:.92rem}
 .lvr .go{width:44px;height:44px;border-radius:50%;background:var(--ac);color:var(--on);display:grid;place-items:center;flex:none}
@@ -137,16 +138,16 @@ h1,h2,h3{margin:0;font-weight:500}
 /* ================= Ejercicio ================= */
 .top{display:flex;align-items:center;gap:10px}
 .pg{flex:1;height:12px;border-radius:6px;background:var(--bd);overflow:hidden}
-.pg i{display:block;height:100%;background:var(--ac);border-radius:6px;transition:width .35s}
+.pg i{display:block;height:100%;background:var(--pill);border-radius:6px;transition:width .35s}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chips span{font-size:.8rem;padding:4px 10px;border-radius:12px;background:var(--soft);color:var(--mu)}
 .chips span.on{background:var(--ac);color:var(--on)}
 .card{background:var(--card);border:2px solid var(--bd);border-radius:24px;padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--sh)}
 .card .enun{display:flex;align-items:center;gap:8px;width:100%;color:var(--mu);font-size:1.05rem}
 .card .enun span{flex:1}
-.voz{width:38px;height:38px;border-radius:50%;background:var(--soft);color:var(--acx);display:grid;place-items:center;flex:none}
+.voz{width:38px;height:38px;border-radius:50%;background:var(--acs);color:var(--aci);display:grid;place-items:center;flex:none}
 .op{font-size:clamp(2.5rem,11vw,3.9rem);font-weight:500;letter-spacing:.5px;text-align:center;line-height:1.1}
-.op .hueco{display:inline-block;min-width:1.25em;padding:0 .12em;border-radius:14px;background:var(--acs);color:var(--acx);box-shadow:inset 0 -4px 0 var(--ac);margin:0 .05em}
+.op .hueco{display:inline-block;min-width:1.25em;padding:0 .12em;border-radius:14px;background:var(--acs);color:var(--tx);box-shadow:inset 0 -4px 0 var(--ac);margin:0 .05em}
 .op .hueco.ok{background:var(--okbg);color:var(--ok);box-shadow:inset 0 -4px 0 var(--ok)}
 .op .hueco.no{background:var(--nobg);color:var(--no);box-shadow:inset 0 -4px 0 var(--no);animation:temb .3s}
 .vis{display:flex;justify-content:center;width:100%}.vis svg{max-width:100%;height:auto}
@@ -169,7 +170,7 @@ h1,h2,h3{margin:0;font-weight:500}
 @keyframes temb{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 
 /* ================= Tutorial ================= */
-.dots{display:flex;gap:6px;justify-content:center}.dots i{width:24px;height:6px;border-radius:3px;background:var(--bd)}.dots i.on{background:var(--ac)}
+.dots{display:flex;gap:6px;justify-content:center}.dots i{width:24px;height:6px;border-radius:3px;background:var(--bd)}.dots i.on{background:var(--pill)}
 .tutt{font-size:clamp(1.2rem,4.6vw,1.45rem);line-height:1.35;text-align:center}
 
 /* ================= Botones ================= */
@@ -198,8 +199,8 @@ h1,h2,h3{margin:0;font-weight:500}
 .inp{font:inherit;font-size:1.15rem;padding:13px 16px;border-radius:16px;border:2px solid var(--bd);background:var(--card);color:var(--tx);width:100%;-webkit-user-select:text;user-select:text}
 .inp:focus{outline:0;border-color:var(--ac)}
 .prf{display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:20px;border:2px solid var(--bd);width:100%;background:var(--card)}
-.prf .i{color:var(--acx)}.prf b{display:block;font-size:1.15rem;font-weight:500}.prf small{color:var(--mu);font-size:.92rem}
-.steps{display:flex;gap:6px;justify-content:center}.steps i{width:22px;height:5px;border-radius:3px;background:var(--bd)}.steps i.on{background:var(--ac)}
+.prf .i{color:var(--aci)}.prf b{display:block;font-size:1.15rem;font-weight:500}.prf small{color:var(--mu);font-size:.92rem}
+.steps{display:flex;gap:6px;justify-content:center}.steps i{width:22px;height:5px;border-radius:3px;background:var(--bd)}.steps i.on{background:var(--pill)}
 
 /* ================= ¿Quién juega? ================= */
 .quien{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
@@ -254,9 +255,9 @@ h1,h2,h3{margin:0;font-weight:500}
 
 /* PIN */
 .pinw{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
-.pinw .lk{width:52px;height:52px;border-radius:16px;background:var(--acs);color:var(--acx);display:grid;place-items:center}
+.pinw .lk{width:52px;height:52px;border-radius:16px;background:var(--acs);color:var(--aci);display:grid;place-items:center}
 .pinw h2{font:600 1.35rem var(--fi)}.pinw p{margin:0;color:var(--mu);font-size:.9rem;max-width:320px}
-.pd{display:flex;gap:14px;margin:6px 0}.pd i{width:18px;height:18px;border-radius:50%;border:2px solid var(--ac)}.pd i.f{background:var(--ac)}
+.pd{display:flex;gap:14px;margin:6px 0}.pd i{width:18px;height:18px;border-radius:50%;border:2px solid var(--tx)}.pd i.f{background:var(--tx)}
 .pd.mal{animation:temb .35s}
 .pk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:300px}
 .pk button{height:54px;border-radius:12px;border:1px solid var(--bd);background:var(--card);font:500 1.35rem var(--fi);display:grid;place-items:center}
@@ -296,6 +297,7 @@ h1,h2,h3{margin:0;font-weight:500}
 @media (orientation:landscape) and (min-width:820px){#app[data-sc="ej"] .ej-lado{display:grid;grid-template-columns:1.1fr 1fr;align-items:center}#app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:0}}
 #app[data-sc="tut"] .vis svg{width:100%;max-width:480px;max-height:46vh}
 #app[data-sc="ej"] .vis svg{width:100%;max-width:380px;max-height:30vh}
+:root[data-theme="dark"] .av{box-shadow:0 0 0 2px var(--bd2)}
 </style>
 </head>
 <body>
@@ -354,7 +356,7 @@ const SON = {
 /* ===== Datos guardados (solo claves con prefijo calc.: comparte dominio con Lectori y Barri) ===== */
 const KEY = 'calc.v1', VERSION_DATOS = 1;
 /* Colores de avatar (inicial del nombre sobre color, como en Barri) */
-const AVATARES = [['', '#EA580C'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#475569']];
+const AVATARES = [['', '#1E2A5A'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#EA580C']];
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
 function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false }, gmt: 0 }; }
@@ -483,19 +485,19 @@ function mascota(tam = 120, estado = 'normal') {
     ? `<path d="M${cx - 14} ${cy + 4}Q${cx} ${cy - 13} ${cx + 14} ${cy + 4}" fill="none" stroke="#1B1F5C" stroke-width="7" stroke-linecap="round"/>`
     : `<g class="ojo"><circle cx="${cx}" cy="${cy}" r="17" fill="#fff"/><circle cx="${cx + mira[0]}" cy="${cy + mira[1]}" r="10.5" fill="#1B1F5C"/><circle cx="${cx + mira[0] - 4}" cy="${cy + mira[1] - 4.5}" r="3.6" fill="#fff"/></g>`;
   const boca = feliz
-    ? '<path d="M78 124Q100 150 122 124Z" fill="#7A2A0C"/><path d="M89 135Q100 129 111 135Q106 142 100 142Q94 142 89 135Z" fill="#FDBA74"/>'
-    : estado === 'piensa' ? '<path d="M90 130Q100 126 110 130" fill="none" stroke="#7A2A0C" stroke-width="6" stroke-linecap="round"/>'
-    : '<path d="M80 122Q100 144 120 122Z" fill="#7A2A0C"/><path d="M90 133Q100 128 110 133Q105 139 100 139Q95 139 90 133Z" fill="#FDBA74"/>';
+    ? '<path d="M78 124Q100 150 122 124Z" fill="var(--mboca)"/><path d="M89 135Q100 129 111 135Q106 142 100 142Q94 142 89 135Z" fill="var(--mlengua)"/>'
+    : estado === 'piensa' ? '<path d="M90 130Q100 126 110 130" fill="none" stroke="var(--mboca)" stroke-width="6" stroke-linecap="round"/>'
+    : '<path d="M80 122Q100 144 120 122Z" fill="var(--mboca)"/><path d="M90 133Q100 128 110 133Q105 139 100 139Q95 139 90 133Z" fill="var(--mlengua)"/>';
   return `<svg class="mas ${estado}" width="${tam}" height="${tam}" viewBox="0 0 200 200" role="img" aria-label="Mascota de Calculi">
   <ellipse class="sombra" cx="100" cy="186" rx="52" ry="7" fill="currentColor" opacity=".12"/>
   <g class="cuerpo">
-    <path d="M100 38C146 34 178 62 178 104C178 146 148 172 102 172C56 172 24 150 24 108C24 64 56 41 100 38Z" fill="#F26B1D"/>
-    <path d="M60 62C76 48 104 44 128 50C108 52 84 60 70 76C64 82 54 72 60 62Z" fill="#FF9A52" opacity=".75"/>
-    <path d="M38 132C56 160 98 170 140 160C122 172 70 174 46 150Z" fill="#C2410C" opacity=".35"/>
+    <path d="M100 38C146 34 178 62 178 104C178 146 148 172 102 172C56 172 24 150 24 108C24 64 56 41 100 38Z" fill="var(--m1)"/>
+    <path d="M60 62C76 48 104 44 128 50C108 52 84 60 70 76C64 82 54 72 60 62Z" fill="var(--m2)" opacity=".75"/>
+    <path d="M38 132C56 160 98 170 140 160C122 172 70 174 46 150Z" fill="var(--m3)" opacity=".35"/>
     <ellipse cx="62" cy="118" rx="11" ry="6.5" fill="#FF7E7E" opacity=".45"/><ellipse cx="140" cy="118" rx="11" ry="6.5" fill="#FF7E7E" opacity=".45"/>
     ${ojo(78, 96)}${ojo(124, 94)}${boca}
   </g>
-  <g class="punto"><path d="M160 26C172 25 180 32 180 42C180 52 172 58 162 58C151 58 145 51 145 42C145 32 150 27 160 26Z" fill="#3B82F6"/><path d="M152 34C156 30 162 29 167 31" stroke="#93C5FD" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <g class="punto"><path d="M160 26C172 25 180 32 180 42C180 52 172 58 162 58C151 58 145 51 145 42C145 32 150 27 160 26Z" fill="var(--mdot)"/><path d="M152 34C156 30 162 29 167 31" stroke="#fff" stroke-opacity=".55" stroke-width="3" fill="none" stroke-linecap="round"/></g>
 </svg>`;
 }
 const logoMini = (t = 40) => `<span class="lg" style="width:${t}px;height:${t}px">${mascota(Math.round(t * .95)).replace('class="mas ', 'class="mas quieta ')}</span>`;
@@ -685,7 +687,7 @@ function temaOscuro() { const t = EST.ajustes.tema; return t === 'dark' || (t ==
 function aplicarTema() {
   document.documentElement.dataset.theme = temaOscuro() ? 'dark' : 'light';
   // Barras del sistema (arriba y abajo en el móvil) del mismo color que el fondo: así no se ven bandas.
-  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#FFF8F2';
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#F6F7FB';
   let m = document.querySelector('meta[name="theme-color"]'); if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
   m.content = bg; document.body.style.background = bg;
 }
@@ -826,7 +828,7 @@ SC.tut = () => {
   const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1;
   setTimeout(() => decir(s.txt), 300);
   return `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button>
-  <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--acx)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
+  <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--aci)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
   <div class="card pop"><div class="enun"><span>${esc(e.n)}</span><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>
   <div class="vis">${VIS.dibujar(s.vis)}</div></div>
   <div class="say">${mascota(66)}<div class="bub tutt" style="text-align:left">${esc(s.txt)}</div></div>

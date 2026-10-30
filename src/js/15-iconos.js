@@ -68,19 +68,19 @@ function mascota(tam = 120, estado = 'normal') {
     ? `<path d="M${cx - 14} ${cy + 4}Q${cx} ${cy - 13} ${cx + 14} ${cy + 4}" fill="none" stroke="#1B1F5C" stroke-width="7" stroke-linecap="round"/>`
     : `<g class="ojo"><circle cx="${cx}" cy="${cy}" r="17" fill="#fff"/><circle cx="${cx + mira[0]}" cy="${cy + mira[1]}" r="10.5" fill="#1B1F5C"/><circle cx="${cx + mira[0] - 4}" cy="${cy + mira[1] - 4.5}" r="3.6" fill="#fff"/></g>`;
   const boca = feliz
-    ? '<path d="M78 124Q100 150 122 124Z" fill="#7A2A0C"/><path d="M89 135Q100 129 111 135Q106 142 100 142Q94 142 89 135Z" fill="#FDBA74"/>'
-    : estado === 'piensa' ? '<path d="M90 130Q100 126 110 130" fill="none" stroke="#7A2A0C" stroke-width="6" stroke-linecap="round"/>'
-    : '<path d="M80 122Q100 144 120 122Z" fill="#7A2A0C"/><path d="M90 133Q100 128 110 133Q105 139 100 139Q95 139 90 133Z" fill="#FDBA74"/>';
+    ? '<path d="M78 124Q100 150 122 124Z" fill="var(--mboca)"/><path d="M89 135Q100 129 111 135Q106 142 100 142Q94 142 89 135Z" fill="var(--mlengua)"/>'
+    : estado === 'piensa' ? '<path d="M90 130Q100 126 110 130" fill="none" stroke="var(--mboca)" stroke-width="6" stroke-linecap="round"/>'
+    : '<path d="M80 122Q100 144 120 122Z" fill="var(--mboca)"/><path d="M90 133Q100 128 110 133Q105 139 100 139Q95 139 90 133Z" fill="var(--mlengua)"/>';
   return `<svg class="mas ${estado}" width="${tam}" height="${tam}" viewBox="0 0 200 200" role="img" aria-label="Mascota de Calculi">
   <ellipse class="sombra" cx="100" cy="186" rx="52" ry="7" fill="currentColor" opacity=".12"/>
   <g class="cuerpo">
-    <path d="M100 38C146 34 178 62 178 104C178 146 148 172 102 172C56 172 24 150 24 108C24 64 56 41 100 38Z" fill="#F26B1D"/>
-    <path d="M60 62C76 48 104 44 128 50C108 52 84 60 70 76C64 82 54 72 60 62Z" fill="#FF9A52" opacity=".75"/>
-    <path d="M38 132C56 160 98 170 140 160C122 172 70 174 46 150Z" fill="#C2410C" opacity=".35"/>
+    <path d="M100 38C146 34 178 62 178 104C178 146 148 172 102 172C56 172 24 150 24 108C24 64 56 41 100 38Z" fill="var(--m1)"/>
+    <path d="M60 62C76 48 104 44 128 50C108 52 84 60 70 76C64 82 54 72 60 62Z" fill="var(--m2)" opacity=".75"/>
+    <path d="M38 132C56 160 98 170 140 160C122 172 70 174 46 150Z" fill="var(--m3)" opacity=".35"/>
     <ellipse cx="62" cy="118" rx="11" ry="6.5" fill="#FF7E7E" opacity=".45"/><ellipse cx="140" cy="118" rx="11" ry="6.5" fill="#FF7E7E" opacity=".45"/>
     ${ojo(78, 96)}${ojo(124, 94)}${boca}
   </g>
-  <g class="punto"><path d="M160 26C172 25 180 32 180 42C180 52 172 58 162 58C151 58 145 51 145 42C145 32 150 27 160 26Z" fill="#3B82F6"/><path d="M152 34C156 30 162 29 167 31" stroke="#93C5FD" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <g class="punto"><path d="M160 26C172 25 180 32 180 42C180 52 172 58 162 58C151 58 145 51 145 42C145 32 150 27 160 26Z" fill="var(--mdot)"/><path d="M152 34C156 30 162 29 167 31" stroke="#fff" stroke-opacity=".55" stroke-width="3" fill="none" stroke-linecap="round"/></g>
 </svg>`;
 }
 const logoMini = (t = 40) => `<span class="lg" style="width:${t}px;height:${t}px">${mascota(Math.round(t * .95)).replace('class="mas ', 'class="mas quieta ')}</span>`;
