@@ -22,7 +22,7 @@
   --bg:#F6F7FB;--card:#fff;--soft:#EEF0F7;--bd:#E0E4EF;--bd2:#CBD1E1;--tx:#151A2E;--mu:#5C6380;
   --ac:#1E2A5A;--acx:#141D45;--acs:#FEF3C7;--aci:#B45309;--on:#fff;--hero1:#FBBF24;--hero2:#FCD34D;--onhero:#1E1A0A;
   --pill:#FBBF24;--onpill:#1E1A0A;--ok:#15803D;--okbg:#DCFCE7;--no:#DC2626;--nobg:#FEE2E2;--warn:#B45309;--warnbg:#FEF3C7;
-  --f1:#2563EB;--f2:#F59E0B;--vacio:#F1F3F9;--marco:#4D546E;
+  --f1:#2563EB;--f2:#F97316;--vacio:#F1F3F9;--marco:#4D546E;
   --t1:#1D4ED8;--t1b:#DBEAFE;--t2:#15803D;--t2b:#DCFCE7;--t3:#7C3AED;--t3b:#EDE9FE;
   --md:linear-gradient(135deg,#7C3AED,#14B8A6);
   --fd:'Fredoka',system-ui,sans-serif;--fi:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
@@ -33,7 +33,7 @@
   --bg:#0F1324;--card:#1A1F35;--soft:#232945;--bd:#2C3352;--bd2:#3A4266;--tx:#EEF0F8;--mu:#A5ADCB;
   --ac:#FBBF24;--acx:#D97706;--acs:rgba(251,191,36,.14);--aci:#FCD34D;--on:#1E1A0A;--hero1:#FBBF24;--hero2:#FCD34D;--onhero:#1E1A0A;
   --ok:#4ADE80;--okbg:rgba(74,222,128,.14);--no:#F87171;--nobg:rgba(248,113,113,.14);--warn:#FCD34D;--warnbg:rgba(252,211,77,.12);
-  --f1:#60A5FA;--f2:#FBBF24;--vacio:#232945;--marco:#B9C0DA;
+  --f1:#60A5FA;--f2:#FB923C;--vacio:#232945;--marco:#B9C0DA;
   --t1:#93C5FD;--t1b:rgba(96,165,250,.14);--t2:#86EFAC;--t2b:rgba(74,222,128,.13);--t3:#C4B5FD;--t3b:rgba(167,139,250,.15);
   --sh:none;
 }
@@ -147,9 +147,9 @@ h1,h2,h3{margin:0;font-weight:500}
 .card .enun span{flex:1}
 .voz{width:38px;height:38px;border-radius:50%;background:var(--acs);color:var(--aci);display:grid;place-items:center;flex:none}
 .op{font-size:clamp(2.5rem,11vw,3.9rem);font-weight:500;letter-spacing:.5px;text-align:center;line-height:1.1}
-.op .hueco{display:inline-block;min-width:1.25em;padding:0 .12em;border-radius:14px;background:var(--acs);color:var(--tx);box-shadow:inset 0 -4px 0 var(--ac);margin:0 .05em}
-.op .hueco.ok{background:var(--okbg);color:var(--ok);box-shadow:inset 0 -4px 0 var(--ok)}
-.op .hueco.no{background:var(--nobg);color:var(--no);box-shadow:inset 0 -4px 0 var(--no);animation:temb .3s}
+.op .hueco{display:inline-block;min-width:1.3em;padding:0 .14em;margin:0 .06em;border:3px solid var(--bd2);border-radius:16px;background:transparent;color:var(--tx);line-height:1.15;transition:border-color .2s,color .2s}
+.op .hueco.ok{border-color:var(--ok);color:var(--ok)}
+.op .hueco.no{border-color:var(--no);color:var(--no);animation:temb .3s}
 .vis{display:flex;justify-content:center;width:100%}.vis svg{max-width:100%;height:auto}
 .pasos{display:flex;flex-direction:column;gap:4px;width:100%}
 .pasos div{display:flex;align-items:center;gap:8px;color:var(--ok);font-size:1.02rem}
@@ -319,11 +319,12 @@ const nid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(
  * extra: distractores típicos que la estrategia sabe que aparecen (p. ej. contar uno de más).
  */
 function opciones(r, n = 3, extra = [], max = 100) {
-  const set = new Set([r]);
-  for (const e of shuffle(extra)) if (set.size < n && Number.isInteger(e) && e >= 0 && e <= max) set.add(e);
-  const cerca = shuffle([r - 1, r + 1, r - 2, r + 2, r + 10, r - 10, r - 3, r + 3]);
-  for (const c of cerca) if (set.size < n && c >= 0 && c <= max) set.add(c);
-  let k = 4; while (set.size < n) { const c = r + k++; if (c <= max) set.add(c); else set.add(Math.max(0, r - k)); }
+  // Distractores cercanos (±1, ±2, ±3); ±10 solo si el número tiene decenas. Nunca negativos.
+  const tope = Math.min(max, r < 10 ? 10 : r < 20 ? 20 : max), set = new Set([r]);
+  for (const e of shuffle(extra)) if (set.size < n && Number.isInteger(e) && e >= 0 && e <= tope && e !== r) set.add(e);
+  const cerca = shuffle([r - 1, r + 1, r - 2, r + 2]).concat(shuffle([r - 3, r + 3]), r >= 10 ? shuffle([r - 10, r + 10]) : []);
+  for (const c of cerca) if (set.size < n && c >= 0 && c <= tope) set.add(c);
+  for (let k = 4; set.size < n && k < 50; k++) for (const c of [r + k, r - k]) if (set.size < n && c >= 0 && c <= Math.max(tope, r + k)) set.add(c);
   return shuffle([...set]);
 }
 
@@ -826,7 +827,7 @@ SC.logros = () => {
 /* ---------- Tutorial ---------- */
 SC.tut = () => {
   const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1;
-  setTimeout(() => decir(s.txt), 300);
+  setTimeout(() => { if (scr === 'tut') decir(s.txt); }, 300);
   return `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button>
   <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--aci)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
   <div class="card pop"><div class="enun"><span>${esc(e.n)}</span><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>
@@ -841,13 +842,20 @@ function finTutorial() { const a = alumno(); progreso(a, EID).tut = true; a.mt =
 function empezar(tipo) {
   const a = alumno(), e = est();
   SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '' };
-  if (tipo === 'guiada') { SES.items = Array.from({ length: 4 }, () => e.guiada()); SES.n = 4; }
+  if (tipo === 'guiada') { SES.items = guiadas(e, 4); SES.n = 4; }
   else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('inicio'); }
   else { SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
   SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!' }[tipo];
   go('ej');
 }
-function nuevoItem() { const e = est(); return Object.assign({ id: e.id, nivel: SES.nivel }, prepararItem(e.item(SES.nivel), SES.nivel)); }
+/** Nuevo ítem del reto, distinto de los 3 anteriores si es posible. */
+function nuevoItem() {
+  const e = est(), ult = new Set((SES.items || []).slice(-3).map(x => x.q)); let it;
+  for (let k = 0; k < 12; k++) { it = e.item(SES.nivel); if (!ult.has(it.q)) break; }
+  return Object.assign({ id: e.id, nivel: SES.nivel }, prepararItem(it, SES.nivel));
+}
+/** Práctica guiada: n ejemplos con operaciones finales distintas. */
+function guiadas(e, n) { const out = [], vistos = new Set(); for (let k = 0; out.length < n && k < 40; k++) { const g = e.guiada(); if (!vistos.has(g.final.q) || k > 30) { vistos.add(g.final.q); out.push(g); } } return out; }
 function actual() {
   const it = SES.items[SES.i];
   if (SES.tipo !== 'guiada') return it;
@@ -883,7 +891,7 @@ function tecladoHTML() {
   <button onclick="tecla('b')" aria-label="Borrar">${ico('backspace', 24)}</button><button onclick="tecla('0')">0</button><button class="ok" onclick="tecla('ok')">OK</button></div>`;
 }
 function tecla(t) {
-  if (SES.bloq) return;
+  if (!SES || SES.bloq) return;
   if (t === 'b') SES.resp = SES.resp.slice(0, -1);
   else if (t === 'ok') { if (SES.resp !== '') responder(+SES.resp); return; }
   else if (SES.resp.length < 3) SES.resp += t;
@@ -897,24 +905,26 @@ function feedback(txt, tipo) {
 }
 function limpiarPaso() { SES.bloq = false; SES.resp = ''; SES.fallos = 0; SES.fb = ''; }
 
+/** Ejecuta fn más tarde solo si sigue abierta la misma sesión (evita que un temporizador pendiente cambie otra sesión). */
+function despues(ms, fn) { const s = SES; setTimeout(() => { if (SES === s && scr === 'ej') fn(); }, ms); }
 function responder(v, btn) {
-  if (SES.bloq) return;
+  if (!SES || SES.bloq) return;
   const c = actual(), it = SES.items[SES.i], bien = String(v) === String(c.r), hueco = document.querySelector('.op .hueco');
   if (bien) {
     SES.bloq = true; SON.bien(); if (btn) btn.classList.add('ok');
     if (hueco) { hueco.textContent = c.r; hueco.classList.add('ok'); }
     feedback(pick(BIEN), 'ok');
     if (SES.tipo === 'guiada') {
-      setTimeout(() => {
+      despues(800, () => {
         if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Ahora el siguiente paso.'; pintar(); }
         else { SES.ok++; siguiente(); }
-      }, 800);
+      });
       return;
     }
     const limpio = SES.fallos === 0 && !SES.ayuda;
     registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++;
     if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
-    setTimeout(siguiente, 850);
+    despues(850, siguiente);
   } else {
     SON.mal(); SES.fallos++; if (btn) { btn.classList.add('no'); btn.disabled = true; }
     if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 400); }
@@ -924,10 +934,10 @@ function responder(v, btn) {
       if (SES.tipo !== 'guiada') { registrar(it.id, false); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
       if (hueco) { hueco.textContent = c.r; hueco.classList.remove('no'); hueco.classList.add('ok'); }
       feedback(c.truco ? `Era: «${c.r}»` : `Era ${c.r}. ¡La próxima sale!`, 'no');
-      setTimeout(() => {
+      despues(2000, () => {
         if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Sigamos.'; pintar(); } else siguiente(); }
         else siguiente();
-      }, 2000);
+      });
     } else if (c.vis && !SES.ayuda && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1) && !c.visSiempre) { SES.ayuda = true; SES.msg = 'Casi. Mira el dibujo y prueba otra vez.'; SES.fb = 'no'; pintar(); }
     else feedback('Casi. Prueba otra vez.', 'no');
   }
@@ -967,8 +977,8 @@ function carta(i, el) {
   const a = JG.cartas[JG.sel], b = JG.cartas[i];
   if (a.k === b.k) {
     JG.hechas.add(JG.sel).add(i); JG.sel = null; SON.bien();
-    if (JG.hechas.size === JG.cartas.length) { RES = { estrellas: JG.err <= 1 ? 3 : JG.err <= 3 ? 2 : 1, tipo: 'juego', err: JG.err }; SON.fin(); setTimeout(() => go('res'), 450); } else pintar();
-  } else { JG.err++; SON.mal(); el.classList.add('mal'); setTimeout(() => { JG.sel = null; pintar(); }, 380); }
+    if (JG.hechas.size === JG.cartas.length) { RES = { estrellas: JG.err <= 1 ? 3 : JG.err <= 3 ? 2 : 1, tipo: 'juego', err: JG.err }; SON.fin(); const j = JG; setTimeout(() => { if (JG === j && scr === 'juego') go('res'); }, 450); } else pintar();
+  } else { JG.err++; SON.mal(); el.classList.add('mal'); const j = JG; setTimeout(() => { if (JG === j && scr === 'juego') { JG.sel = null; pintar(); } }, 380); }
 }
 
 /* ---------- Resultado ---------- */
@@ -976,7 +986,7 @@ SC.res = () => {
   const r = RES;
   const titulo = r.estrellas === 3 ? '¡Fantástico!' : r.estrellas === 2 ? '¡Muy bien!' : r.estrellas === 1 ? '¡Buen trabajo!' : '¡Sigue practicando!';
   const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.${r.mejora ? ' ¡Nuevo récord de estrellas!' : ''}`;
-  setTimeout(() => decir(titulo), 300);
+  setTimeout(() => { if (scr === 'res') decir(titulo); }, 300);
   const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`, volver = r.tipo === 'repaso' ? "go('inicio')" : "go('estr')";
   const sig = r.tipo === 'guiada' ? `<button class="bt w" onclick="empezar('reto')">${ico('star', 20)}Hacer el reto</button>` : '';
   return `<div class="res pop">${mascota(140, r.estrellas >= 2 ? 'feliz' : 'normal')}<div class="estr">${estrellasHTML(r.estrellas, 3, 50)}</div>
@@ -1127,26 +1137,28 @@ ESTR.add({
     { txt: 'Mira este dado. ¿Ves cuántos puntos hay sin contar uno a uno?', vis: { t: 'puntos', n: 4 } },
     { txt: 'Con los puntos del dado, el 3, el 4 y el 5 se reconocen enseguida.', vis: { t: 'puntos', n: 5 } },
     { txt: 'Para el 7, mira un dado de 5 y otro de 2. ¡5 y 2 son 7!', vis: { t: 'puntos', n: 7 } },
-    { txt: 'En el marco del 10 también: una fila llena son 5 y las fichas de abajo se suman.', vis: { t: 'marco', a: 8 } },
+    { txt: 'En el marco del 10 también: una fila llena son 5, y 3 más abajo. ¡5 y 3 son 8!', vis: { t: 'marco', a: 5, b: 3 } },
     { txt: 'Y con los dedos: una mano es 5. Mano y tres dedos más, ¡8!', vis: { t: 'dedos', n: 8 } }
   ],
   guiada() {
-    const n = rnd(6, 9);
+    const n = rnd(7, 10); // siempre dos dados: 5 + (n − 5)
     return {
       pasos: [
-        { txt: '¿Cuántos puntos tiene el dado azul?', q: '?', r: 5, vis: { t: 'puntos', n }, extra: [4, 6] },
-        { txt: '¿Cuántos puntos tiene el dado naranja?', q: '?', r: n - 5, vis: { t: 'puntos', n } }
+        { txt: '¿Cuántos puntos tiene el dado azul?', q: '?', r: 5, vis: { t: 'puntos', n }, ops: opciones(5, 3, [4, 6], 10) },
+        { txt: '¿Cuántos puntos tiene el dado naranja?', q: '?', r: n - 5, vis: { t: 'puntos', n }, ops: opciones(n - 5, 3, [n - 6, n - 4, 5], 6) }
       ],
-      final: { txt: '5 y ' + (n - 5) + '. ¿Cuántos hay en total?', q: '?', r: n, vis: { t: 'puntos', n }, extra: [n - 1, n + 1] }
+      final: { txt: '5 y ' + (n - 5) + '. ¿Cuántos hay en total?', q: '?', r: n, vis: { t: 'puntos', n }, ops: opciones(n, 3, [n - 1, n + 1], 10) }
     };
   },
   item(nivel) {
     let n, t;
     if (nivel === 1) { n = rnd(1, 6); t = 'puntos'; }
-    else if (nivel === 2) { n = rnd(2, 10); t = pick(n <= 10 ? ['puntos', 'marco', 'dedos'] : ['puntos']); }
+    else if (nivel === 2) { n = rnd(2, 10); t = pick(['puntos', 'marco', 'dedos']); }
     else { n = rnd(3, 10); t = pick(['marco', 'dedos', 'puntos']); }
-    const vis = t === 'marco' ? { t: 'marco', a: n } : { t, n };
-    return { visSiempre: true, txt: '¿Cuántos hay?', q: '?', r: n, vis, extra: [n - 1, n + 1, n + 2] };
+    // marco: primera fila azul (5) y el resto naranja, igual que los dados y los dedos
+    const vis = t === 'marco' ? { t: 'marco', a: Math.min(n, 5), b: Math.max(0, n - 5) } : { t, n };
+    const mx = nivel === 1 ? 6 : 10;
+    return { visSiempre: true, txt: '¿Cuántos hay?', q: '?', r: n, vis, ops: opciones(n, 3, [n - 1, n + 1, n + 2], mx) };
   },
   juego: {
     tipo: 'parejas', meta: 'Une cada número con su palabra',
@@ -1167,16 +1179,16 @@ ESTR.add({
     { txt: 'Los números están en fila. Cada número tiene un vecino a cada lado.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 5 } },
     { txt: 'Uno más es dar un paso a la derecha. 5 + 1 = 6.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 5, saltos: [1] } },
     { txt: 'Uno menos es dar un paso a la izquierda. 5 − 1 = 4.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 5, saltos: [-1] } },
-    { txt: 'Y si sumo o resto 0, me quedo donde estoy. ¡No me muevo!', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 7 } },
+    { txt: 'Si sumo 0 o resto 0, me quedo donde estoy. 7 + 0 = 7. ¡No me muevo!', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 7 } },
     { txt: 'Truco: uno más es el número que viene después. Uno menos, el de antes.', vis: { t: 'recta', desde: 0, hasta: 10, inicio: 8, saltos: [1] } }
   ],
   guiada() {
     const n = rnd(2, 8), mas = rnd(0, 1) === 0, r = mas ? n + 1 : n - 1;
     return {
       pasos: [
-        { txt: mas ? `¿Qué número viene justo después del ${n}?` : `¿Qué número viene justo antes del ${n}?`, q: '?', r, vis: { t: 'recta', desde: 0, hasta: 10, inicio: n }, extra: [n] }
+        { txt: mas ? `¿Qué número viene justo después del ${n}?` : `¿Qué número viene justo antes del ${n}?`, q: '?', r, vis: { t: 'recta', desde: 0, hasta: 10, inicio: n }, ops: opciones(r, 3, [n, mas ? n + 2 : n - 2], 10) }
       ],
-      final: { txt: 'Ahora la cuenta:', q: mas ? `${n} + 1` : `${n} − 1`, r, vis: { t: 'recta', desde: 0, hasta: 10, inicio: n, saltos: [mas ? 1 : -1] }, extra: [n, mas ? n - 1 : n + 1] }
+      final: { txt: 'Ahora la cuenta:', q: mas ? `${n} + 1` : `${n} − 1`, r, vis: { t: 'recta', desde: 0, hasta: 10, inicio: n, saltos: [mas ? 1 : -1] }, ops: opciones(r, 3, [n, mas ? n - 1 : n + 1], 10) }
     };
   },
   item(nivel) {
@@ -1190,7 +1202,7 @@ ESTR.add({
     const op = d === 1 ? '+ 1' : d === -1 ? '− 1' : '+ 0';
     const q = (d !== -1 && nivel >= 2 && rnd(0, 3) === 0) ? `${d === 1 ? 1 : 0} + ${n}` : `${n} ${op}`;
     const vis = { t: 'recta', desde: 0, hasta: max, inicio: n, saltos: d ? [d] : [] };
-    return { q, r, vis, extra: [n, r + 1, r - 1, n + (d === 1 ? 2 : -2)] };
+    return { q, r, vis, ops: nivel < 3 ? opciones(r, 3, [n, r + 1, r - 1, n + (d === 1 ? 2 : -2)], max) : undefined };
   },
   juego: {
     tipo: 'parejas', meta: 'Une la cuenta con su resultado',
@@ -1214,16 +1226,16 @@ ESTR.add({
     { txt: '7 es 5 y 2. Las fichas azules son 5 y las naranjas son 2.', vis: { t: 'marco', a: 5, b: 2 } },
     { txt: 'Pero 7 también es 4 y 3. ¡Hay muchas formas de partirlo!', vis: { t: 'marco', a: 4, b: 3 } },
     { txt: 'Si sé el todo y una parte, me falta la otra. 7 = 5 + ?', vis: { t: 'parte', total: 7, a: 5, b: 2, oculto: 'b' } },
-    { txt: 'Truco: del todo quito la parte que veo y lo que queda es la otra.', vis: { t: 'marco', a: 6, b: 2 } }
+    { txt: 'Truco: del todo (8) quito la parte que veo (6) y lo que queda (2) es la otra.', vis: { t: 'parte', total: 8, a: 6, b: 2, oculto: 'b' } }
   ],
   guiada() {
     const t = rnd(5, 10), a = rnd(1, t - 1), b = t - a;
     return {
       pasos: [
-        { txt: `Tengo ${t} fichas en total. ¿Cuántas son azules?`, q: '?', r: a, vis: { t: 'marco', a, b }, extra: [b] },
-        { txt: '¿Cuántas son naranjas?', q: '?', r: b, vis: { t: 'marco', a, b }, extra: [a] }
+        { txt: `Tengo ${t} fichas en total. ¿Cuántas son azules?`, q: '?', r: a, vis: { t: 'marco', a, b }, ops: opciones(a, 3, [b, a + 1, a - 1], t) },
+        { txt: '¿Cuántas son naranjas?', q: '?', r: b, vis: { t: 'marco', a, b }, ops: opciones(b, 3, [a, b + 1, b - 1], t) }
       ],
-      final: { txt: 'Ahora la operación:', q: `${t} = ${a} + ?`, r: b, vis: { t: 'parte', total: t, a, b, oculto: 'b' }, extra: [a, t] }
+      final: { txt: 'Ahora la operación:', q: `${t} = ${a} + ?`, r: b, vis: { t: 'parte', total: t, a, b, oculto: 'b' }, ops: opciones(b, 3, [a, t, b + 1], t) }
     };
   },
   item(nivel) {
@@ -1236,7 +1248,7 @@ ESTR.add({
     else if (forma === 1) q = `${a} + ? = ${t}`;
     else if (forma === 2) { q = `${t} = ? + ${b}`; r = a; oculto = 'a'; }
     else { q = `? + ${b} = ${t}`; r = a; oculto = 'a'; }
-    return { q, r, vis: { t: 'parte', total: t, a: aa, b: bb, oculto }, extra: [t, a === r ? b : a, r + 1, r - 1] };
+    return { q, r, vis: { t: 'parte', total: t, a: aa, b: bb, oculto }, ops: nivel < 3 ? opciones(r, 3, [t, a === r ? b : a, r + 1, r - 1], t) : undefined };
   },
   juego: {
     tipo: 'parejas', meta: 'Une cada número con su descomposición',
@@ -1266,22 +1278,22 @@ ESTR.add({
     const a = rnd(1, 9), b = 10 - a;
     return {
       pasos: [
-        { txt: '¿Cuántas fichas azules hay?', q: '?', r: a, vis: { t: 'marco', a } },
-        { txt: '¿Cuántos huecos vacíos hay?', q: '?', r: b, vis: { t: 'marco', a } }
+        { txt: '¿Cuántas fichas azules hay?', q: '?', r: a, vis: { t: 'marco', a }, ops: opciones(a, 3, [b, a + 1, a - 1], 10) },
+        { txt: '¿Cuántos huecos vacíos hay?', q: '?', r: b, vis: { t: 'marco', a }, ops: opciones(b, 3, [a, b + 1, b - 1], 10) }
       ],
-      final: { txt: 'Ahora la operación:', q: `${a} + ? = 10`, r: b, vis: { t: 'marco', a, b } }
+      final: { txt: 'Ahora la operación:', q: `${a} + ? = 10`, r: b, vis: { t: 'marco', a, b }, ops: opciones(b, 3, [a, b + 1, b - 1], 10) }
     };
   },
   item(nivel) {
     const a = rnd(nivel === 1 ? 1 : 0, nivel === 1 ? 9 : 10), b = 10 - a;
     const forma = rnd(0, 2);
-    if (forma === 2) return { q: `10 = ${a} + ?`, r: b, vis: { t: 'marco', a }, extra: [a, b + 1, b - 1] };
-    if (forma === 1) return { q: `? + ${a} = 10`, r: b, vis: { t: 'marco', a }, extra: [a, b + 1, b - 1] };
-    return { q: `${a} + ? = 10`, r: b, vis: { t: 'marco', a }, extra: [a, b + 1, b - 1] };
+    if (forma === 2) return { q: `10 = ${a} + ?`, r: b, vis: { t: 'marco', a }, ops: nivel < 3 ? opciones(b, 3, [a, b + 1, b - 1], 10) : undefined };
+    if (forma === 1) return { q: `? + ${a} = 10`, r: b, vis: { t: 'marco', a }, ops: nivel < 3 ? opciones(b, 3, [a, b + 1, b - 1], 10) : undefined };
+    return { q: `${a} + ? = 10`, r: b, vis: { t: 'marco', a }, ops: nivel < 3 ? opciones(b, 3, [a, b + 1, b - 1], 10) : undefined };
   },
   juego: {
     tipo: 'parejas', meta: 'Busca parejas que sumen 10',
-    pares() { return shuffle([[1, 9], [2, 8], [3, 7], [4, 6], [5, 5], [0, 10]]).slice(0, 6); }
+    pares() { return shuffle([[1, 9], [2, 8], [3, 7], [4, 6], [5, 5], [0, 10]]).map(p => rnd(0, 1) ? p : [p[1], p[0]]).slice(0, 6); }
   }
 });
 
@@ -1302,24 +1314,27 @@ ESTR.add({
     const a = rnd(1, 4), b = rnd(a + 1, Math.min(9, 10 - a)), t = a + b;
     return {
       pasos: [
-        { txt: `${a} + ${b} es lo mismo que ${b} + ${a}. ¿Cuál es el número grande?`, q: '?', r: b, vis: { t: 'marco', a: b, b: a }, extra: [a, t] }
+        { txt: `${a} + ${b} es lo mismo que ${b} + ${a}. ¿Cuál es el número grande?`, q: '?', r: b, vis: { t: 'marco', a: b, b: a }, ops: opciones(b, 3, [a, t, b - 1], 10) }
       ],
-      final: { txt: `Empiezo por el ${b} y sumo ${a}:`, q: `${b} + ${a}`, r: t, vis: { t: 'marco', a: b, b: a }, extra: [b, t - 1, t + 1] }
+      final: { txt: `Empiezo por el ${b} y sumo ${a}:`, q: `${b} + ${a}`, r: t, vis: { t: 'marco', a: b, b: a }, ops: opciones(t, 3, [b, t - 1, t + 1], 10) }
     };
   },
   item(nivel) {
     const a = rnd(1, 4), b = rnd(a + 1, Math.min(9, 10 - a)), t = a + b;
     const forma = nivel === 1 ? rnd(0, 1) : rnd(0, 2);
+    // formas 1 y 2: el dibujo muestra el lado derecho ya girado; forma 0: el dibujo es la suma tal cual
     const vis = { t: 'marco', a: b, b: a };
-    if (forma === 1) return { q: `${a} + ${b} = ${b} + ?`, r: a, vis, extra: [b, t, a + 1] };
-    if (forma === 2) return { q: `${a} + ${b} = ? + ${a}`, r: b, vis, extra: [a, t, b + 1] };
-    return { q: `${a} + ${b}`, r: t, vis, extra: [b, t - 1, t + 1] };
+    const o = (r, ex) => nivel < 3 ? opciones(r, 3, ex, 10) : undefined;
+    if (forma === 1) return { q: `${a} + ${b} = ${b} + ?`, r: a, vis, ops: o(a, [b, t, a + 1]) };
+    if (forma === 2) return { q: `${a} + ${b} = ? + ${a}`, r: b, vis, ops: o(b, [a, t, b + 1]) };
+    return { q: `${a} + ${b}`, r: t, vis: { t: 'marco', a, b }, ops: o(t, [b, t - 1, t + 1]) };
   },
   juego: {
     tipo: 'parejas', meta: 'Une las sumas que dan igual',
     pares() {
-      const C = [[1, 4], [2, 7], [3, 6], [1, 8], [2, 5], [3, 4], [1, 6], [4, 5], [2, 8], [3, 5], [1, 9], [2, 6]];
-      return shuffle(C).slice(0, 6).map(([a, b]) => rnd(0, 1) ? [`${a} + ${b}`, `${b} + ${a}`] : [`${b} + ${a}`, `${a} + ${b}`]);
+      // una pareja por cada total distinto (así cada tarjeta solo encaja con una)
+      const C = { 4: [[1, 3]], 5: [[1, 4], [2, 3]], 6: [[1, 5], [2, 4]], 7: [[1, 6], [2, 5], [3, 4]], 8: [[1, 7], [2, 6], [3, 5]], 9: [[1, 8], [2, 7], [3, 6], [4, 5]], 10: [[1, 9], [2, 8], [3, 7], [4, 6]] };
+      return shuffle([4, 5, 6, 7, 8, 9, 10]).slice(0, 6).map(t => pick(C[t])).map(([a, b]) => rnd(0, 1) ? [`${a} + ${b}`, `${b} + ${a}`] : [`${b} + ${a}`, `${a} + ${b}`]);
     }
   }
 });
@@ -1335,25 +1350,26 @@ ESTR.add({
     { txt: 'Con el mayor. Empiezo en el 8 y no hace falta contarlo desde el 1.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 8, saltos: [] } },
     { txt: 'Ahora cuento 3 más: 9, 10, 11.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 8, saltos: [1, 1, 1] } },
     { txt: 'Termino en 11. Entonces 3 + 8 = 11.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 8, saltos: [1, 1, 1] } },
-    { txt: 'Truco: busco el número mayor, empiezo ahí y cuento los pasos que faltan.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 12, saltos: [1, 1] } }
+    { txt: 'Truco: en 2 + 12 empiezo en el 12, el mayor, y cuento 2 más: 13, 14.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 12, saltos: [1, 1] } }
   ],
   guiada() {
     const p = rnd(2, 4), m = rnd(6, 20 - p), pri = rnd(0, 1);
     const q = pri ? `${p} + ${m}` : `${m} + ${p}`;
+    const mv = pri ? { t: 'marco', a: p, b: m, tam: 20 } : { t: 'marco', a: m, b: p, tam: 20 };
     const vis = { t: 'recta', desde: 0, hasta: 20, inicio: m, saltos: Array(p).fill(1) };
     return {
       pasos: [
-        { txt: `En ${q}, ¿cuál es el mayor?`, q: '?', r: m, ops: shuffle([m, p, m + p]), vis: { t: 'marco', a: m, b: p, tam: 20 } },
-        { txt: `Empiezo en ${m} y cuento 1 más. ¿Qué número viene?`, q: '?', r: m + 1, vis: { t: 'recta', desde: 0, hasta: 20, inicio: m, saltos: [1] } }
+        { txt: `En ${q}, ¿cuál es el mayor?`, q: '?', r: m, ops: shuffle([m, p, m + 1]), vis: mv },
+        { txt: `Empiezo en ${m} y cuento 1 más. ¿Qué número viene?`, q: '?', r: m + 1, ops: opciones(m + 1, 3, [m, m + 2], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: m, saltos: [1] } }
       ],
-      final: { txt: `Cuento ${p} pasos desde el ${m}:`, q: `${q} = ?`, r: m + p, vis }
+      final: { txt: `Cuento ${p} pasos desde el ${m}:`, q: `${q} = ?`, r: m + p, ops: opciones(m + p, 3, [m, m + p - 1, m + p + 1], 20), vis }
     };
   },
   item(nivel) {
     const p = rnd(1, 4), m = rnd(5, nivel === 1 ? 10 : nivel === 2 ? 14 : 20 - p);
     const mm = Math.min(m, 20 - p), r = mm + p;
     const q = rnd(0, 1) ? `${p} + ${mm}` : `${mm} + ${p}`;
-    return { q, r, vis: { t: 'recta', desde: 0, hasta: 20, inicio: mm, saltos: Array(p).fill(1) }, extra: [mm, r - 1, r + 1, mm + p + 2] };
+    return { q, r, vis: { t: 'recta', desde: 0, hasta: 20, inicio: mm, saltos: Array(p).fill(1) }, ops: opciones(r, 3, [mm, r - 1, r + 1], 20) };
   },
   juego: {
     tipo: 'parejas', meta: 'Empieza por el mayor',
@@ -1374,18 +1390,18 @@ ESTR.add({
     { txt: 'Quito 2, así que doy 2 pasos hacia atrás: 8, 7.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [-1, -1] } },
     { txt: 'Aquí se ve igual: hay 9 fichas y tacho las 2 últimas.', vis: { t: 'marco', a: 9, tam: 10, tachar: 2 } },
     { txt: 'Me quedo en el 7. Entonces 9 − 2 = 7.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [-1, -1] } },
-    { txt: 'Truco: para quitar 1, 2 o 3, cuento hacia atrás sin contar el número donde empiezo.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 15, saltos: [-1, -1, -1] } }
+    { txt: 'Truco: en 15 − 3 empiezo en el 15 y doy 3 pasos atrás: 14, 13, 12. El 15 no se cuenta.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 15, saltos: [-1, -1, -1] } }
   ],
   guiada() {
     const s = rnd(2, 3), a = rnd(5, 20);
-    const pasos = [{ txt: `Empiezo en ${a}. Doy un paso atrás. ¿Dónde estoy?`, q: '?', r: a - 1, vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1] } }];
-    if (s === 3) pasos.push({ txt: 'Otro paso atrás. ¿Y ahora?', q: '?', r: a - 2, vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1, -1] } });
-    return { pasos, final: { txt: `Quito ${s} en total:`, q: `${a} − ${s} = ?`, r: a - s, vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) } } };
+    const pasos = [{ txt: `Empiezo en ${a}. Doy un paso atrás. ¿Dónde estoy?`, q: '?', r: a - 1, ops: opciones(a - 1, 3, [a, a - 2], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1] } }];
+    if (s === 3) pasos.push({ txt: 'Otro paso atrás. ¿Y ahora?', q: '?', r: a - 2, ops: opciones(a - 2, 3, [a - 1, a - 3], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1, -1] } });
+    return { pasos, final: { txt: `Quito ${s} en total:`, q: `${a} − ${s} = ?`, r: a - s, ops: opciones(a - s, 3, [a, a - s + 1, a - s - 1], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) } } };
   },
   item(nivel) {
     const s = rnd(1, 3), a = rnd(s + 1, nivel === 1 ? 10 : 20), r = a - s;
     const vis = nivel === 1 && rnd(0, 1) ? { t: 'marco', a, tam: a > 10 ? 20 : 10, tachar: s } : { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) };
-    return { q: `${a} − ${s}`, r, vis, extra: [a, r + 1, r - 1, a + s] };
+    return { q: `${a} − ${s}`, r, vis, ops: opciones(r, 3, [a, r + 1, r - 1, a + s], 20) };
   },
   juego: {
     tipo: 'parejas', meta: 'Cuenta hacia atrás',
@@ -1418,21 +1434,22 @@ ESTR.add({
     const a = rnd(6, 9), b = rnd(6, 9);
     return {
       pasos: [
-        { txt: `El ${a} es una mano y ¿cuántos dedos más?`, q: `${a} = 5 + ?`, r: a - 5, vis: { t: 'dedos', n: a } },
-        { txt: `Y el ${b}, ¿cuántos más que 5?`, q: `${b} = 5 + ?`, r: b - 5, vis: { t: 'dedos', n: b } },
-        { txt: 'Junto las dos manos:', q: '5 + 5 = ?', r: 10, vis: { t: 'marco', a: 5, b: 5, tam: 10 } }
+        { txt: `El ${a} es una mano y ¿cuántos dedos más?`, q: `${a} = 5 + ?`, r: a - 5, ops: opciones(a - 5, 3, [a - 4, a - 6, 5], 20), vis: { t: 'dedos', n: a } },
+        { txt: `Y el ${b}, ¿cuántos más que 5?`, q: `${b} = 5 + ?`, r: b - 5, ops: opciones(b - 5, 3, [b - 4, b - 6, 5], 20), vis: { t: 'dedos', n: b } },
+        { txt: 'Junto lo que me sobra de cada número:', q: `${a - 5} + ${b - 5} = ?`, r: a + b - 10, ops: opciones(a + b - 10, 3, [a - 5, b - 5], 20), vis: { t: 'marco', a: a - 5, b: b - 5, tam: 10 } }
       ],
-      final: { txt: 'Ahora sumo todo:', q: `${a} + ${b} = ?`, r: a + b, vis: { t: 'marco', a, b, tam: 20 } }
+      final: { txt: `Dos manos son 10 y sobran ${a + b - 10}. Entonces:`, q: `${a} + ${b} = ?`, r: a + b, ops: opciones(a + b, 3, [10, a + b - 1, a + b + 1], 20), vis: { t: 'marco', a, b, tam: 20 } }
     };
   },
   item(nivel) {
     if (nivel === 1) {
       const a = rnd(6, 9);
-      return { q: `${a} = 5 + ?`, r: a - 5, vis: rnd(0, 1) ? { t: 'marco', a, tam: 10 } : { t: 'dedos', n: a }, extra: [a, a - 4, a - 6, 5] };
+      return { q: `${a} = 5 + ?`, r: a - 5, vis: rnd(0, 1) ? { t: 'marco', a, tam: 10 } : { t: 'dedos', n: a }, ops: opciones(a - 5, 3, [a - 4, a - 6, 5], 20) };
     }
     const a = rnd(5, 9), b = rnd(5, 9), r = a + b, vis = { t: 'marco', a, b, tam: 20 };
-    if (nivel === 2 && rnd(0, 2) === 0) return { q: `5 + ${a - 5} + 5 + ${b - 5}`, r, vis, extra: [10, r + 1, r - 1, r + 10] };
-    return { q: `${a} + ${b}`, r, vis, extra: [10, r + 1, r - 1, r - 5] };
+    const ops = opciones(r, 3, [10, r + 1, r - 1, r - 5], 20);
+    if (nivel === 2 && a > 5 && b > 5 && rnd(0, 2) === 0) return { q: `5 + ${a - 5} + 5 + ${b - 5}`, r, vis, ops };
+    return { q: `${a} + ${b}`, r, vis, ops };
   },
   juego: {
     tipo: 'parejas', meta: 'Separa el 5 y suma',
@@ -1452,19 +1469,19 @@ ESTR.add({
   n: 'Dobles', ic: '👯', desc: 'El mismo número dos veces',
   truco: 'Me sé los dobles',
   tutorial: [
-    { txt: 'Un doble es sumar un número consigo mismo. 3 + 3 es el doble de 3.', vis: { t: 'dedos', n: 6 } },
-    { txt: '3 + 3 = 6. Hay dos grupos iguales de 3 fichas.', vis: { t: 'marco', a: 3, b: 3, tam: 10 } },
+    { txt: 'Un doble es sumar un número consigo mismo. 3 + 3 es el doble de 3.', vis: { t: 'marco', a: 3, b: 3, tam: 10 } },
+    { txt: '3 + 3 = 6. Hay dos grupos iguales de 3 fichas.', vis: { t: 'parte', total: 6, a: 3, b: 3 } },
     { txt: 'El doble de 5 es 10: dos manos llenas.', vis: { t: 'dedos', n: 10 } },
     { txt: 'El doble de 8 es 16. 8 + 8 = 16.', vis: { t: 'marco', a: 8, b: 8, tam: 20 } },
-    { txt: 'Truco: si me sé los dobles, ¡me ayudan a hacer muchas sumas!', vis: { t: 'marco', a: 10, b: 10, tam: 20 } }
+    { txt: 'El doble de 10 es 20. Truco: si me sé los dobles, ¡me ayudan a hacer muchas sumas!', vis: { t: 'marco', a: 10, b: 10, tam: 20 } }
   ],
   guiada() {
     const n = rnd(2, 9);
     return {
       pasos: [
-        { txt: `Hay ${n} fichas azules. ¿Cuántas naranjas hay para hacer un doble?`, q: '?', r: n, vis: { t: 'marco', a: n, b: n, tam: 20 } }
+        { txt: `Hay ${n} fichas azules. Para hacer un doble pongo otro grupo igual. ¿Cuántas fichas pongo?`, q: '?', r: n, ops: opciones(n, 3, [n + 1, n - 1], 20), vis: { t: 'marco', a: n, tam: 20 } }
       ],
-      final: { txt: 'Junto las dos partes iguales:', q: `${n} + ${n} = ?`, r: 2 * n, vis: { t: 'marco', a: n, b: n, tam: 20 } }
+      final: { txt: 'Junto las dos partes iguales:', q: `${n} + ${n} = ?`, r: 2 * n, ops: opciones(2 * n, 3, [2 * n - 1, 2 * n + 1, n], 20), vis: { t: 'marco', a: n, b: n, tam: 20 } }
     };
   },
   item(nivel) {
@@ -1473,7 +1490,7 @@ ESTR.add({
     const forma = nivel === 3 ? rnd(0, 2) : 0;
     if (forma === 1) return { q: `${n} + ? = ${r}`, r: n, vis, extra: [r, n + 1, n - 1] };
     if (forma === 2) return { q: `${r} = ${n} + ?`, r: n, vis, extra: [r, n + 1, n - 1] };
-    return { q: `${n} + ${n}`, r, vis, extra: [r + 1, r - 1, n, n + 1] };
+    return { q: `${n} + ${n}`, r, vis, ops: opciones(r, 3, [r + 1, r - 1, n, n + 1], 20) };
   },
   juego: {
     tipo: 'parejas', meta: 'Une cada doble con su resultado',
@@ -1492,25 +1509,24 @@ ESTR.add({
     { txt: 'Conozco el doble: 6 + 6 = 12.', vis: { t: 'marco', a: 6, b: 6, tam: 20 } },
     { txt: 'Pero en 6 + 7 hay una ficha más. Entonces sumo 1.', vis: { t: 'marco', a: 6, b: 7, tam: 20 } },
     { txt: '12 y 1 más son 13. Entonces 6 + 7 = 13.', vis: { t: 'parte', total: 13, a: 12, b: 1 } },
-    { txt: 'Truco: busco el doble del número pequeño y le sumo 1.', vis: { t: 'marco', a: 8, b: 9, tam: 20 } }
+    { txt: 'Truco: en 8 + 9 el doble de 8 es 16, y sumo 1: 17.', vis: { t: 'marco', a: 8, b: 9, tam: 20 } }
   ],
   guiada() {
     const n = rnd(3, 9), arriba = rnd(0, 1), m = n + 1;
-    const q = arriba ? `${m} + ${n}` : `${n} + ${m}`, vis = { t: 'marco', a: n, b: m, tam: 20 };
+    const q = arriba ? `${m} + ${n}` : `${n} + ${m}`, vis = arriba ? { t: 'marco', a: m, b: n, tam: 20 } : { t: 'marco', a: n, b: m, tam: 20 };
     return {
       pasos: [
-        { txt: `En ${q}, ¿qué número doblo? (el pequeño)`, q: '?', r: n, ops: shuffle([n, m, n + m]), vis },
-        { txt: 'Hago el doble:', q: `${n} + ${n} = ?`, r: 2 * n, vis: { t: 'marco', a: n, b: n, tam: 20 } },
-        { txt: 'Y sumo la ficha que sobra:', q: `${2 * n} + 1 = ?`, r: 2 * n + 1, vis: { t: 'parte', total: 2 * n + 1, a: 2 * n, b: 1 } }
+        { txt: `En ${q}, ¿qué número doblo? (el pequeño)`, q: '?', r: n, ops: opciones(n, 3, [m, n + 2], 20), vis },
+        { txt: 'Hago el doble:', q: `${n} + ${n} = ?`, r: 2 * n, ops: opciones(2 * n, 3, [2 * n - 1, 2 * n + 1, n], 20), vis: { t: 'marco', a: n, b: n, tam: 20 } },
+        { txt: 'Y sumo la ficha que sobra:', q: `${2 * n} + 1 = ?`, r: 2 * n + 1, ops: opciones(2 * n + 1, 3, [2 * n, 2 * n + 2], 20), vis: { t: 'parte', total: 2 * n + 1, a: 2 * n, b: 1, oculto: 'total' } }
       ],
-      final: { txt: 'Ahora la suma completa:', q: `${q} = ?`, r: n + m, vis }
+      final: { txt: 'Ahora la suma completa:', q: `${q} = ?`, r: n + m, ops: opciones(n + m, 3, [2 * n, 2 * m, n + m + 1, n + m - 1], 20), vis }
     };
   },
   item(nivel) {
-    const dif = nivel === 3 && rnd(0, 2) === 0 ? 2 : 1;
-    const n = rnd(nivel === 1 ? 3 : 4, nivel === 1 ? 7 : 9), m = n + dif, r = n + m;
-    const q = rnd(0, 1) ? `${n} + ${m}` : `${m} + ${n}`;
-    return { q, r, vis: { t: 'marco', a: n, b: m, tam: 20 }, extra: [2 * n, 2 * m, r + 1, r - 1] };
+    const n = rnd(nivel === 1 ? 3 : 4, nivel === 1 ? 7 : 9), m = n + 1, r = n + m, arriba = rnd(0, 1);
+    const q = arriba ? `${m} + ${n}` : `${n} + ${m}`;
+    return { q, r, vis: arriba ? { t: 'marco', a: m, b: n, tam: 20 } : { t: 'marco', a: n, b: m, tam: 20 }, ops: opciones(r, 3, [2 * n, 2 * m, r + 1, r - 1], 20) };
   },
   juego: {
     tipo: 'parejas', meta: 'Casi dobles y su resultado',
@@ -1538,7 +1554,7 @@ ESTR.add({
       { txt: 'Juntos: 3 + 4 = 7. Y también 4 + 3 = 7.', vis: { t: 'marco', a: 3, b: 4, tam: 10 } },
       { txt: 'Si quito las 4 naranjas, quedan 3. Entonces 7 − 4 = 3.', vis: { t: 'marco', a: 3, b: 4, tam: 10, tachar: 4 } },
       { txt: 'Y si quito las 3 azules, quedan 4. Entonces 7 − 3 = 4.', vis: { t: 'parte', total: 7, a: 3, b: 4, oculto: 'b' } },
-      { txt: 'Truco: si no sé restar, pienso en la suma de su familia.', vis: { t: 'parte', total: 9, a: 5, b: 4, oculto: 'a' } }
+      { txt: 'Truco: para 9 − 4 pienso en la suma de su familia: ? + 4 = 9.', vis: { t: 'parte', total: 9, a: 5, b: 4, oculto: 'a' } }
     ],
     guiada() {
       const { a, b, t } = suma(2, true);
@@ -1556,7 +1572,7 @@ ESTR.add({
       return {
         txt: `Si ${a} + ${b} = ${t}…`, q: `${t} − ${x} = ?`, r,
         vis: { t: 'parte', total: t, a, b, oculto: quitar ? 'b' : 'a' },
-        extra: [t, x, t + x > 20 ? r + 2 : t + x, r + 1]
+        ops: opciones(r, 3, [t, x, t + x, r + 1], 20)
       };
     },
     juego: {
@@ -1593,7 +1609,8 @@ ESTR.add({
       final: { txt: 'Y ya tengo la suma:', q: `${a} + ${b} = ?`, r: a + b, vis: { t: 'marco', a, b, tam: 20 } }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     let a, b;
     if (nivel === 1) { a = rnd(8, 9); b = rnd(Math.max(3, 11 - a), 6); }
     else if (nivel === 2) { a = rnd(6, 9); b = rnd(Math.max(2, 11 - a), Math.min(9, 18 - a)); }
@@ -1634,7 +1651,8 @@ ESTR.add({
       final: { txt: 'Y ya tengo la suma:', q: `${n} + 9 = ?`, r: n + 9, vis: { t: 'recta', desde: 0, hasta: 30, inicio: n, saltos: [10, -1] } }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     const n = nivel === 1 ? rnd(4, 9) : nivel === 2 ? rnd(11, 29) : rnd(21, 40);
     const r = n + 9, rc = _rectaS9(n);
     const q = nivel > 1 && rnd(0, 1) ? `9 + ${n} = ?` : `${n} + 9 = ?`;
@@ -1673,7 +1691,8 @@ ESTR.add({
       final: { txt: `Junto los saltos y sé cuánto es:`, q: `${t} − ${s} = ?`, r: t - s, vis: _recRS(s, t) }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     const s = nivel === 1 ? rnd(8, 9) : rnd(7, 9), t = nivel === 1 ? rnd(11, 14) : rnd(11, 18), r = t - s;
     const q = nivel > 1 && rnd(0, 2) === 0 ? `${s} + ? = ${t}` : `${t} − ${s} = ?`;
     return { q, r, vis: _recRS(s, t), extra: [r + 1, r - 1, t - 10, 10 - s, t - s + 2].filter(x => x > 0) };
@@ -1692,7 +1711,7 @@ ESTR.add({
 /* ---- js/estrategias/15-masmenos10.js ---- */
 /* Estrategia 15 · Sumar y restar 10 (solo cambia la decena) */
 const _recMM = (a) => { const d = Math.floor(a / 10) * 10; return { t: 'recta', desde: d - 10, hasta: d + 10, inicio: a, saltos: [-10] }; };
-const _visMM = (a, suma) => suma ? { t: 'decenas', grupos: [{ d: Math.floor(a / 10), u: a % 10 }, { d: 1, u: 0 }] } : _recMM(a);
+const _visMM = (a, suma, antes) => suma ? { t: 'decenas', grupos: antes ? [{ d: 1, u: 0 }, { d: Math.floor(a / 10), u: a % 10 }] : [{ d: Math.floor(a / 10), u: a % 10 }, { d: 1, u: 0 }] } : { t: 'decenas', grupos: [{ d: Math.floor(a / 10), u: a % 10 }], tachar: 1 };
 ESTR.add({
   id: 'masmenos10', orden: 15, tri: 3,
   n: 'Sumar y restar 10', ic: '🔟', desc: 'Solo cambia la decena',
@@ -1701,7 +1720,7 @@ ESTR.add({
     { txt: 'El 34 son 3 barras de diez y 4 cubitos.', vis: { t: 'decenas', grupos: [{ d: 3, u: 4 }] } },
     { txt: 'Si sumo 10, añado una barra más.', vis: { t: 'decenas', grupos: [{ d: 3, u: 4 }, { d: 1, u: 0 }] } },
     { txt: 'Ahora hay 4 barras y los mismos 4 cubitos: 34 + 10 = 44.', vis: { t: 'decenas', grupos: [{ d: 4, u: 4 }] } },
-    { txt: 'Si resto 10, quito una barra. 57 − 10 = 47. ¡Los cubitos no cambian!', vis: { t: 'recta', desde: 40, hasta: 60, inicio: 57, saltos: [-10] } },
+    { txt: 'Si resto 10, quito una barra. 57 − 10 = 47. ¡Los cubitos no cambian!', vis: { t: 'decenas', grupos: [{ d: 5, u: 7 }], tachar: 1 } },
     { txt: 'Truco: al sumar o restar 10, solo cambia el número de las decenas.', vis: { t: 'decenas', grupos: [{ d: 2, u: 6 }, { d: 1, u: 0 }] } }
   ],
   guiada() {
@@ -1711,14 +1730,16 @@ ESTR.add({
         { txt: `¿Cuántas decenas tiene el ${a}?`, q: '?', r: d, vis: { t: 'decenas', grupos: [{ d, u }] } },
         { txt: suma ? 'Sumo una decena más:' : 'Quito una decena:', q: suma ? `${d} + 1 = ?` : `${d} − 1 = ?`, r: suma ? d + 1 : d - 1, vis: _visMM(a, suma) }
       ],
-      final: { txt: `Las unidades siguen siendo ${u}:`, q: suma ? `${a} + 10 = ?` : `${a} − 10 = ?`, r, vis: _visMM(a, suma) }
+      final: { txt: u ? `Los cubitos siguen siendo ${u}:` : 'No hay cubitos sueltos:', q: suma ? `${a} + 10 = ?` : `${a} − 10 = ?`, r, vis: _visMM(a, suma) }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     const suma = rnd(0, 1) === 1, a = nivel === 1 ? (suma ? rnd(11, 69) : rnd(21, 69)) : nivel === 2 ? (suma ? rnd(11, 89) : rnd(21, 89)) : (suma ? rnd(12, 89) : rnd(22, 99));
     const r = suma ? a + 10 : a - 10;
-    const q = suma ? (nivel === 3 && rnd(0, 1) ? `10 + ${a} = ?` : `${a} + 10 = ?`) : `${a} − 10 = ?`;
-    return { q, r, vis: _visMM(a, suma), extra: suma ? [a + 1, a + 20, r + 1, r - 1] : [a - 1, a - 20, r + 1, r - 1] };
+    const antes = suma && nivel === 3 && rnd(0, 1) === 1;
+    const q = suma ? (antes ? `10 + ${a} = ?` : `${a} + 10 = ?`) : `${a} − 10 = ?`;
+    return { q, r, vis: _visMM(a, suma, antes), extra: suma ? [a + 1, a + 20, r + 1, r - 1] : [a - 1, a - 20, r + 1, r - 1] };
   },
   juego: {
     tipo: 'parejas', meta: 'Busca cada cuenta con su resultado',
@@ -1754,13 +1775,14 @@ ESTR.add({
     const r = suma ? x + y : x - y, vis = suma ? { t: 'decenas', grupos: [{ d: x }, { d: y }] } : { t: 'decenas', grupos: [{ d: x }], tachar: y };
     return {
       pasos: [
-        { txt: 'Cuento las barras de diez:', q: `${x * 10} son ? decenas`, r: x, vis: { t: 'decenas', grupos: [{ d: x }] } },
-        { txt: suma ? `${y * 10} son ${y} decenas. Las junto:` : `${y * 10} son ${y} decenas. Las quito:`, q: suma ? `${x} + ${y} = ?` : `${x} − ${y} = ?`, r, vis }
+        { txt: 'Cuento las barras de diez:', q: `${x * 10} = ? decenas`, r: x, vis: { t: 'decenas', grupos: [{ d: x }] } },
+        { txt: `${y * 10} ${y === 1 ? 'es 1 decena' : `son ${y} decenas`}. ${suma ? 'Las junto:' : 'Las quito:'}`, q: suma ? `${x} + ${y} = ?` : `${x} − ${y} = ?`, r, vis }
       ],
       final: { txt: 'Ahora lo digo en decenas completas:', q: suma ? `${x * 10} + ${y * 10} = ?` : `${x * 10} − ${y * 10} = ?`, r: r * 10, vis }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     const suma = rnd(0, 1) === 1;
     let x, y;
     if (nivel === 1) { if (suma) { x = rnd(1, 4); y = rnd(1, 5 - x); } else { x = rnd(3, 6); y = rnd(1, x - 1); } }

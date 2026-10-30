@@ -17,7 +17,7 @@
       { txt: 'Juntos: 3 + 4 = 7. Y también 4 + 3 = 7.', vis: { t: 'marco', a: 3, b: 4, tam: 10 } },
       { txt: 'Si quito las 4 naranjas, quedan 3. Entonces 7 − 4 = 3.', vis: { t: 'marco', a: 3, b: 4, tam: 10, tachar: 4 } },
       { txt: 'Y si quito las 3 azules, quedan 4. Entonces 7 − 3 = 4.', vis: { t: 'parte', total: 7, a: 3, b: 4, oculto: 'b' } },
-      { txt: 'Truco: si no sé restar, pienso en la suma de su familia.', vis: { t: 'parte', total: 9, a: 5, b: 4, oculto: 'a' } }
+      { txt: 'Truco: para 9 − 4 pienso en la suma de su familia: ? + 4 = 9.', vis: { t: 'parte', total: 9, a: 5, b: 4, oculto: 'a' } }
     ],
     guiada() {
       const { a, b, t } = suma(2, true);
@@ -35,7 +35,7 @@
       return {
         txt: `Si ${a} + ${b} = ${t}…`, q: `${t} − ${x} = ?`, r,
         vis: { t: 'parte', total: t, a, b, oculto: quitar ? 'b' : 'a' },
-        extra: [t, x, t + x > 20 ? r + 2 : t + x, r + 1]
+        ops: opciones(r, 3, [t, x, t + x, r + 1], 20)
       };
     },
     juego: {

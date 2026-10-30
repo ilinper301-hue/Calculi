@@ -21,7 +21,8 @@ ESTR.add({
       final: { txt: `Junto los saltos y sé cuánto es:`, q: `${t} − ${s} = ?`, r: t - s, vis: _recRS(s, t) }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     const s = nivel === 1 ? rnd(8, 9) : rnd(7, 9), t = nivel === 1 ? rnd(11, 14) : rnd(11, 18), r = t - s;
     const q = nivel > 1 && rnd(0, 2) === 0 ? `${s} + ? = ${t}` : `${t} − ${s} = ?`;
     return { q, r, vis: _recRS(s, t), extra: [r + 1, r - 1, t - 10, 10 - s, t - s + 2].filter(x => x > 0) };

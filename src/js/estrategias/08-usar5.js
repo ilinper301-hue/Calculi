@@ -14,21 +14,22 @@ ESTR.add({
     const a = rnd(6, 9), b = rnd(6, 9);
     return {
       pasos: [
-        { txt: `El ${a} es una mano y ¿cuántos dedos más?`, q: `${a} = 5 + ?`, r: a - 5, vis: { t: 'dedos', n: a } },
-        { txt: `Y el ${b}, ¿cuántos más que 5?`, q: `${b} = 5 + ?`, r: b - 5, vis: { t: 'dedos', n: b } },
-        { txt: 'Junto las dos manos:', q: '5 + 5 = ?', r: 10, vis: { t: 'marco', a: 5, b: 5, tam: 10 } }
+        { txt: `El ${a} es una mano y ¿cuántos dedos más?`, q: `${a} = 5 + ?`, r: a - 5, ops: opciones(a - 5, 3, [a - 4, a - 6, 5], 20), vis: { t: 'dedos', n: a } },
+        { txt: `Y el ${b}, ¿cuántos más que 5?`, q: `${b} = 5 + ?`, r: b - 5, ops: opciones(b - 5, 3, [b - 4, b - 6, 5], 20), vis: { t: 'dedos', n: b } },
+        { txt: 'Junto lo que me sobra de cada número:', q: `${a - 5} + ${b - 5} = ?`, r: a + b - 10, ops: opciones(a + b - 10, 3, [a - 5, b - 5], 20), vis: { t: 'marco', a: a - 5, b: b - 5, tam: 10 } }
       ],
-      final: { txt: 'Ahora sumo todo:', q: `${a} + ${b} = ?`, r: a + b, vis: { t: 'marco', a, b, tam: 20 } }
+      final: { txt: `Dos manos son 10 y sobran ${a + b - 10}. Entonces:`, q: `${a} + ${b} = ?`, r: a + b, ops: opciones(a + b, 3, [10, a + b - 1, a + b + 1], 20), vis: { t: 'marco', a, b, tam: 20 } }
     };
   },
   item(nivel) {
     if (nivel === 1) {
       const a = rnd(6, 9);
-      return { q: `${a} = 5 + ?`, r: a - 5, vis: rnd(0, 1) ? { t: 'marco', a, tam: 10 } : { t: 'dedos', n: a }, extra: [a, a - 4, a - 6, 5] };
+      return { q: `${a} = 5 + ?`, r: a - 5, vis: rnd(0, 1) ? { t: 'marco', a, tam: 10 } : { t: 'dedos', n: a }, ops: opciones(a - 5, 3, [a - 4, a - 6, 5], 20) };
     }
     const a = rnd(5, 9), b = rnd(5, 9), r = a + b, vis = { t: 'marco', a, b, tam: 20 };
-    if (nivel === 2 && rnd(0, 2) === 0) return { q: `5 + ${a - 5} + 5 + ${b - 5}`, r, vis, extra: [10, r + 1, r - 1, r + 10] };
-    return { q: `${a} + ${b}`, r, vis, extra: [10, r + 1, r - 1, r - 5] };
+    const ops = opciones(r, 3, [10, r + 1, r - 1, r - 5], 20);
+    if (nivel === 2 && a > 5 && b > 5 && rnd(0, 2) === 0) return { q: `5 + ${a - 5} + 5 + ${b - 5}`, r, vis, ops };
+    return { q: `${a} + ${b}`, r, vis, ops };
   },
   juego: {
     tipo: 'parejas', meta: 'Separa el 5 y suma',

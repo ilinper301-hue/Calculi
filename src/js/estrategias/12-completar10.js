@@ -21,7 +21,8 @@ ESTR.add({
       final: { txt: 'Y ya tengo la suma:', q: `${a} + ${b} = ?`, r: a + b, vis: { t: 'marco', a, b, tam: 20 } }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     let a, b;
     if (nivel === 1) { a = rnd(8, 9); b = rnd(Math.max(3, 11 - a), 6); }
     else if (nivel === 2) { a = rnd(6, 9); b = rnd(Math.max(2, 11 - a), Math.min(9, 18 - a)); }

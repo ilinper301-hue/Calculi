@@ -14,11 +14,12 @@ const nid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(
  * extra: distractores típicos que la estrategia sabe que aparecen (p. ej. contar uno de más).
  */
 function opciones(r, n = 3, extra = [], max = 100) {
-  const set = new Set([r]);
-  for (const e of shuffle(extra)) if (set.size < n && Number.isInteger(e) && e >= 0 && e <= max) set.add(e);
-  const cerca = shuffle([r - 1, r + 1, r - 2, r + 2, r + 10, r - 10, r - 3, r + 3]);
-  for (const c of cerca) if (set.size < n && c >= 0 && c <= max) set.add(c);
-  let k = 4; while (set.size < n) { const c = r + k++; if (c <= max) set.add(c); else set.add(Math.max(0, r - k)); }
+  // Distractores cercanos (±1, ±2, ±3); ±10 solo si el número tiene decenas. Nunca negativos.
+  const tope = Math.min(max, r < 10 ? 10 : r < 20 ? 20 : max), set = new Set([r]);
+  for (const e of shuffle(extra)) if (set.size < n && Number.isInteger(e) && e >= 0 && e <= tope && e !== r) set.add(e);
+  const cerca = shuffle([r - 1, r + 1, r - 2, r + 2]).concat(shuffle([r - 3, r + 3]), r >= 10 ? shuffle([r - 10, r + 10]) : []);
+  for (const c of cerca) if (set.size < n && c >= 0 && c <= tope) set.add(c);
+  for (let k = 4; set.size < n && k < 50; k++) for (const c of [r + k, r - k]) if (set.size < n && c >= 0 && c <= Math.max(tope, r + k)) set.add(c);
   return shuffle([...set]);
 }
 

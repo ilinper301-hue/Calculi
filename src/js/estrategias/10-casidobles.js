@@ -8,25 +8,24 @@ ESTR.add({
     { txt: 'Conozco el doble: 6 + 6 = 12.', vis: { t: 'marco', a: 6, b: 6, tam: 20 } },
     { txt: 'Pero en 6 + 7 hay una ficha más. Entonces sumo 1.', vis: { t: 'marco', a: 6, b: 7, tam: 20 } },
     { txt: '12 y 1 más son 13. Entonces 6 + 7 = 13.', vis: { t: 'parte', total: 13, a: 12, b: 1 } },
-    { txt: 'Truco: busco el doble del número pequeño y le sumo 1.', vis: { t: 'marco', a: 8, b: 9, tam: 20 } }
+    { txt: 'Truco: en 8 + 9 el doble de 8 es 16, y sumo 1: 17.', vis: { t: 'marco', a: 8, b: 9, tam: 20 } }
   ],
   guiada() {
     const n = rnd(3, 9), arriba = rnd(0, 1), m = n + 1;
-    const q = arriba ? `${m} + ${n}` : `${n} + ${m}`, vis = { t: 'marco', a: n, b: m, tam: 20 };
+    const q = arriba ? `${m} + ${n}` : `${n} + ${m}`, vis = arriba ? { t: 'marco', a: m, b: n, tam: 20 } : { t: 'marco', a: n, b: m, tam: 20 };
     return {
       pasos: [
-        { txt: `En ${q}, ¿qué número doblo? (el pequeño)`, q: '?', r: n, ops: shuffle([n, m, n + m]), vis },
-        { txt: 'Hago el doble:', q: `${n} + ${n} = ?`, r: 2 * n, vis: { t: 'marco', a: n, b: n, tam: 20 } },
-        { txt: 'Y sumo la ficha que sobra:', q: `${2 * n} + 1 = ?`, r: 2 * n + 1, vis: { t: 'parte', total: 2 * n + 1, a: 2 * n, b: 1 } }
+        { txt: `En ${q}, ¿qué número doblo? (el pequeño)`, q: '?', r: n, ops: opciones(n, 3, [m, n + 2], 20), vis },
+        { txt: 'Hago el doble:', q: `${n} + ${n} = ?`, r: 2 * n, ops: opciones(2 * n, 3, [2 * n - 1, 2 * n + 1, n], 20), vis: { t: 'marco', a: n, b: n, tam: 20 } },
+        { txt: 'Y sumo la ficha que sobra:', q: `${2 * n} + 1 = ?`, r: 2 * n + 1, ops: opciones(2 * n + 1, 3, [2 * n, 2 * n + 2], 20), vis: { t: 'parte', total: 2 * n + 1, a: 2 * n, b: 1, oculto: 'total' } }
       ],
-      final: { txt: 'Ahora la suma completa:', q: `${q} = ?`, r: n + m, vis }
+      final: { txt: 'Ahora la suma completa:', q: `${q} = ?`, r: n + m, ops: opciones(n + m, 3, [2 * n, 2 * m, n + m + 1, n + m - 1], 20), vis }
     };
   },
   item(nivel) {
-    const dif = nivel === 3 && rnd(0, 2) === 0 ? 2 : 1;
-    const n = rnd(nivel === 1 ? 3 : 4, nivel === 1 ? 7 : 9), m = n + dif, r = n + m;
-    const q = rnd(0, 1) ? `${n} + ${m}` : `${m} + ${n}`;
-    return { q, r, vis: { t: 'marco', a: n, b: m, tam: 20 }, extra: [2 * n, 2 * m, r + 1, r - 1] };
+    const n = rnd(nivel === 1 ? 3 : 4, nivel === 1 ? 7 : 9), m = n + 1, r = n + m, arriba = rnd(0, 1);
+    const q = arriba ? `${m} + ${n}` : `${n} + ${m}`;
+    return { q, r, vis: arriba ? { t: 'marco', a: m, b: n, tam: 20 } : { t: 'marco', a: n, b: m, tam: 20 }, ops: opciones(r, 3, [2 * n, 2 * m, r + 1, r - 1], 20) };
   },
   juego: {
     tipo: 'parejas', meta: 'Casi dobles y su resultado',

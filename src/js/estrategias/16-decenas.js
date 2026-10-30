@@ -17,13 +17,14 @@ ESTR.add({
     const r = suma ? x + y : x - y, vis = suma ? { t: 'decenas', grupos: [{ d: x }, { d: y }] } : { t: 'decenas', grupos: [{ d: x }], tachar: y };
     return {
       pasos: [
-        { txt: 'Cuento las barras de diez:', q: `${x * 10} son ? decenas`, r: x, vis: { t: 'decenas', grupos: [{ d: x }] } },
-        { txt: suma ? `${y * 10} son ${y} decenas. Las junto:` : `${y * 10} son ${y} decenas. Las quito:`, q: suma ? `${x} + ${y} = ?` : `${x} − ${y} = ?`, r, vis }
+        { txt: 'Cuento las barras de diez:', q: `${x * 10} = ? decenas`, r: x, vis: { t: 'decenas', grupos: [{ d: x }] } },
+        { txt: `${y * 10} ${y === 1 ? 'es 1 decena' : `son ${y} decenas`}. ${suma ? 'Las junto:' : 'Las quito:'}`, q: suma ? `${x} + ${y} = ?` : `${x} − ${y} = ?`, r, vis }
       ],
       final: { txt: 'Ahora lo digo en decenas completas:', q: suma ? `${x * 10} + ${y * 10} = ?` : `${x * 10} − ${y * 10} = ?`, r: r * 10, vis }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     const suma = rnd(0, 1) === 1;
     let x, y;
     if (nivel === 1) { if (suma) { x = rnd(1, 4); y = rnd(1, 5 - x); } else { x = rnd(3, 6); y = rnd(1, x - 1); } }

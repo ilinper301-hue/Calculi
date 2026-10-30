@@ -3,7 +3,7 @@
 /* ---------- Tutorial ---------- */
 SC.tut = () => {
   const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1;
-  setTimeout(() => decir(s.txt), 300);
+  setTimeout(() => { if (scr === 'tut') decir(s.txt); }, 300);
   return `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button>
   <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--aci)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
   <div class="card pop"><div class="enun"><span>${esc(e.n)}</span><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>
@@ -18,13 +18,20 @@ function finTutorial() { const a = alumno(); progreso(a, EID).tut = true; a.mt =
 function empezar(tipo) {
   const a = alumno(), e = est();
   SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '' };
-  if (tipo === 'guiada') { SES.items = Array.from({ length: 4 }, () => e.guiada()); SES.n = 4; }
+  if (tipo === 'guiada') { SES.items = guiadas(e, 4); SES.n = 4; }
   else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('inicio'); }
   else { SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
   SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!' }[tipo];
   go('ej');
 }
-function nuevoItem() { const e = est(); return Object.assign({ id: e.id, nivel: SES.nivel }, prepararItem(e.item(SES.nivel), SES.nivel)); }
+/** Nuevo ítem del reto, distinto de los 3 anteriores si es posible. */
+function nuevoItem() {
+  const e = est(), ult = new Set((SES.items || []).slice(-3).map(x => x.q)); let it;
+  for (let k = 0; k < 12; k++) { it = e.item(SES.nivel); if (!ult.has(it.q)) break; }
+  return Object.assign({ id: e.id, nivel: SES.nivel }, prepararItem(it, SES.nivel));
+}
+/** Práctica guiada: n ejemplos con operaciones finales distintas. */
+function guiadas(e, n) { const out = [], vistos = new Set(); for (let k = 0; out.length < n && k < 40; k++) { const g = e.guiada(); if (!vistos.has(g.final.q) || k > 30) { vistos.add(g.final.q); out.push(g); } } return out; }
 function actual() {
   const it = SES.items[SES.i];
   if (SES.tipo !== 'guiada') return it;
@@ -60,7 +67,7 @@ function tecladoHTML() {
   <button onclick="tecla('b')" aria-label="Borrar">${ico('backspace', 24)}</button><button onclick="tecla('0')">0</button><button class="ok" onclick="tecla('ok')">OK</button></div>`;
 }
 function tecla(t) {
-  if (SES.bloq) return;
+  if (!SES || SES.bloq) return;
   if (t === 'b') SES.resp = SES.resp.slice(0, -1);
   else if (t === 'ok') { if (SES.resp !== '') responder(+SES.resp); return; }
   else if (SES.resp.length < 3) SES.resp += t;
@@ -74,24 +81,26 @@ function feedback(txt, tipo) {
 }
 function limpiarPaso() { SES.bloq = false; SES.resp = ''; SES.fallos = 0; SES.fb = ''; }
 
+/** Ejecuta fn más tarde solo si sigue abierta la misma sesión (evita que un temporizador pendiente cambie otra sesión). */
+function despues(ms, fn) { const s = SES; setTimeout(() => { if (SES === s && scr === 'ej') fn(); }, ms); }
 function responder(v, btn) {
-  if (SES.bloq) return;
+  if (!SES || SES.bloq) return;
   const c = actual(), it = SES.items[SES.i], bien = String(v) === String(c.r), hueco = document.querySelector('.op .hueco');
   if (bien) {
     SES.bloq = true; SON.bien(); if (btn) btn.classList.add('ok');
     if (hueco) { hueco.textContent = c.r; hueco.classList.add('ok'); }
     feedback(pick(BIEN), 'ok');
     if (SES.tipo === 'guiada') {
-      setTimeout(() => {
+      despues(800, () => {
         if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Ahora el siguiente paso.'; pintar(); }
         else { SES.ok++; siguiente(); }
-      }, 800);
+      });
       return;
     }
     const limpio = SES.fallos === 0 && !SES.ayuda;
     registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++;
     if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
-    setTimeout(siguiente, 850);
+    despues(850, siguiente);
   } else {
     SON.mal(); SES.fallos++; if (btn) { btn.classList.add('no'); btn.disabled = true; }
     if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 400); }
@@ -101,10 +110,10 @@ function responder(v, btn) {
       if (SES.tipo !== 'guiada') { registrar(it.id, false); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
       if (hueco) { hueco.textContent = c.r; hueco.classList.remove('no'); hueco.classList.add('ok'); }
       feedback(c.truco ? `Era: «${c.r}»` : `Era ${c.r}. ¡La próxima sale!`, 'no');
-      setTimeout(() => {
+      despues(2000, () => {
         if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Sigamos.'; pintar(); } else siguiente(); }
         else siguiente();
-      }, 2000);
+      });
     } else if (c.vis && !SES.ayuda && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1) && !c.visSiempre) { SES.ayuda = true; SES.msg = 'Casi. Mira el dibujo y prueba otra vez.'; SES.fb = 'no'; pintar(); }
     else feedback('Casi. Prueba otra vez.', 'no');
   }
@@ -144,8 +153,8 @@ function carta(i, el) {
   const a = JG.cartas[JG.sel], b = JG.cartas[i];
   if (a.k === b.k) {
     JG.hechas.add(JG.sel).add(i); JG.sel = null; SON.bien();
-    if (JG.hechas.size === JG.cartas.length) { RES = { estrellas: JG.err <= 1 ? 3 : JG.err <= 3 ? 2 : 1, tipo: 'juego', err: JG.err }; SON.fin(); setTimeout(() => go('res'), 450); } else pintar();
-  } else { JG.err++; SON.mal(); el.classList.add('mal'); setTimeout(() => { JG.sel = null; pintar(); }, 380); }
+    if (JG.hechas.size === JG.cartas.length) { RES = { estrellas: JG.err <= 1 ? 3 : JG.err <= 3 ? 2 : 1, tipo: 'juego', err: JG.err }; SON.fin(); const j = JG; setTimeout(() => { if (JG === j && scr === 'juego') go('res'); }, 450); } else pintar();
+  } else { JG.err++; SON.mal(); el.classList.add('mal'); const j = JG; setTimeout(() => { if (JG === j && scr === 'juego') { JG.sel = null; pintar(); } }, 380); }
 }
 
 /* ---------- Resultado ---------- */
@@ -153,7 +162,7 @@ SC.res = () => {
   const r = RES;
   const titulo = r.estrellas === 3 ? '¡Fantástico!' : r.estrellas === 2 ? '¡Muy bien!' : r.estrellas === 1 ? '¡Buen trabajo!' : '¡Sigue practicando!';
   const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.${r.mejora ? ' ¡Nuevo récord de estrellas!' : ''}`;
-  setTimeout(() => decir(titulo), 300);
+  setTimeout(() => { if (scr === 'res') decir(titulo); }, 300);
   const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`, volver = r.tipo === 'repaso' ? "go('inicio')" : "go('estr')";
   const sig = r.tipo === 'guiada' ? `<button class="bt w" onclick="empezar('reto')">${ico('star', 20)}Hacer el reto</button>` : '';
   return `<div class="res pop">${mascota(140, r.estrellas >= 2 ? 'feliz' : 'normal')}<div class="estr">${estrellasHTML(r.estrellas, 3, 50)}</div>

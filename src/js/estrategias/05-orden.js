@@ -14,24 +14,27 @@ ESTR.add({
     const a = rnd(1, 4), b = rnd(a + 1, Math.min(9, 10 - a)), t = a + b;
     return {
       pasos: [
-        { txt: `${a} + ${b} es lo mismo que ${b} + ${a}. ¿Cuál es el número grande?`, q: '?', r: b, vis: { t: 'marco', a: b, b: a }, extra: [a, t] }
+        { txt: `${a} + ${b} es lo mismo que ${b} + ${a}. ¿Cuál es el número grande?`, q: '?', r: b, vis: { t: 'marco', a: b, b: a }, ops: opciones(b, 3, [a, t, b - 1], 10) }
       ],
-      final: { txt: `Empiezo por el ${b} y sumo ${a}:`, q: `${b} + ${a}`, r: t, vis: { t: 'marco', a: b, b: a }, extra: [b, t - 1, t + 1] }
+      final: { txt: `Empiezo por el ${b} y sumo ${a}:`, q: `${b} + ${a}`, r: t, vis: { t: 'marco', a: b, b: a }, ops: opciones(t, 3, [b, t - 1, t + 1], 10) }
     };
   },
   item(nivel) {
     const a = rnd(1, 4), b = rnd(a + 1, Math.min(9, 10 - a)), t = a + b;
     const forma = nivel === 1 ? rnd(0, 1) : rnd(0, 2);
+    // formas 1 y 2: el dibujo muestra el lado derecho ya girado; forma 0: el dibujo es la suma tal cual
     const vis = { t: 'marco', a: b, b: a };
-    if (forma === 1) return { q: `${a} + ${b} = ${b} + ?`, r: a, vis, extra: [b, t, a + 1] };
-    if (forma === 2) return { q: `${a} + ${b} = ? + ${a}`, r: b, vis, extra: [a, t, b + 1] };
-    return { q: `${a} + ${b}`, r: t, vis, extra: [b, t - 1, t + 1] };
+    const o = (r, ex) => nivel < 3 ? opciones(r, 3, ex, 10) : undefined;
+    if (forma === 1) return { q: `${a} + ${b} = ${b} + ?`, r: a, vis, ops: o(a, [b, t, a + 1]) };
+    if (forma === 2) return { q: `${a} + ${b} = ? + ${a}`, r: b, vis, ops: o(b, [a, t, b + 1]) };
+    return { q: `${a} + ${b}`, r: t, vis: { t: 'marco', a, b }, ops: o(t, [b, t - 1, t + 1]) };
   },
   juego: {
     tipo: 'parejas', meta: 'Une las sumas que dan igual',
     pares() {
-      const C = [[1, 4], [2, 7], [3, 6], [1, 8], [2, 5], [3, 4], [1, 6], [4, 5], [2, 8], [3, 5], [1, 9], [2, 6]];
-      return shuffle(C).slice(0, 6).map(([a, b]) => rnd(0, 1) ? [`${a} + ${b}`, `${b} + ${a}`] : [`${b} + ${a}`, `${a} + ${b}`]);
+      // una pareja por cada total distinto (así cada tarjeta solo encaja con una)
+      const C = { 4: [[1, 3]], 5: [[1, 4], [2, 3]], 6: [[1, 5], [2, 4]], 7: [[1, 6], [2, 5], [3, 4]], 8: [[1, 7], [2, 6], [3, 5]], 9: [[1, 8], [2, 7], [3, 6], [4, 5]], 10: [[1, 9], [2, 8], [3, 7], [4, 6]] };
+      return shuffle([4, 5, 6, 7, 8, 9, 10]).slice(0, 6).map(t => pick(C[t])).map(([a, b]) => rnd(0, 1) ? [`${a} + ${b}`, `${b} + ${a}`] : [`${b} + ${a}`, `${a} + ${b}`]);
     }
   }
 });

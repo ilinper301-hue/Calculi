@@ -21,7 +21,8 @@ ESTR.add({
       final: { txt: 'Y ya tengo la suma:', q: `${n} + 9 = ?`, r: n + 9, vis: { t: 'recta', desde: 0, hasta: 30, inicio: n, saltos: [10, -1] } }
     };
   },
-  item(nivel) {
+  item(nivel) { let it, k = 0; do { it = this._it(nivel); } while (it.q === this._ult && ++k < 8); this._ult = it.q; return it; },
+  _it(nivel) {
     const n = nivel === 1 ? rnd(4, 9) : nivel === 2 ? rnd(11, 29) : rnd(21, 40);
     const r = n + 9, rc = _rectaS9(n);
     const q = nivel > 1 && rnd(0, 1) ? `9 + ${n} = ?` : `${n} + 9 = ?`;

@@ -8,16 +8,16 @@ ESTR.add({
     { txt: '7 es 5 y 2. Las fichas azules son 5 y las naranjas son 2.', vis: { t: 'marco', a: 5, b: 2 } },
     { txt: 'Pero 7 también es 4 y 3. ¡Hay muchas formas de partirlo!', vis: { t: 'marco', a: 4, b: 3 } },
     { txt: 'Si sé el todo y una parte, me falta la otra. 7 = 5 + ?', vis: { t: 'parte', total: 7, a: 5, b: 2, oculto: 'b' } },
-    { txt: 'Truco: del todo quito la parte que veo y lo que queda es la otra.', vis: { t: 'marco', a: 6, b: 2 } }
+    { txt: 'Truco: del todo (8) quito la parte que veo (6) y lo que queda (2) es la otra.', vis: { t: 'parte', total: 8, a: 6, b: 2, oculto: 'b' } }
   ],
   guiada() {
     const t = rnd(5, 10), a = rnd(1, t - 1), b = t - a;
     return {
       pasos: [
-        { txt: `Tengo ${t} fichas en total. ¿Cuántas son azules?`, q: '?', r: a, vis: { t: 'marco', a, b }, extra: [b] },
-        { txt: '¿Cuántas son naranjas?', q: '?', r: b, vis: { t: 'marco', a, b }, extra: [a] }
+        { txt: `Tengo ${t} fichas en total. ¿Cuántas son azules?`, q: '?', r: a, vis: { t: 'marco', a, b }, ops: opciones(a, 3, [b, a + 1, a - 1], t) },
+        { txt: '¿Cuántas son naranjas?', q: '?', r: b, vis: { t: 'marco', a, b }, ops: opciones(b, 3, [a, b + 1, b - 1], t) }
       ],
-      final: { txt: 'Ahora la operación:', q: `${t} = ${a} + ?`, r: b, vis: { t: 'parte', total: t, a, b, oculto: 'b' }, extra: [a, t] }
+      final: { txt: 'Ahora la operación:', q: `${t} = ${a} + ?`, r: b, vis: { t: 'parte', total: t, a, b, oculto: 'b' }, ops: opciones(b, 3, [a, t, b + 1], t) }
     };
   },
   item(nivel) {
@@ -30,7 +30,7 @@ ESTR.add({
     else if (forma === 1) q = `${a} + ? = ${t}`;
     else if (forma === 2) { q = `${t} = ? + ${b}`; r = a; oculto = 'a'; }
     else { q = `? + ${b} = ${t}`; r = a; oculto = 'a'; }
-    return { q, r, vis: { t: 'parte', total: t, a: aa, b: bb, oculto }, extra: [t, a === r ? b : a, r + 1, r - 1] };
+    return { q, r, vis: { t: 'parte', total: t, a: aa, b: bb, oculto }, ops: nivel < 3 ? opciones(r, 3, [t, a === r ? b : a, r + 1, r - 1], t) : undefined };
   },
   juego: {
     tipo: 'parejas', meta: 'Une cada número con su descomposición',
