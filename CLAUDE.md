@@ -1,9 +1,9 @@
-# Calculín (nombre provisional)
+# Calculi
 
 App web (PWA) de **cálculo mental** para Primaria, empezando por 1.º. Cada estrategia sigue el ciclo **Aprender (tutorial) → Practicar (guiada) → Automatizar (juegos y repaso)**.
 Forma parte del ecosistema de Iván junto a **Lectori** (lectura) y **Barri** (problemas con barras), y en el futuro enviará datos a **Tabula** (cuaderno docente).
 
-Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/<Repo>/` (lo que se sube a `main` es lo que ven los usuarios).
+Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/Calculi/` (lo que se sube a `main` es lo que ven los usuarios).
 
 ## Sobre mí y cómo quiero trabajar
 - No sé programar. Explícame los cambios en lenguaje sencillo y dime qué tengo que probar.
@@ -17,7 +17,7 @@ Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/<Repo>/` (lo qu
    - Todas las claves llevan prefijo `calc.` (`calc.v1`, `calc.fb`, `calc.sync.uid`, `calc.sync.t`, `calc.bk`, `calc.wel`, `calc.th`).
    - Nunca escribir en claves de otras apps (`ar2`, `arth`… de Lectori; `barri.*` de Barri). Solo **leerlas** para importar alumnos.
    - Caché del service worker con prefijo propio: `calc-pwa-N`; borrar solo las cachés `calc-pwa-*`.
-   - `manifest.webmanifest` con `id` propio (`calculin-app`), `start_url` y `scope` = `./`.
+   - `manifest.webmanifest` con `id` propio (`calculi-app`), `start_url` y `scope` = `./`.
 2. **Firebase compartido**: proyecto `mis-apps-educativas`, SDK compat `10.12.2`, Google como inicio de sesión.
    - Colección `calculo` → documento `{uid}` (`meta`, `ts`) → subcolección `alu` (un documento por alumno: `{d: JSON, mt}`). Mismo patrón y misma lógica de fusión (`syncNow`, `syncSoon` a los 15 s, `cleanX` al leer, `del` para borrados) que Lectori/Barri.
    - Las reglas de Firestore deben permitir `calculo/{uid}/**` solo al propio `uid`.
@@ -28,10 +28,11 @@ Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/<Repo>/` (lo qu
 5. **Datos de menores**: no se envía nada a servicios nuevos sin preguntarme. Si cambia la estructura de datos, añade una migración: nunca se pierde el progreso.
 
 ## Estructura
-- `src/` código por partes (`estilos.css`, `datos/estrategias.js`, `motor.js`, `pantallas/*.js`, `sync.js`).
+- `src/estilos.css` y `src/js/`: `00-util.js` (ayudas, voz, sonidos), `10-datos.js` (guardado y migraciones), `20-visual.js` (dibujos SVG: marco, puntos, parte, recta, decenas, dedos), `30-motor.js` (contrato de una estrategia, desbloqueo, repaso), `40-pantallas.js`, `zz-arranque.js`.
+- `src/js/estrategias/NN-id.js`: una estrategia por archivo; `04-amigos10.js` es la plantilla de referencia.
 - `tools/build.py` une todo en `index.html` (raíz, la que publica Pages). No editar `index.html` a mano.
 - `sw.js`, `manifest.webmanifest`, `icon-192.png`, `icon-512.png`, `fonts/` (copiadas de Barri).
-- `tests/` pruebas del motor (generación de operaciones, repaso espaciado, migraciones).
+- `tests/test_motor.js` (`node tests/test_motor.js`): comprueba todas las estrategias (cuentas, opciones, dibujos, juegos, repaso).
 - `ESTADO.md` lista de pasos; si escribo «Continúa», léela y sigue por el primer paso sin marcar.
 
 ## Cómo probar
