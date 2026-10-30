@@ -53,8 +53,8 @@ SC.ej = () => {
   } else {
     pregunta = `<div class="card pop">${c.txt || !guiada ? `<div class="enun"><span>${esc(c.txt || '')}</span><button class="voz" onclick="decir(${esc(JSON.stringify(c.voz || c.txt || c.q))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>` : ''}
       ${guiada && SES.hechos.length ? `<div class="pasos">${SES.hechos.map(h => `<div>${ico('check', 18, 3)}${esc(h)}</div>`).join('')}</div>` : ''}
-      <div class="op">${huecoHTML(c.q, teclado ? SES.resp : '')}</div>${verVis ? `<div class="vis">${VIS.dibujar(c.vis)}</div>` : ''}</div>`;
-    respuesta = teclado ? tecladoHTML() : `<div class="ops">${c.ops.map(o => `<button class="opc" onclick="responder(${o},this)">${o}</button>`).join('')}</div>`;
+      <div class="op${c.q.length > 18 ? ' muy' : c.q.length > 12 ? ' larga' : ''}">${huecoHTML(c.q, teclado ? SES.resp : '')}</div>${verVis ? `<div class="vis">${VIS.dibujar(Object.assign({ ocultarFin: true }, c.vis))}</div>` : ''}</div>`;
+    respuesta = teclado ? tecladoHTML(decimales(c.r) > 0 || c.coma) : `<div class="ops">${c.ops.map(o => `<button class="opc" onclick="responder(${o},this)">${fmt(o)}</button>`).join('')}</div>`;
   }
   const ayuda = !guiada && !c.truco && c.vis && !verVis ? `<button class="ayuda" onclick="SES.ayuda=true;SES.msg='Mira el dibujo: te ayuda a pensar.';pintar()">${ico('bulb', 18)}Ayuda</button>` : '';
   return `<div class="top"><button class="rnd" onclick="${salirSesion()}" aria-label="Salir">${ico('x', 20, 2.4)}</button>
@@ -62,15 +62,17 @@ SC.ej = () => {
   <div class="ej-lado"><div class="ej-cuerpo">${pregunta}</div>
   <div class="ej-cuerpo"><div class="say">${mascota(58, SES.fb === 'ok' ? 'feliz' : SES.fb === 'no' ? 'piensa' : 'normal')}<div class="bub ${SES.fb || ''}" id="fb">${esc(SES.msg)}</div></div>${respuesta}${ayuda}</div></div>`;
 };
-function tecladoHTML() {
-  return `<div class="kp">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="tecla('${n}')">${n}</button>`).join('')}
-  <button onclick="tecla('b')" aria-label="Borrar">${ico('backspace', 24)}</button><button onclick="tecla('0')">0</button><button class="ok" onclick="tecla('ok')">OK</button></div>`;
+function tecladoHTML(coma) {
+  const dig = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="tecla('${n}')">${n}</button>`).join('');
+  if (coma) return `<div class="kp dec">${dig}<button onclick="tecla(',')" aria-label="Coma">,</button><button onclick="tecla('0')">0</button><button onclick="tecla('b')" aria-label="Borrar">${ico('backspace', 24)}</button><button class="ok" onclick="tecla('ok')">OK</button></div>`;
+  return `<div class="kp">${dig}<button onclick="tecla('b')" aria-label="Borrar">${ico('backspace', 24)}</button><button onclick="tecla('0')">0</button><button class="ok" onclick="tecla('ok')">OK</button></div>`;
 }
 function tecla(t) {
   if (!SES || SES.bloq) return;
   if (t === 'b') SES.resp = SES.resp.slice(0, -1);
-  else if (t === 'ok') { if (SES.resp !== '') responder(+SES.resp); return; }
-  else if (SES.resp.length < 3) SES.resp += t;
+  else if (t === 'ok') { if (SES.resp !== '' && SES.resp !== ',') responder(num(SES.resp)); return; }
+  else if (t === ',') { if (!SES.resp.includes(',')) SES.resp = (SES.resp || '0') + ','; }
+  else if (SES.resp.replace(',', '').length < 7) SES.resp = SES.resp === '0' ? t : SES.resp + t;
   const h = document.querySelector('.op .hueco'); if (h) h.innerHTML = SES.resp || '&nbsp;';
 }
 const BIEN = ['¡Muy bien!', '¡Genial!', '¡Eso es!', '¡Perfecto!', '¡Bravo!', '¡Qué rápido!'];
@@ -85,14 +87,14 @@ function limpiarPaso() { SES.bloq = false; SES.resp = ''; SES.fallos = 0; SES.fb
 function despues(ms, fn) { const s = SES; setTimeout(() => { if (SES === s && scr === 'ej') fn(); }, ms); }
 function responder(v, btn) {
   if (!SES || SES.bloq) return;
-  const c = actual(), it = SES.items[SES.i], bien = String(v) === String(c.r), hueco = document.querySelector('.op .hueco');
+  const c = actual(), it = SES.items[SES.i], bien = c.truco ? String(v) === String(c.r) : igual(v, c.r), hueco = document.querySelector('.op .hueco');
   if (bien) {
     SES.bloq = true; SON.bien(); if (btn) btn.classList.add('ok');
-    if (hueco) { hueco.textContent = c.r; hueco.classList.add('ok'); }
+    if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.add('ok'); }
     feedback(pick(BIEN), 'ok');
     if (SES.tipo === 'guiada') {
       despues(800, () => {
-        if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Ahora el siguiente paso.'; pintar(); }
+        if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', fmt(c.r))); SES.paso++; limpiarPaso(); SES.msg = 'Ahora el siguiente paso.'; pintar(); }
         else { SES.ok++; siguiente(); }
       });
       return;
@@ -108,10 +110,10 @@ function responder(v, btn) {
     if (SES.fallos >= 2 || c.truco) {
       SES.bloq = true;
       if (SES.tipo !== 'guiada') { registrar(it.id, false); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
-      if (hueco) { hueco.textContent = c.r; hueco.classList.remove('no'); hueco.classList.add('ok'); }
-      feedback(c.truco ? `Era: «${c.r}»` : `Era ${c.r}. ¡La próxima sale!`, 'no');
+      if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.remove('no'); hueco.classList.add('ok'); }
+      feedback(c.truco ? `Era: «${c.r}»` : `Era ${fmt(c.r)}. ¡La próxima sale!`, 'no');
       despues(2000, () => {
-        if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Sigamos.'; pintar(); } else siguiente(); }
+        if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', fmt(c.r))); SES.paso++; limpiarPaso(); SES.msg = 'Sigamos.'; pintar(); } else siguiente(); }
         else siguiente();
       });
     } else if (c.vis && !SES.ayuda && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1) && !c.visSiempre) { SES.ayuda = true; SES.msg = 'Casi. Mira el dibujo y prueba otra vez.'; SES.fb = 'no'; pintar(); }
@@ -139,13 +141,13 @@ function empezarJuego() {
   const e = est();
   if (!e.juego || e.juego.tipo !== 'parejas') return empezar('rapido');
   const pares = e.juego.pares().slice(0, 6);
-  JG = { cartas: shuffle(pares.flatMap((p, k) => [{ t: String(p[0]), k }, { t: String(p[1]), k }])), sel: null, hechas: new Set(), err: 0 };
+  JG = { cartas: shuffle(pares.flatMap((p, k) => [{ t: typeof p[0] === 'number' ? fmt(p[0]) : String(p[0]), k }, { t: typeof p[1] === 'number' ? fmt(p[1]) : String(p[1]), k }])), sel: null, hechas: new Set(), err: 0 };
   go('juego');
 }
 SC.juego = () => `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Salir">${ico('x', 20, 2.4)}</button>
   <div class="pg"><i style="width:${(JG.hechas.size / JG.cartas.length) * 100}%"></i></div><span class="pill">${ico('game', 18)}${JG.hechas.size / 2}/6</span></div>
   <div class="say">${mascota(58)}<div class="bub">${esc(est().juego.meta)}. Toca dos tarjetas que vayan juntas.</div></div>
-  <div class="tablero">${JG.cartas.map((c, i) => `<button class="carta${JG.hechas.has(i) ? ' hecha' : ''}${JG.sel === i ? ' sel' : ''}" onclick="carta(${i},this)">${esc(c.t)}</button>`).join('')}</div>`;
+  <div class="tablero">${JG.cartas.map((c, i) => `<button class="carta${JG.hechas.has(i) ? ' hecha' : ''}${JG.sel === i ? ' sel' : ''}${c.t.length > 7 ? ' xl' : c.t.length > 4 ? ' l' : ''}" onclick="carta(${i},this)">${esc(c.t)}</button>`).join('')}</div>`;
 function carta(i, el) {
   if (JG.hechas.has(i)) return;
   if (JG.sel === null) { JG.sel = i; el.classList.add('sel'); return; }

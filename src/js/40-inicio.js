@@ -1,5 +1,5 @@
 /* ===== Navegación, cabecera y pantallas de inicio ===== */
-let scr = 'inicio', EID = null, SES = null, TUT = 0, RES = null, JG = null, WEL = 0, NUEVO = '';
+let VCURSO = 1, scr = 'inicio', EID = null, SES = null, TUT = 0, RES = null, JG = null, WEL = 0, NUEVO = '';
 const SC = {};
 const est = () => ESTR.get(EID);
 const decir = t => VOZ.decir(t);
@@ -31,6 +31,10 @@ function cabecera() {
   return `<div class="hd"><div class="brand">${logoMini(40)}<span class="wm">Calculi</span></div><div class="hr">${der}
   <button class="rnd" onclick="cambiarTema()" aria-label="Cambiar tema">${ico(temaOscuro() ? 'sun' : 'moon', 20)}</button></div></div>`;
 }
+const nomCurso = c => `${c}.º`;
+/** Fila de botones para elegir curso. act = función que recibe el número de curso. */
+const chipsCurso = (sel, act, cursos = [1, 2, 3, 4, 5, 6]) => `<div class="cchips">${cursos.map(c => `<button class="${c === sel ? 'on' : ''}" onclick="${act}(${c})">${nomCurso(c)}</button>`).join('')}</div>`;
+function verCurso(c) { VCURSO = c; if (MODO_DOCENTE) ALU_DOCENTE.curso = c; pintar(); }
 const atras = (txt, act, icono = 'back') => `<button class="back" onclick="${act}">${ico(icono, 20, 2.4)}${txt}</button>`;
 function salirDocente() { MODO_DOCENTE = false; go('inicio'); }
 
@@ -48,6 +52,7 @@ SC.wel = () => {
   const doc = EST.ajustes.perfil === 'docente';
   return `${cabecera()}<div class="wel"><div class="gcard pop" style="align-items:stretch;text-align:left">${pasos}<h2>Primer alumno</h2>
     <p class="mut">${doc ? 'Escribe el nombre de un alumno. Podrás añadir al resto de la clase desde la Zona del tutor.' : 'Escribe el nombre del niño o la niña que va a practicar. Podrás añadir más después.'}</p>
+    <p class="mut" style="margin:0;font-size:.95rem">${doc ? 'Curso de tu clase' : 'Curso'}</p>${chipsCurso(EST.ajustes.curso || 1, 'cursoWel')}
     <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')finWel(true)">
     ${importables()}
     <div class="acts"><button class="bt sec" onclick="finWel(false)">Lo haré después</button><button class="bt" onclick="finWel(true)">Continuar</button></div></div></div>`;
@@ -56,6 +61,7 @@ function importables() {
   const xs = alumnosDeOtrasApps().slice(0, 12); if (!xs.length) return '';
   return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},${EST.alu.length % AVATARES.length});toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
 }
+function cursoWel(c) { const v = $('#nom') ? $('#nom').value : ''; EST.ajustes.curso = c; pintar(); if ($('#nom')) $('#nom').value = v; }
 function finWel(conNombre) {
   const n = conNombre && $('#nom') ? $('#nom').value.trim() : '';
   if (conNombre && !n && !EST.alu.length) { $('#nom').focus(); return; }
@@ -81,11 +87,11 @@ SC.inicio = () => {
   return `${cabecera()}
   <div class="greet">${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>
   <div class="home-grid">
-  <button class="lc hero" onclick="${MODO_DOCENTE ? "go('mapa')" : 'continuar()'}"><span class="ico">${ico('play', 26)}</span><span class="tx2"><b>${MODO_DOCENTE ? 'Trucos' : 'Seguir'}</b><small>${esc(sigTxt)}</small></span></button>
+  <button class="lc hero" onclick="${MODO_DOCENTE ? "VCURSO=cursoDe(alumno());go('mapa')" : 'continuar()'}"><span class="ico">${ico('play', 26)}</span><span class="tx2"><b>${MODO_DOCENTE ? 'Trucos' : 'Seguir'}</b><small>${esc(sigTxt)}</small></span></button>
   <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${hayRepaso ? 'Mezcla de los trucos que ya conoces' : 'Se abre cuando practiques un truco'}</small></span></button>
   <button class="lc" onclick="EID='${e.id}';TUT=0;go('tut')"><span class="ico">${ico('book', 24)}</span><span class="tx2"><b>Aprender</b><small>Cómo funciona: ${esc(e.n)}</small></span></button>
   </div>
-  <div class="duo"><button class="hc" onclick="go('logros')">${ico('medal', 22)}Mis logros</button><button class="hc" onclick="go('mapa')">${ico('map', 22)}Mapa de trucos</button></div>
+  <div class="duo"><button class="hc" onclick="go('logros')">${ico('medal', 22)}Mis logros</button><button class="hc" onclick="VCURSO=cursoDe(alumno());go('mapa')">${ico('map', 22)}Mapa de trucos</button></div>
   ${MODO_DOCENTE ? '' : `<button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button>`}`;
 };
 
@@ -102,17 +108,18 @@ function crearDesdeForm() { const n = $('#nom').value.trim(); if (!n) return $('
 
 /* ---------- Mapa de trucos ---------- */
 SC.mapa = () => {
-  const a = alumno(), sug = sugerida(a);
+  const a = alumno(), sug = sugerida(a), cs = ESTR.cursos();
+  if (!cs.includes(VCURSO)) VCURSO = cursoDe(a);
   const tri = [1, 2, 3].map(t => {
-    const cs = ESTR.lista.filter(e => e.tri === t).map(e => {
+    const ts = ESTR.delCurso(VCURSO).filter(e => e.tri === t).map(e => {
       const p = a.e[e.id] || {}, ab = abierta(a, e), d = dominio(a, e.id);
-      return `<button class="mw t${t}${ab ? '' : ' lock'}${e === sug && !MODO_DOCENTE ? ' sug' : ''}" onclick="${ab ? `EID='${e.id}';go('estr')` : "toast('Consigue una estrella en el truco anterior')"}">
+      return `<button class="mw t${t}${ab ? '' : ' lock'}${e === sug && !MODO_DOCENTE ? ' sug' : ''}" onclick="${ab ? `EID='${e.id}';go('estr')` : `toast(${e.curso > cursoDe(a) ? "'Es de un curso más adelante'" : "'Consigue una estrella en el truco anterior'"})`}">
       <span class="gl">${glifo(e)}</span>${ab ? '' : `<span class="lk">${ico('lock', 16)}</span>`}<b>${esc(e.n)}</b>
       <span class="es">${p.est ? '★'.repeat(p.est) + '☆'.repeat(3 - p.est) : ''}</span><span class="br"><i style="width:${Math.round((d ?? 0) * 100)}%"></i></span></button>`;
     }).join('');
-    return `<div class="tri">${['', '1.er', '2.º', '3.er'][t]} trimestre</div><div class="mapa">${cs}</div>`;
+    return ts ? `<div class="tri">${['', '1.er', '2.º', '3.er'][t]} trimestre</div><div class="mapa">${ts}</div>` : '';
   }).join('');
-  return `${atras('Inicio', "go('inicio')", 'home')}<h1 class="ttl">Mapa de trucos</h1>${tri}`;
+  return `${atras('Inicio', "go('inicio')", 'home')}<h1 class="ttl">Mapa de trucos</h1>${cs.length > 1 ? chipsCurso(VCURSO, 'verCurso', cs) : ''}${tri}`;
 };
 
 /* ---------- Un truco ---------- */
@@ -131,11 +138,11 @@ SC.estr = () => {
 /* ---------- Mis logros ---------- */
 SC.logros = () => {
   const a = alumno(), nEst = totalEstrellas(a), dom = ESTR.lista.filter(e => semaforo(a, e.id) === 'v').length, ej = Object.values(a.dia).reduce((s, n) => s + n, 0);
-  const tri = t => ESTR.lista.filter(e => e.tri === t).every(e => (a.e[e.id] || {}).est >= 1);
+  const tri = t => ESTR.delCurso(cursoDe(a)).filter(e => e.tri === t).every(e => (a.e[e.id] || {}).est >= 1);
   const L = [['star', 'Primera estrella', 'Gana una estrella en un reto', nEst >= 1], ['flame', 'Constancia', 'Practica 5 días distintos', a.dias.length >= 5],
     ['target', 'Puntería', 'Domina 3 trucos', dom >= 3], ['check', 'Cien cuentas', 'Haz 100 ejercicios', ej >= 100],
-    ['medal', '1.er trimestre', 'Una estrella en todos sus trucos', tri(1)], ['medal', '2.º trimestre', 'Una estrella en todos sus trucos', tri(2)],
-    ['medal', '3.er trimestre', 'Una estrella en todos sus trucos', tri(3)], ['star', 'Coleccionista', 'Consigue 30 estrellas', nEst >= 30]];
+    ['medal', `${nomCurso(cursoDe(a))} · 1.er trimestre`, 'Una estrella en todos sus trucos', tri(1)], ['medal', `${nomCurso(cursoDe(a))} · 2.º trimestre`, 'Una estrella en todos sus trucos', tri(2)],
+    ['medal', `${nomCurso(cursoDe(a))} · 3.er trimestre`, 'Una estrella en todos sus trucos', tri(3)], ['star', 'Coleccionista', 'Consigue 30 estrellas', nEst >= 30]];
   return `${atras('Inicio', "go('inicio')", 'home')}<h1 class="ttl">Mis logros</h1>
   <div class="greet" style="justify-content:flex-start">${mascota(70, 'feliz')}<div><div class="hi" style="font-size:1.5rem">${nEst} estrellas</div><p>${dom} ${dom === 1 ? 'truco dominado' : 'trucos dominados'} · ${ej} ejercicios</p></div></div>
   ${L.map(([i, t, s, ok]) => `<div class="lc" style="${ok ? '' : 'opacity:.55'}"><span class="ico" style="${ok ? 'background:#FEF3C7;color:#B45309' : ''}">${ico(i, 24)}</span><span class="tx2"><b>${t}</b><small>${s}</small></span>${ok ? `<span style="color:var(--ok)">${ico('check', 24, 3)}</span>` : ''}</div>`).join('')}`;

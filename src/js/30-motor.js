@@ -1,11 +1,12 @@
 /* ===== Motor de estrategias =====
 Cada archivo de src/js/estrategias/ registra UNA estrategia con ESTR.add({...}). Contrato:
 
-  id:       'amigos10'           identificador único [a-z0-9]
-  orden:    4                    posición en el curso (1..16); marca el orden de desbloqueo
+  id:       'amigos10'           identificador único [a-z0-9] (único en TODOS los cursos)
+  curso:    1                    curso de Primaria (1..6); si falta, 1
+  orden:    4                    posición dentro de su curso (1..16); marca el orden de desbloqueo
   tri:      1                    trimestre (1, 2, 3)
   n:        'Amigos del 10'      nombre para el niño (corto)
-  ic:       '10'                 icono: emoji o texto de 1-3 caracteres
+  ic:       '×9'                 icono: texto matemático corto (1-4 caracteres, sin emojis): '×9', '25%', '½', '0,5'
   desc:     'Parejas que suman 10'  subtítulo (corto)
   truco:    'Busco el amigo del 10'  frase para «¿Qué truco usarías?» (repaso mixto)
   tutorial: [{txt, vis}, …]      3-6 pantallas: frase corta (se lee en voz alta) + modelo visual (ver 20-visual.js)
@@ -24,21 +25,27 @@ const ESTR = {
   lista: [],
   add(e) {
     if (!e || !/^[a-z0-9]{2,20}$/.test(e.id) || this.lista.some(x => x.id === e.id)) { console.error('Estrategia no válida o repetida', e && e.id); return; }
-    this.lista.push(e); this.lista.sort((a, b) => a.orden - b.orden);
+    e.curso = e.curso || 1;
+    this.lista.push(e); this.lista.sort((a, b) => a.curso - b.curso || a.orden - b.orden);
   },
-  get(id) { return this.lista.find(e => e.id === id); }
+  get(id) { return this.lista.find(e => e.id === id); },
+  delCurso(c) { return this.lista.filter(e => e.curso === c); },
+  cursos() { return [...new Set(this.lista.map(e => e.curso))].sort(); }
 };
+const cursoDe = a => (a && a.curso) || 1;
 
-/** Desbloqueo: la primera siempre; las demás cuando la anterior tiene al menos 1 estrella (o todo abierto / Modo Docente). */
+/** Desbloqueo: dentro de su curso, la primera siempre y las demás cuando la anterior tiene ≥ 1 estrella.
+    Cursos anteriores al del alumno: abiertos. Posteriores: cerrados (salvo «todo abierto» o Modo Docente). */
 function abierta(a, e) {
   if (MODO_DOCENTE || EST.ajustes.abierto) return true;
-  const i = ESTR.lista.indexOf(e); if (i <= 0) return true;
-  const prev = ESTR.lista[i - 1]; return ((a.e[prev.id] || {}).est || 0) >= 1;
+  const c = cursoDe(a); if (e.curso < c) return true; if (e.curso > c) return false;
+  const L = ESTR.delCurso(e.curso), i = L.indexOf(e); if (i <= 0) return true;
+  return ((a.e[L[i - 1].id] || {}).est || 0) >= 1;
 }
-/** Sugerida: la primera abierta sin estrellas, o la de peor dominio. */
+/** Sugerida: en el curso del alumno, la primera abierta sin estrellas, o la de peor dominio. */
 function sugerida(a) {
-  const ab = ESTR.lista.filter(e => abierta(a, e));
-  return ab.find(e => !((a.e[e.id] || {}).est)) || ab.slice().sort((x, y) => (dominio(a, x.id) ?? 1) - (dominio(a, y.id) ?? 1))[0];
+  const L = ESTR.delCurso(cursoDe(a)).length ? ESTR.delCurso(cursoDe(a)) : ESTR.lista, ab = L.filter(e => abierta(a, e));
+  return ab.find(e => !((a.e[e.id] || {}).est)) || ab.slice().sort((x, y) => (dominio(a, x.id) ?? 1) - (dominio(a, y.id) ?? 1))[0] || L[0];
 }
 
 /** Normaliza un ítem: opciones si faltan, enteros, hueco presente. */
@@ -52,7 +59,7 @@ function prepararItem(it, nivel) {
 
 /** Repaso mixto: estrategias ya trabajadas, más peso a las de menos dominio y a las que hace más que no se practican. */
 function itemsRepaso(a, n = 10) {
-  const vistas = ESTR.lista.filter(e => abierta(a, e) && (a.e[e.id] || {}).n > 0);
+  const vistas = ESTR.lista.filter(e => e.curso <= cursoDe(a) && abierta(a, e) && (a.e[e.id] || {}).n > 0);
   if (!vistas.length) return [];
   const peso = e => { const d = dominio(a, e.id) ?? .5, ult = (a.e[e.id] || {}).ult || '2000-01-01', dias = Math.min(14, (Date.now() - new Date(ult)) / 864e5); return .3 + (1 - d) * 2 + dias / 7; };
   const out = [];

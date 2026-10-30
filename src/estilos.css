@@ -285,3 +285,12 @@ h1,h2,h3{margin:0;font-weight:500}
 #app[data-sc="tut"] .vis svg{width:100%;max-width:480px;max-height:46vh}
 #app[data-sc="ej"] .vis svg{width:100%;max-width:380px;max-height:30vh}
 :root[data-theme="dark"] .av{box-shadow:0 0 0 2px var(--bd2)}
+
+/* Selector de curso */
+.cchips{display:flex;gap:6px;flex-wrap:wrap}
+.cchips button{min-width:46px;height:38px;padding:0 12px;border-radius:19px;border:2px solid var(--bd);background:var(--card);font-weight:500;color:var(--mu)}
+.cchips button.on{background:var(--ac);border-color:var(--ac);color:var(--on)}
+.tz .cchips button{font:500 .9rem var(--fi);height:34px;border-width:1px}
+.kp.dec .ok{grid-column:1/-1}
+.carta.l{font-size:clamp(1rem,4.4vw,1.45rem)}.carta.xl{font-size:clamp(.82rem,3.4vw,1.15rem);word-break:break-word}
+.op.larga{font-size:clamp(2rem,8.4vw,3.2rem)}.op.muy{font-size:clamp(1.55rem,6.4vw,2.6rem)}

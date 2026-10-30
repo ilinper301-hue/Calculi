@@ -4,7 +4,7 @@ const KEY = 'calc.v1', VERSION_DATOS = 1;
 const AVATARES = [['', '#1E2A5A'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#EA580C']];
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
-function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false }, gmt: 0 }; }
+function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false, curso: 1 }, gmt: 0 }; }
 
 const ss = (s, n) => String(s ?? '').replace(/[<>&"'`]/g, '').trim().slice(0, n);
 function limpiarAlu(a) {
@@ -14,7 +14,7 @@ function limpiarAlu(a) {
     if (!/^[a-z0-9]{2,20}$/.test(k) || !v || typeof v !== 'object') continue;
     e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0) };
   }
-  return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400),
+  return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', curso: [1, 2, 3, 4, 5, 6].includes(a.curso) ? a.curso : 1, av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400),
     /* ejercicios por día (para la Zona del tutor) */ dia: Object.fromEntries(Object.entries(a.dia && typeof a.dia === 'object' ? a.dia : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)])) };
 }
 /** Migraciones: nunca se pierde el progreso. Añadir aquí un paso por cada cambio de VERSION_DATOS. */
@@ -34,7 +34,7 @@ let MODO_DOCENTE = false;
 const ALU_DOCENTE = limpiarAlu({ id: 'docente00', n: 'Docente', av: 5 });
 const alumno = () => MODO_DOCENTE ? ALU_DOCENTE : EST.alu.find(a => a.id === EST.act) || null;
 
-function crearAlumno(nombre, av) { const a = limpiarAlu({ n: nombre, av, mt: Date.now() }); EST.alu.push(a); EST.act = a.id; guardar(); return a; }
+function crearAlumno(nombre, av, curso) { const a = limpiarAlu({ n: nombre, av, curso: curso || EST.ajustes.curso || 1, mt: Date.now() }); EST.alu.push(a); EST.act = a.id; guardar(); return a; }
 function progreso(a, id) { return a.e[id] || (a.e[id] = { tut: false, est: 0, h: [], ult: '', n: 0 }); }
 
 /** Registra un resultado (1 acierto sin ayuda, 0 fallo o con ayuda) para el dominio y el repaso. */

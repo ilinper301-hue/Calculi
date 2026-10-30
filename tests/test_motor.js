@@ -2,12 +2,14 @@
 // Comprueba el contrato de 30-motor.js generando muchos ítems de cada estrategia.
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const R = path.join(__dirname, '..', 'src', 'js');
+const listar = d => fs.readdirSync(d, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name)).flatMap(x => x.isDirectory() ? listar(path.join(d, x.name)) : x.name.endsWith('.js') ? [path.join(d, x.name)] : []);
+
 const ctx = { console, window: {}, document: { querySelector: () => null }, localStorage: { getItem: () => null, setItem() {} }, matchMedia: () => ({ matches: false }), navigator: {}, location: {}, setTimeout, Math, Date, JSON };
 vm.createContext(ctx);
 const files = ['00-util.js', '10-datos.js', '20-visual.js', '30-motor.js'].map(f => path.join(R, f))
-  .concat(fs.readdirSync(path.join(R, 'estrategias')).sort().map(f => path.join(R, 'estrategias', f)));
+  .concat(listar(path.join(R, 'estrategias')));
 for (const f of files) vm.runInContext(fs.readFileSync(f, 'utf8'), ctx, { filename: f });
-vm.runInContext('globalThis.ESTR=ESTR;globalThis.VIS=VIS;globalThis.prepararItem=prepararItem;globalThis.itemsRepaso=itemsRepaso;globalThis.limpiarAlu=limpiarAlu', ctx);
+vm.runInContext('globalThis.fmt=fmt;globalThis.ESTR=ESTR;globalThis.VIS=VIS;globalThis.prepararItem=prepararItem;globalThis.itemsRepaso=itemsRepaso;globalThis.limpiarAlu=limpiarAlu', ctx);
 const { ESTR, VIS, prepararItem } = ctx;
 let err = 0; const fallo = (e, m) => { err++; console.log(`✗ [${e}] ${m}`); };
 const visCoh = (id, it, d) => {
@@ -16,6 +18,10 @@ const visCoh = (id, it, d) => {
   if (v.t === 'puntos' && !(v.n >= 1 && v.n <= 10)) fallo(id, `${d}: puntos fuera de 1-10 (${v.n})`);
   if (v.t === 'dedos' && !(v.n >= 0 && v.n <= 10)) fallo(id, `${d}: dedos fuera de 0-10 (${v.n})`);
   if (v.t === 'parte' && [v.total, v.a, v.b].every(Number.isFinite) && v.total !== v.a + v.b) fallo(id, `${d}: parte-todo no cuadra (${v.a}+${v.b}≠${v.total})`);
+  if (v.t === 'matriz' && !(v.filas >= 1 && v.filas <= 12 && v.cols >= 1 && v.cols <= 12)) fallo(id, `${d}: matriz fuera de 1-12 (${v.filas}×${v.cols})`);
+  if (v.t === 'matriz' && (v.partir || 0) >= v.filas && v.partir) fallo(id, `${d}: partir ≥ filas`);
+  if (v.t === 'barra' && !(v.partes >= 1 && v.partes <= 20 && (v.marcadas || 0) <= v.partes)) fallo(id, `${d}: barra mal (${v.marcadas}/${v.partes})`);
+  if (v.t === 'cien' && (v.n || 0) + (v.m || 0) > 100) fallo(id, `${d}: más de 100 casillas`);
   if (v.t === 'decenas' && (v.tachar || 0) > sumG) fallo(id, `${d}: tacha más barras de las que hay`);
   if (v.t === 'recta') { let p = v.inicio; if (v.desde >= v.hasta) fallo(id, `${d}: recta vacía`); if (p !== null && p !== undefined) { if (p < v.desde || p > v.hasta) fallo(id, `${d}: inicio fuera de la recta (${p} en ${v.desde}-${v.hasta})`); for (const sj of v.saltos || []) { p += sj; if (p < v.desde || p > v.hasta) { fallo(id, `${d}: un salto se sale de la recta (${JSON.stringify(v)})`); break; } } } }
   if (/dado naranja/.test(txt) && !(v.t === 'puntos' && v.n > 6)) fallo(id, `${d}: habla del dado naranja pero no hay dos dados (${JSON.stringify(v)})`);
@@ -29,19 +35,27 @@ const visOk = (id, v, d) => { if (!v) return; if (!VIS[v.t]) return fallo(id, `$
 const qOk = (id, it, d) => {
   if (typeof it.q !== 'string' || !it.q.length) return fallo(id, `${d}: q vacío`);
   if ((it.q.match(/\?/g) || []).length > 1) fallo(id, `${d}: más de un «?» en "${it.q}"`);
-  if (!Number.isInteger(it.r) || it.r < 0 || it.r > 100) fallo(id, `${d}: r no es entero 0-100 (${it.r}) en "${it.q}"`);
+  const e = ESTR.get(id), maxR = { 1: 100, 2: 1000, 3: 10000 }[e ? e.curso : 1] || 1e7;
+  if (typeof it.r !== 'number' || !isFinite(it.r) || it.r < 0 || it.r > maxR) fallo(id, `${d}: r fuera de 0-${maxR} (${it.r}) en "${it.q}"`);
+  else if ((e ? e.curso : 1) < 4 && !Number.isInteger(it.r)) fallo(id, `${d}: decimal antes de 4.º (${it.r})`);
+  else if (Math.abs(it.r * 1000 - Math.round(it.r * 1000)) > 1e-6) fallo(id, `${d}: más de 3 decimales (${it.r})`);
+  if (/\d\.\d/.test(it.q) && !/\d{1,3}(\.\d{3})+/.test(it.q)) fallo(id, `${d}: usa punto decimal en "${it.q}" (debe ser coma)`);
   // Comprobar la aritmética si la expresión es evaluable
-  const exp = it.q.includes('?') ? it.q.replace('?', it.r) : it.q + ' = ' + it.r;
-  const lados = exp.replace(/−/g, '-').split('=');
-  if (lados.length === 2 && lados.every(l => /^[\d\s+\-]+$/.test(l))) { const [a, b] = lados.map(l => Function(`return (${l})`)()); if (a !== b) fallo(id, `${d}: cuenta incorrecta "${exp}"`); }
-  const p = prepararItem(it, 1); if (!p.ops.includes(p.r) || new Set(p.ops).size !== p.ops.length || p.ops.some(o => o < 0)) fallo(id, `${d}: opciones mal ${JSON.stringify(p.ops)}`);
+  const exp = it.q.includes('?') ? it.q.replace('?', String(it.r).replace('.', ',')) : it.q + ' = ' + String(it.r).replace('.', ',');
+  const norm = l => l.replace(/(\d)\.(?=\d{3})/g, '$1').replace(/,/g, '.').replace(/−/g, '-').replace(/×/g, '*').replace(/[:÷]/g, '/');
+  const lados = exp.split('=').map(norm);
+  if (lados.length === 2 && lados.every(l => /^[\d\s+\-*/.()]+$/.test(l))) { const [a, b] = lados.map(l => Function(`return (${l})`)()); if (Math.abs(a - b) > 1e-9) fallo(id, `${d}: cuenta incorrecta "${exp}"`); }
+  const p = prepararItem(it, 1); if (!p.ops.some(o => Math.abs(o - p.r) < 1e-9) || new Set(p.ops).size !== p.ops.length || p.ops.some(o => o < 0)) fallo(id, `${d}: opciones mal ${JSON.stringify(p.ops)}`);
   visOk(id, it.vis, d); visCoh(id, it, d);
 };
 const ordenes = new Set();
-console.log(`Estrategias: ${ESTR.lista.length}`);
+console.log(`Estrategias: ${ESTR.lista.length} (${ESTR.cursos().map(c => c + '.º: ' + ESTR.delCurso(c).length).join(', ')})`);
+const nArch = files.filter(f => f.includes('estrategias')).length; if (nArch !== ESTR.lista.length) fallo('carga', `${nArch} archivos pero ${ESTR.lista.length} estrategias (¿id repetido o error al cargar?)`);
 for (const e of ESTR.lista) {
   for (const k of ['id', 'orden', 'tri', 'n', 'ic', 'desc', 'truco']) if (e[k] === undefined || e[k] === '') fallo(e.id, `falta ${k}`);
-  if (ordenes.has(e.orden)) fallo(e.id, `orden repetido ${e.orden}`); ordenes.add(e.orden);
+  if (ordenes.has(e.curso + '-' + e.orden)) fallo(e.id, `orden repetido ${e.orden} en ${e.curso}.º`); ordenes.add(e.curso + '-' + e.orden);
+  if (e.curso > 1 && !/^[^\p{Extended_Pictographic}]{1,5}$/u.test(e.ic)) fallo(e.id, `ic debe ser texto corto sin emojis («${e.ic}»)`);
+  if (e.n.length > 24) fallo(e.id, `nombre largo (${e.n.length} > 24)`);
   if (![1, 2, 3].includes(e.tri)) fallo(e.id, 'tri debe ser 1, 2 o 3');
   if (!Array.isArray(e.tutorial) || e.tutorial.length < 3 || e.tutorial.length > 6) fallo(e.id, 'tutorial: 3-6 pantallas');
   (e.tutorial || []).forEach((s, i) => { if (!s.txt || s.txt.length > 140) fallo(e.id, `tutorial ${i}: txt vacío o > 140`); visOk(e.id, s.vis, `tutorial ${i}`); });
