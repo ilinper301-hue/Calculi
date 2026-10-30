@@ -1,9 +1,10 @@
 /* ===== Datos guardados (solo claves con prefijo calc.: comparte dominio con Lectori y Barri) ===== */
 const KEY = 'calc.v1', VERSION_DATOS = 1;
-const AVATARES = [['🦊','#EA580C'],['🐢','#15803D'],['🐼','#475569'],['🦁','#B45309'],['🐸','#16A34A'],['🐙','#9333EA'],['🐳','#2563EB'],['🦉','#78350F'],['🐝','#CA8A04'],['🐞','#DC2626'],['🦄','#DB2777'],['🐨','#64748B']];
+/* Colores de avatar (inicial del nombre sobre color, como en Barri) */
+const AVATARES = [['', '#EA580C'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#475569']];
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
-function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '' }, gmt: 0 }; }
+function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false }, gmt: 0 }; }
 
 const ss = (s, n) => String(s ?? '').replace(/[<>&"'`]/g, '').trim().slice(0, n);
 function limpiarAlu(a) {
@@ -13,7 +14,8 @@ function limpiarAlu(a) {
     if (!/^[a-z0-9]{2,20}$/.test(k) || !v || typeof v !== 'object') continue;
     e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0) };
   }
-  return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400) };
+  return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400),
+    /* ejercicios por día (para la Zona del tutor) */ dia: Object.fromEntries(Object.entries(a.dia && typeof a.dia === 'object' ? a.dia : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)])) };
 }
 /** Migraciones: nunca se pierde el progreso. Añadir aquí un paso por cada cambio de VERSION_DATOS. */
 function migrar(d) {
@@ -40,6 +42,7 @@ function registrar(id, ok) {
   const a = alumno(); if (!a) return;
   const p = progreso(a, id); p.h.push(ok ? 1 : 0); p.h = p.h.slice(-20); p.ult = hoy(); p.n++;
   if (!a.dias.includes(hoy())) a.dias.push(hoy());
+  a.dia[hoy()] = (a.dia[hoy()] || 0) + 1;
   a.mt = Date.now(); guardar();
 }
 /** Dominio 0..1 con los últimos 10 resultados; null si aún hay pocos datos. */

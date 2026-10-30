@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Calculi: cálculo mental</title>
 <meta name="description" content="Aprende trucos de cálculo mental y practícalos jugando.">
-<meta name="theme-color" content="#EA580C">
+<meta name="theme-color" content="#FFF8F2">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,155 +17,285 @@
 @font-face{font-family:'Inter';src:url(fonts/inter-500.woff) format('woff');font-weight:500;font-display:swap}
 @font-face{font-family:'Inter';src:url(fonts/inter-600.woff) format('woff');font-weight:600 700;font-display:swap}
 
-/* ===== Colores: naranja propio de Calculi (Lectori: verde azulado · Barri: morado) ===== */
+/* ================= Colores (naranja propio de Calculi) ================= */
 :root{
-  --bg:#FFF7ED;--card:#fff;--soft:#FFEDD5;--tx:#1F1A17;--mu:#6B5E55;--ln:#F3D9C2;--sh:#EBD3BD;
-  --ac:#C2410C;--ac2:#EA580C;--on:#fff;--acx:#9A3412;
-  --ok:#15803D;--okbg:#DCFCE7;--no:#B91C1C;--nobg:#FEE2E2;--warn:#B45309;--warnbg:#FEF3C7;
-  --f1:#2563EB;--f2:#EA580C;--vacio:#F5EDE6;--marco:#57534E;
+  --bg:#FFF8F2;--card:#fff;--soft:#FFF1E6;--bd:#F1E1D2;--bd2:#E7CFBA;--tx:#2A1C14;--mu:#7C6758;
+  --ac:#EA580C;--acx:#C2410C;--acs:#FFEDD5;--on:#fff;--hero1:#F97316;--hero2:#FB923C;--onhero:#2A1406;
+  --pill:#F59E0B;--onpill:#2A1C14;--ok:#15803D;--okbg:#DCFCE7;--no:#DC2626;--nobg:#FEE2E2;--warn:#B45309;--warnbg:#FEF3C7;
+  --f1:#2563EB;--f2:#EA580C;--vacio:#F7EEE6;--marco:#6B5A4E;
+  --t1:#1D4ED8;--t1b:#DBEAFE;--t2:#15803D;--t2b:#DCFCE7;--t3:#7C3AED;--t3b:#EDE9FE;
   --md:linear-gradient(135deg,#7C3AED,#14B8A6);
   --fd:'Fredoka',system-ui,sans-serif;--fi:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  --r:20px;
+  --sh:0 1px 2px rgba(74,40,16,.05),0 4px 14px rgba(74,40,16,.05);
 }
 :root[data-theme="dark"]{
-  --bg:#1A1411;--card:#2A211C;--soft:#3A2C23;--tx:#FBEFE6;--mu:#C9B6A8;--ln:#4A3A2F;--sh:#0E0A08;
-  --ac:#FB923C;--ac2:#FB923C;--on:#1A1411;--acx:#FDBA74;
-  --ok:#4ADE80;--okbg:#14321F;--no:#FCA5A5;--nobg:#3B1A1A;--warn:#FCD34D;--warnbg:#3A3020;
-  --f1:#60A5FA;--f2:#FB923C;--vacio:#3A2E26;--marco:#D6C7BB;
+  --bg:#17110D;--card:#221913;--soft:#2C211A;--bd:#3A2C22;--bd2:#4A382B;--tx:#F7ECE3;--mu:#BCA594;
+  --ac:#FB923C;--acx:#FDBA74;--acs:rgba(251,146,60,.15);--on:#1A120D;--hero1:#F97316;--hero2:#FB923C;--onhero:#1A0E05;
+  --ok:#4ADE80;--okbg:rgba(74,222,128,.14);--no:#F87171;--nobg:rgba(248,113,113,.14);--warn:#FCD34D;--warnbg:rgba(252,211,77,.12);
+  --f1:#60A5FA;--f2:#FB923C;--vacio:#2E231B;--marco:#D2C1B3;
+  --t1:#93C5FD;--t1b:rgba(96,165,250,.14);--t2:#86EFAC;--t2b:rgba(74,222,128,.13);--t3:#C4B5FD;--t3b:rgba(167,139,250,.15);
+  --sh:none;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--bg);overscroll-behavior-y:none}
-body{margin:0;min-height:100dvh;background:var(--bg);color:var(--tx);font-family:var(--fd);font-size:18px;line-height:1.35;-webkit-user-select:none;user-select:none}
-button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
-#app{max-width:980px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+body{margin:0;min-height:100dvh;background:var(--bg);color:var(--tx);font:500 17px/1.35 var(--fd);-webkit-user-select:none;user-select:none;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;border:0;background:none;padding:0}
+#app{max-width:760px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;gap:14px;padding:calc(12px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left))}
+.i{flex:none;display:block}
+.mut{color:var(--mu)}
+h1,h2,h3{margin:0;font-weight:500}
+.ttl{font-size:1.75rem;line-height:1.15}
 
-/* ===== Barra superior ===== */
-.top{display:flex;align-items:center;gap:10px;padding:12px 16px}
-.top h1{flex:1;margin:0;font-size:1.35rem;font-weight:600;text-align:center}
-.ib{width:52px;height:52px;border-radius:16px;border:0;background:var(--card);box-shadow:0 3px 0 var(--sh);font-size:1.5rem;display:grid;place-items:center;flex:none}
-.ib:active{transform:translateY(2px);box-shadow:0 1px 0 var(--sh)}
-.ib.hid{visibility:hidden}
-.est{font-weight:600;background:var(--card);border-radius:999px;padding:8px 14px;box-shadow:0 3px 0 var(--sh);white-space:nowrap}
-.main{flex:1;display:flex;flex-direction:column;padding:4px 16px 20px;gap:14px}
+/* ================= Cabecera ================= */
+.hd{display:flex;align-items:center;gap:10px;min-height:44px}
+.brand{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
+.lg{background:#13214F;border-radius:12px;display:grid;place-items:center;overflow:hidden;flex:none}
+.wm{font-size:clamp(1.45rem,6.4vw,1.75rem);font-weight:600;color:var(--ac);letter-spacing:.2px;line-height:1}
+.hr{display:flex;gap:8px;align-items:center}
+.rnd{width:42px;height:42px;border-radius:50%;border:2px solid var(--bd);background:var(--card);display:grid;place-items:center;color:var(--tx)}
+.rnd:active,.lc:active,.mw:active,.lvr:active,.opc:active,.kp button:active,.bt:active,.row:active{transform:scale(.97)}
+.av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font:600 1.05rem var(--fd);box-shadow:0 2px 6px rgba(0,0,0,.12);flex:none}
+.pill{display:flex;align-items:center;gap:6px;height:42px;padding:0 14px;border-radius:21px;background:var(--pill);color:var(--onpill);font-weight:600;font-size:1.05rem}
+.back{display:flex;align-items:center;gap:4px;color:var(--acx);font-size:1.1rem;padding:6px 2px;align-self:flex-start}
 
-/* ===== Botones ===== */
-.bt{border:0;border-radius:var(--r);padding:16px 24px;font-size:1.3rem;font-weight:600;background:var(--ac);color:var(--on);box-shadow:0 5px 0 var(--acx);min-height:64px}
-.bt:active{transform:translateY(3px);box-shadow:0 2px 0 var(--acx)}
-.bt.sec{background:var(--card);color:var(--tx);box-shadow:0 5px 0 var(--sh)}
-.bt:disabled{opacity:.45;pointer-events:none}
-.fila{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.voz{border:0;background:var(--soft);color:var(--acx);border-radius:14px;width:48px;height:48px;font-size:1.4rem;flex:none}
+/* ================= Mascota ================= */
+.mas{overflow:visible;color:var(--tx)}
+.mas .cuerpo{animation:flotar 3.4s ease-in-out infinite alternate;transform-origin:50% 90%;transform-box:fill-box}
+.mas .sombra{animation:sombra 3.4s ease-in-out infinite alternate;transform-origin:50% 50%;transform-box:fill-box}
+.mas .ojo{animation:parpadeo 5.2s infinite;transform-origin:50% 50%;transform-box:fill-box}
+.mas .ojo+.ojo{animation-delay:.04s}
+.mas .punto{animation:punto 2.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 50%}
+.mas.feliz .cuerpo{animation:salto .9s ease-in-out 2,flotar 3.4s .9s ease-in-out infinite alternate}
+.mas.quieta *{animation:none!important}
+@keyframes flotar{from{transform:translateY(0) rotate(-2deg) scaleY(1)}to{transform:translateY(-7px) rotate(2deg) scaleY(1.015)}}
+@keyframes sombra{from{transform:scaleX(1);opacity:.14}to{transform:scaleX(.82);opacity:.08}}
+@keyframes parpadeo{0%,91%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
+@keyframes punto{from{transform:translate(0,0)}to{transform:translate(-3px,5px)}}
+@keyframes salto{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(2px) scale(1.06,.94)}60%{transform:translateY(-12px) scale(.97,1.03)}}
 
-/* ===== Splash / inicio ===== */
-.splash{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:20px}
-.logo{font-size:clamp(2.6rem,9vw,4rem);font-weight:700;color:var(--ac);letter-spacing:.5px}
-.logo small{display:block;font-size:.35em;color:var(--mu);font-weight:500;letter-spacing:0}
-.piedras{display:flex;gap:8px;justify-content:center}
-.piedras i{width:26px;height:22px;border-radius:50% 50% 46% 54%/60% 55% 45% 40%;background:var(--ac2);display:block}
-.piedras i:nth-child(2n){background:var(--f1)}
-.perfiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;width:100%;max-width:640px}
-.pf{border:0;background:var(--card);border-radius:var(--r);padding:18px 10px;box-shadow:0 5px 0 var(--sh);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:1.15rem;font-weight:600}
-.pf .av{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:1.7rem;color:#fff}
-.pf.nuevo{border:3px dashed var(--ln);box-shadow:none;background:transparent;color:var(--mu)}
-.pf.md{background:var(--md);color:#fff;box-shadow:0 5px 0 #4C1D95}
-.inp{font:inherit;font-size:1.3rem;padding:14px 16px;border-radius:16px;border:3px solid var(--ln);background:var(--card);color:var(--tx);width:100%;max-width:360px;text-align:center;-webkit-user-select:text;user-select:text}
-.inp:focus{outline:0;border-color:var(--ac2)}
+/* ================= Splash ================= */
+.splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;animation:spOut .45s ease 1.3s forwards}
+.splash .wm{font-size:2.6rem;opacity:0;animation:spIn .5s .25s ease forwards}
+@keyframes spIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes spOut{to{opacity:0;visibility:hidden}}
 
-/* ===== Mapa de estrategias ===== */
-.tri{margin:4px 0 0;font-size:1.05rem;color:var(--mu);font-weight:600}
-.mapa{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.es{border:0;background:var(--card);border-radius:var(--r);padding:14px;box-shadow:0 5px 0 var(--sh);display:flex;gap:12px;align-items:center;text-align:left;position:relative;min-height:84px}
-.es .ic{width:54px;height:54px;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:1.45rem;font-weight:700;color:var(--acx);flex:none}
-.es b{display:block;font-size:1.08rem;font-weight:600}
-.es small{display:block;color:var(--mu);font-size:.86rem;font-family:var(--fi);margin-top:2px}
-.es .st{position:absolute;top:8px;right:10px;font-size:.85rem;letter-spacing:-1px}
-.es.lock{opacity:.5}
-.es.lock .ic{filter:grayscale(1)}
-.es.sug{outline:4px solid var(--ac2);outline-offset:2px}
-.sem{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:4px}
-.sem.r{background:#DC2626}.sem.a{background:#F59E0B}.sem.v{background:#16A34A}.sem.g{background:var(--ln)}
-.repaso{display:flex;align-items:center;gap:14px;background:var(--md);color:#fff;border:0;border-radius:var(--r);padding:16px 18px;box-shadow:0 5px 0 #4C1D95;text-align:left;font-size:1.15rem;font-weight:600}
-.repaso span{font-size:1.9rem}
-.repaso small{display:block;font-weight:400;font-size:.88rem;opacity:.92;font-family:var(--fi)}
+/* ================= Tarjetas ================= */
+.gcard{background:var(--card);border:2px solid var(--bd);border-radius:28px;padding:22px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;box-shadow:var(--sh)}
+.gcard p{margin:0}
+.lc{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:26px;border:2px solid var(--bd);background:var(--card);box-shadow:var(--sh);transition:transform .08s}
+.lc .ico{width:54px;height:54px;border-radius:16px;background:var(--acs);color:var(--acx);display:grid;place-items:center;flex:none;font-weight:600;font-size:1.25rem}
+.lc .tx2{flex:1;min-width:0;display:flex;flex-direction:column}
+.lc b{font-weight:500;font-size:1.28rem;line-height:1.15}
+.lc small{font-size:.97rem;color:var(--mu);line-height:1.3;margin-top:2px}
+.lc.hero{background:linear-gradient(135deg,var(--hero1),var(--hero2));border-color:transparent;color:var(--onhero)}
+.lc.hero .ico{background:rgba(42,20,6,.14);color:var(--onhero)}
+.lc.hero small{color:rgba(42,20,6,.78)}
+.lc.md{background:var(--md);border-color:transparent;color:#fff}.lc.md .ico{background:rgba(255,255,255,.2);color:#fff}.lc.md small{color:rgba(255,255,255,.88)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hc{display:flex;align-items:center;gap:10px;padding:14px;border-radius:22px;border:2px solid var(--bd);background:var(--card);font-size:1.05rem;text-align:left;box-shadow:var(--sh)}
+.hc .i{color:var(--acx)}
+.tzb{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:24px;border:2px dashed var(--bd2);color:var(--mu);font-size:1.05rem}
 
-/* ===== Menú de una estrategia ===== */
-.fases{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.fase{border:0;background:var(--card);border-radius:var(--r);padding:20px 16px;box-shadow:0 5px 0 var(--sh);display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
-.fase .n{font-size:2.3rem}
-.fase b{font-size:1.25rem}
-.fase small{color:var(--mu);font-family:var(--fi);font-size:.9rem}
-.fase .ok{color:var(--ok);font-weight:600}
+/* ================= Inicio ================= */
+.greet{display:flex;align-items:center;gap:12px;justify-content:center;margin:2px 0}
+.greet .hi{font-size:clamp(1.6rem,7vw,1.95rem);line-height:1.1}
+.greet p{margin:2px 0 0;color:var(--mu)}
+.bub{position:relative;background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:10px 14px;font-size:1.02rem;line-height:1.3;box-shadow:var(--sh)}
 
-/* ===== Tutorial ===== */
-.tut{flex:1;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;text-align:center}
-.tut .txt{font-size:clamp(1.25rem,4.2vw,1.7rem);font-weight:500;max-width:680px;display:flex;align-items:center;gap:10px}
-.puntos-n{display:flex;gap:8px;justify-content:center}
-.puntos-n i{width:12px;height:12px;border-radius:50%;background:var(--ln)}
-.puntos-n i.on{background:var(--ac2)}
+/* ================= Mapa de trucos ================= */
+.tri{font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);font-family:var(--fi);font-weight:600;margin:6px 2px -4px}
+.mapa{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.mw{position:relative;display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;padding:12px 10px 10px;border-radius:20px;min-height:132px;transition:transform .08s}
+.mw .gl{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:1.05rem;line-height:1}
+.mw .gl small{font-size:.75em}
+.mw b{font-weight:500;font-size:.98rem;line-height:1.12;flex:1}
+.mw .es{font-size:.8rem;letter-spacing:-1px;color:var(--pill);min-height:14px}
+.mw .br{width:100%;height:5px;border-radius:3px;background:rgba(0,0,0,.08);overflow:hidden}
+.mw .br i{display:block;height:100%;border-radius:3px}
+.mw.t1{background:var(--t1b)}.mw.t1 .gl{background:#2563EB}.mw.t1 .br i{background:#2563EB}
+.mw.t2{background:var(--t2b)}.mw.t2 .gl{background:#16A34A}.mw.t2 .br i{background:#16A34A}
+.mw.t3{background:var(--t3b)}.mw.t3 .gl{background:#7C3AED}.mw.t3 .br i{background:#7C3AED}
+.mw.lock{opacity:.5}.mw.lock .gl{background:var(--mu)!important}
+.mw.sug{outline:3px solid var(--ac);outline-offset:2px}
+.mw .lk{position:absolute;top:10px;right:10px;color:var(--mu)}
+:root[data-theme="dark"] .mw .br{background:rgba(255,255,255,.1)}
 
-/* ===== Ejercicio ===== */
-.ej{flex:1;display:flex;flex-direction:column;align-items:center;gap:14px}
-.prog{width:100%;height:14px;background:var(--card);border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 2px var(--ln)}
-.prog i{display:block;height:100%;background:var(--ac2);border-radius:999px;transition:width .3s}
-.enun{font-size:1.15rem;color:var(--mu);text-align:center;display:flex;align-items:center;gap:8px;justify-content:center}
-.op{font-size:clamp(2.6rem,11vw,4.4rem);font-weight:600;letter-spacing:1px;text-align:center;line-height:1.1}
-.op .hueco{display:inline-block;min-width:1.3em;border-bottom:6px solid var(--ac2);color:var(--ac);padding:0 .1em}
-.op .hueco.ok{color:var(--ok);border-color:var(--ok)}
-.op .hueco.no{color:var(--no);border-color:var(--no)}
-.vis{display:flex;justify-content:center;width:100%}
-.vis svg{max-width:100%;height:auto}
-.ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:12px;width:100%;max-width:520px}
-.opc{border:0;border-radius:var(--r);background:var(--card);box-shadow:0 5px 0 var(--sh);font-size:2.2rem;font-weight:600;padding:14px 0;min-height:80px}
-.opc:active{transform:translateY(3px);box-shadow:0 2px 0 var(--sh)}
-.opc.ok{background:var(--okbg);color:var(--ok);box-shadow:0 5px 0 var(--ok)}
-.opc.no{background:var(--nobg);color:var(--no);box-shadow:0 5px 0 var(--no)}
-.teclado{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px}
-.teclado button{border:0;border-radius:18px;background:var(--card);box-shadow:0 4px 0 var(--sh);font-size:1.9rem;font-weight:600;min-height:62px}
-.teclado button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sh)}
-.teclado .okb{background:var(--ac);color:var(--on);box-shadow:0 4px 0 var(--acx)}
-.fb{min-height:34px;font-size:1.25rem;font-weight:600;text-align:center}
-.fb.ok{color:var(--ok)}.fb.no{color:var(--no)}
-.ayuda{border:0;background:var(--warnbg);color:var(--warn);border-radius:14px;padding:10px 16px;font-weight:600}
-.paso{background:var(--soft);border-radius:16px;padding:8px 14px;font-size:1.05rem;color:var(--acx);font-weight:600}
-.pasos-ok{display:flex;flex-direction:column;gap:4px;align-items:center;font-size:1.25rem;color:var(--mu)}
-.pasos-ok div{opacity:.85}
+/* ================= Pantalla de un truco ================= */
+.shead{display:flex;align-items:center;gap:14px;padding:16px;border-radius:24px;border:2px solid var(--bd);background:var(--card)}
+.shead .gl{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;color:#fff;font-size:1.3rem;font-weight:600;flex:none}
+.shead .gl small{font-size:.75em}
+.shead b{font-size:1.4rem;font-weight:500;display:block;line-height:1.15}
+.shead small{color:var(--mu);font-size:1rem}
+.gl.t1{background:#2563EB}.gl.t2{background:#16A34A}.gl.t3{background:#7C3AED}
+.lvr{display:flex;align-items:center;gap:14px;padding:14px 14px 14px 16px;border-radius:24px;border:2px solid var(--bd);background:var(--card);text-align:left;width:100%;box-shadow:var(--sh)}
+.lvr .n{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--acs);color:var(--acx);font-weight:600;flex:none}
+.lvr .n.ok{background:var(--ok);color:#fff}
+.lvr .tx2{flex:1;min-width:0}.lvr b{font-weight:500;font-size:1.15rem;display:block}.lvr small{color:var(--mu);font-size:.92rem}
+.lvr .go{width:44px;height:44px;border-radius:50%;background:var(--ac);color:var(--on);display:grid;place-items:center;flex:none}
+.lvr .es{color:var(--pill);font-size:.95rem;letter-spacing:-1px}
 
-/* ===== Juego de parejas ===== */
-.tablero{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:560px}
-.carta{border:0;aspect-ratio:1/1;border-radius:18px;background:var(--card);box-shadow:0 5px 0 var(--sh);font-size:clamp(1.6rem,7vw,2.6rem);font-weight:600;display:grid;place-items:center;transition:transform .15s,opacity .3s}
-.carta.sel{background:var(--soft);outline:4px solid var(--ac2);transform:scale(1.04)}
-.carta.hecha{background:var(--okbg);color:var(--ok);box-shadow:none;opacity:.55;pointer-events:none}
-.carta.mal{animation:temb .35s}
-@keyframes temb{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.meta{font-size:1.3rem;font-weight:600;background:var(--card);border-radius:16px;padding:10px 18px;box-shadow:0 3px 0 var(--sh)}
+/* ================= Ejercicio ================= */
+.top{display:flex;align-items:center;gap:10px}
+.pg{flex:1;height:12px;border-radius:6px;background:var(--bd);overflow:hidden}
+.pg i{display:block;height:100%;background:var(--ac);border-radius:6px;transition:width .35s}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips span{font-size:.8rem;padding:4px 10px;border-radius:12px;background:var(--soft);color:var(--mu)}
+.chips span.on{background:var(--ac);color:var(--on)}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:24px;padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--sh)}
+.card .enun{display:flex;align-items:center;gap:8px;width:100%;color:var(--mu);font-size:1.05rem}
+.card .enun span{flex:1}
+.voz{width:38px;height:38px;border-radius:50%;background:var(--soft);color:var(--acx);display:grid;place-items:center;flex:none}
+.op{font-size:clamp(2.5rem,11vw,3.9rem);font-weight:500;letter-spacing:.5px;text-align:center;line-height:1.1}
+.op .hueco{display:inline-block;min-width:1.25em;padding:0 .12em;border-radius:14px;background:var(--acs);color:var(--acx);box-shadow:inset 0 -4px 0 var(--ac);margin:0 .05em}
+.op .hueco.ok{background:var(--okbg);color:var(--ok);box-shadow:inset 0 -4px 0 var(--ok)}
+.op .hueco.no{background:var(--nobg);color:var(--no);box-shadow:inset 0 -4px 0 var(--no);animation:temb .3s}
+.vis{display:flex;justify-content:center;width:100%}.vis svg{max-width:100%;height:auto}
+.pasos{display:flex;flex-direction:column;gap:4px;width:100%}
+.pasos div{display:flex;align-items:center;gap:8px;color:var(--ok);font-size:1.02rem}
+.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.ops.una{grid-template-columns:1fr}
+.opc{min-height:72px;border-radius:20px;background:var(--card);border:2px solid var(--bd);box-shadow:inset 0 -5px 0 var(--bd);font-size:2rem;font-weight:500;padding-bottom:4px}
+.ops.una .opc{font-size:1.2rem;min-height:58px}
+.opc.ok{background:var(--okbg);border-color:var(--ok);box-shadow:inset 0 -5px 0 var(--ok);color:var(--ok)}
+.opc.no{background:var(--nobg);border-color:var(--no);box-shadow:inset 0 -5px 0 var(--no);color:var(--no);opacity:.8}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:360px;align-self:center}
+.kp button{height:58px;border-radius:16px;background:var(--card);border:2px solid var(--bd);box-shadow:inset 0 -4px 0 var(--bd);font-size:1.6rem;font-weight:500;display:grid;place-items:center}
+.kp .ok{background:var(--ac);border-color:var(--ac);color:var(--on);box-shadow:inset 0 -4px 0 var(--acx);font-size:1.2rem}
+.say{display:flex;align-items:flex-end;gap:8px;min-height:64px}
+.say .bub{flex:1}
+.say .bub.ok{border-color:var(--ok);color:var(--ok)}.say .bub.no{border-color:var(--no);color:var(--no)}
+.ayuda{display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:16px;background:var(--warnbg);color:var(--warn);font-size:1rem;align-self:center}
+.ej-cuerpo{display:flex;flex-direction:column;gap:12px}
+@keyframes temb{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 
-/* ===== Resultado ===== */
-.res{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center}
-.estrellas{font-size:clamp(3rem,13vw,5rem);letter-spacing:6px}
-.estrellas .off{filter:grayscale(1);opacity:.3}
-.res h2{margin:0;font-size:1.8rem}
-.res p{margin:0;color:var(--mu);font-size:1.15rem}
+/* ================= Tutorial ================= */
+.dots{display:flex;gap:6px;justify-content:center}.dots i{width:24px;height:6px;border-radius:3px;background:var(--bd)}.dots i.on{background:var(--ac)}
+.tutt{font-size:clamp(1.2rem,4.6vw,1.45rem);line-height:1.35;text-align:center}
 
-/* ===== Animaciones suaves ===== */
-.pop{animation:pop .35s ease}
-@keyframes pop{0%{transform:scale(.85);opacity:.4}100%{transform:scale(1);opacity:1}}
+/* ================= Botones ================= */
+.bt{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 22px;border-radius:20px;background:var(--ac);color:var(--on);font-size:1.15rem;font-weight:500;box-shadow:inset 0 -4px 0 var(--acx)}
+.bt.sec{background:var(--card);color:var(--tx);border:2px solid var(--bd);box-shadow:inset 0 -4px 0 var(--bd)}
+.bt.w{width:100%}
+.acts{display:flex;gap:10px}.acts .bt{flex:1}
+.fila{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* ================= Juego ================= */
+.tablero{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.carta{aspect-ratio:1/1;border-radius:18px;background:var(--card);border:2px solid var(--bd);box-shadow:inset 0 -5px 0 var(--bd);font-size:clamp(1.15rem,5.4vw,1.8rem);font-weight:500;display:grid;place-items:center;padding:4px;line-height:1.1;transition:transform .12s,opacity .3s}
+.carta.sel{border-color:var(--ac);box-shadow:inset 0 -5px 0 var(--ac);background:var(--acs);transform:scale(1.04)}
+.carta.hecha{background:var(--okbg);border-color:transparent;box-shadow:none;color:var(--ok);opacity:.55;pointer-events:none}
+.carta.mal{animation:temb .32s}
+
+/* ================= Resultado ================= */
+.res{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
+.estr{display:flex;gap:6px;color:var(--pill)}.estr .off{color:var(--bd2)}
+.estr .i{filter:drop-shadow(0 3px 0 rgba(0,0,0,.08))}
+.res h2{font-size:1.9rem}
+
+/* ================= Bienvenida ================= */
+.wel{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.wel h2{font-size:1.6rem}
+.inp{font:inherit;font-size:1.15rem;padding:13px 16px;border-radius:16px;border:2px solid var(--bd);background:var(--card);color:var(--tx);width:100%;-webkit-user-select:text;user-select:text}
+.inp:focus{outline:0;border-color:var(--ac)}
+.prf{display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:20px;border:2px solid var(--bd);width:100%;background:var(--card)}
+.prf .i{color:var(--acx)}.prf b{display:block;font-size:1.15rem;font-weight:500}.prf small{color:var(--mu);font-size:.92rem}
+.steps{display:flex;gap:6px;justify-content:center}.steps i{width:22px;height:5px;border-radius:3px;background:var(--bd)}.steps i.on{background:var(--ac)}
+
+/* ================= ¿Quién juega? ================= */
+.quien{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.qa{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px;border-radius:22px;border:2px solid var(--bd);background:var(--card);font-size:1rem;box-shadow:var(--sh)}
+.qa .av{width:54px;height:54px;font-size:1.35rem}
+.qa.on{border-color:var(--ac)}
+.qa.add{border-style:dashed;box-shadow:none;color:var(--mu);background:transparent}
+
+/* ================= Zona del tutor (sobria, Inter) ================= */
+.tz{font-family:var(--fi);font-size:15px;font-weight:400}
+.tz h2,.tz h3,.tz b{font-family:var(--fi)}
+.tzh{display:flex;align-items:center;gap:12px}
+.tzh .av{width:44px;height:44px;border-radius:12px;box-shadow:none;font:600 1.1rem var(--fi)}
+.tzh .tzn{flex:1;min-width:0}.tzh .tzn b{font-size:1.4rem;font-weight:600;display:block;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tzh .tzn small{color:var(--mu);font-size:.85rem}
+.seg{display:flex;border-bottom:1px solid var(--bd)}
+.seg button{flex:1;padding:10px 4px;font:500 .93rem var(--fi);color:var(--mu);border-bottom:2px solid transparent;margin-bottom:-1px}
+.seg button.on{color:var(--tx);border-bottom-color:var(--tx);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stats b{display:block;font-size:1.3rem;font-weight:600}.stats small{color:var(--mu);font-size:.78rem}
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:66px}
+.wk div{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.wk i{width:100%;border-radius:4px;background:var(--bd);min-height:4px}
+.wk i.on{background:var(--ac)}
+.wk small{font-size:.72rem;color:var(--mu)}
+.gt{font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin:8px 2px -6px}
+.list{background:var(--card);border:1px solid var(--bd);border-radius:14px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;width:100%;text-align:left;font:inherit;border-top:1px solid var(--bd)}
+.row:first-child{border-top:0}
+.row>.i{color:var(--mu)}
+.row .tx2{flex:1;min-width:0}.row .tx2 span{display:block;font-weight:500;font-size:.98rem}.row .tx2 small{display:block;color:var(--mu);font-size:.82rem;margin-top:1px}
+.row .chev{color:var(--bd2)}
+.row .val{color:var(--mu);font-size:.9rem}
+.row.dz span{color:var(--no)}
+.sw{width:44px;height:26px;border-radius:13px;background:var(--bd2);position:relative;flex:none;transition:background .15s}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .15s}
+.sw.on{background:var(--ok)}.sw.on::after{left:21px}
+.dom{display:flex;align-items:center;gap:8px;min-width:98px}
+.dom .bar{flex:1;height:6px;border-radius:3px;background:var(--bd);overflow:hidden}.dom .bar i{display:block;height:100%;border-radius:3px}
+.dom .pc{font-size:.8rem;color:var(--mu);width:34px;text-align:right}
+.sem{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.sem.r,.bar i.r{background:#DC2626}.sem.a,.bar i.a{background:#F59E0B}.sem.v,.bar i.v{background:#16A34A}.sem.g{background:var(--bd2)}
+.tz .bt{font:600 .95rem var(--fi);min-height:44px;border-radius:12px;box-shadow:none;padding:0 16px}
+.tz .bt.sec{border-width:1px}
+.tbl{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:14px}
+.tbl table{border-collapse:collapse;width:100%;font-size:.85rem}
+.tbl th,.tbl td{padding:8px 6px;border-bottom:1px solid var(--bd);text-align:center;white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left;position:sticky;left:0;background:var(--card);padding-left:12px}
+.tbl th{font-weight:600;color:var(--mu);font-size:.75rem}
+.tbl tr:last-child td{border-bottom:0}
+.note{font-size:.85rem;color:var(--mu);margin:0 2px}
+.txa{width:100%;min-height:150px;font:inherit;font-size:.92rem;padding:12px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);-webkit-user-select:text;user-select:text}
+
+/* PIN */
+.pinw{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.pinw .lk{width:52px;height:52px;border-radius:16px;background:var(--acs);color:var(--acx);display:grid;place-items:center}
+.pinw h2{font:600 1.35rem var(--fi)}.pinw p{margin:0;color:var(--mu);font-size:.9rem;max-width:320px}
+.pd{display:flex;gap:14px;margin:6px 0}.pd i{width:18px;height:18px;border-radius:50%;border:2px solid var(--ac)}.pd i.f{background:var(--ac)}
+.pd.mal{animation:temb .35s}
+.pk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:300px}
+.pk button{height:54px;border-radius:12px;border:1px solid var(--bd);background:var(--card);font:500 1.35rem var(--fi);display:grid;place-items:center}
+.pk button:active{background:var(--soft)}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:14px;font:500 .95rem var(--fi);z-index:30;animation:spIn .2s ease}
+
+/* Animaciones de entrada */
+.pop{animation:pop .3s ease}
+@keyframes pop{from{transform:scale(.94);opacity:.4}to{transform:none;opacity:1}}
 .fichas-anim circle.f{animation:caer .35s ease both}
-@keyframes caer{from{transform:translateY(-14px);opacity:0}to{transform:none;opacity:1}}
+@keyframes caer{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* ===== Zona adulta (sobria, Inter) ===== */
-.adulto{font-family:var(--fi);font-size:16px}
-.adulto .tarj{background:var(--card);border-radius:14px;border:1px solid var(--ln);padding:14px 16px}
-.adulto table{width:100%;border-collapse:collapse;font-size:.92rem}
-.adulto th,.adulto td{padding:7px 6px;border-bottom:1px solid var(--ln);text-align:left}
-.adulto .bt{font-family:var(--fi);font-size:1rem;min-height:46px;padding:10px 16px;box-shadow:none;border-radius:12px}
-
-/* Horizontal (tableta / móvil girado): visual y respuesta lado a lado */
-@media (orientation:landscape) and (min-width:700px){
-  .ej.lado{display:grid;grid-template-columns:1fr 1fr;align-items:center;column-gap:24px}
-  .ej.lado>.prog,.ej.lado>.enun{grid-column:1/-1}
+/* Tableta / horizontal */
+.home-grid{display:flex;flex-direction:column;gap:12px}
+@media (min-width:700px){
+  #app{gap:16px}
+  .mapa{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .home-grid{display:grid;grid-template-columns:1fr 1fr}
+  .home-grid .lc.hero{grid-column:1/-1}
 }
-@media (max-height:560px){.op{font-size:2.4rem}.opc{min-height:62px;font-size:1.8rem}.teclado button{min-height:50px}}
+@media (orientation:landscape) and (min-width:820px){
+  .ej-lado{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:start}
+}
+@media (max-height:600px){.op{font-size:2.3rem}.opc{min-height:56px;font-size:1.6rem}.kp button{height:46px}}
+
+/* Ajustes finos */
+.gl{display:flex!important;align-items:center;justify-content:center;gap:1px;white-space:nowrap}
+.acts .bt{white-space:nowrap;font-size:1.08rem;padding:0 14px}
+.txa{min-height:300px}
+#app[data-sc="ej"] .ej-lado,#app[data-sc="tut"] .card{flex:1}
+#app[data-sc="ej"] .ej-lado{display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+#app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:auto}
+#app[data-sc="tut"] .card{justify-content:center}
+@media (orientation:landscape) and (min-width:820px){#app[data-sc="ej"] .ej-lado{display:grid;grid-template-columns:1.1fr 1fr;align-items:center}#app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:0}}
+#app[data-sc="tut"] .vis svg{width:100%;max-width:480px;max-height:46vh}
+#app[data-sc="ej"] .vis svg{width:100%;max-width:380px;max-height:30vh}
 </style>
 </head>
 <body>
@@ -223,10 +353,11 @@ const SON = {
 /* ---- js/10-datos.js ---- */
 /* ===== Datos guardados (solo claves con prefijo calc.: comparte dominio con Lectori y Barri) ===== */
 const KEY = 'calc.v1', VERSION_DATOS = 1;
-const AVATARES = [['🦊','#EA580C'],['🐢','#15803D'],['🐼','#475569'],['🦁','#B45309'],['🐸','#16A34A'],['🐙','#9333EA'],['🐳','#2563EB'],['🦉','#78350F'],['🐝','#CA8A04'],['🐞','#DC2626'],['🦄','#DB2777'],['🐨','#64748B']];
+/* Colores de avatar (inicial del nombre sobre color, como en Barri) */
+const AVATARES = [['', '#EA580C'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#475569']];
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
-function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '' }, gmt: 0 }; }
+function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false }, gmt: 0 }; }
 
 const ss = (s, n) => String(s ?? '').replace(/[<>&"'`]/g, '').trim().slice(0, n);
 function limpiarAlu(a) {
@@ -236,7 +367,8 @@ function limpiarAlu(a) {
     if (!/^[a-z0-9]{2,20}$/.test(k) || !v || typeof v !== 'object') continue;
     e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0) };
   }
-  return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400) };
+  return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400),
+    /* ejercicios por día (para la Zona del tutor) */ dia: Object.fromEntries(Object.entries(a.dia && typeof a.dia === 'object' ? a.dia : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)])) };
 }
 /** Migraciones: nunca se pierde el progreso. Añadir aquí un paso por cada cambio de VERSION_DATOS. */
 function migrar(d) {
@@ -263,6 +395,7 @@ function registrar(id, ok) {
   const a = alumno(); if (!a) return;
   const p = progreso(a, id); p.h.push(ok ? 1 : 0); p.h = p.h.slice(-20); p.ult = hoy(); p.n++;
   if (!a.dias.includes(hoy())) a.dias.push(hoy());
+  a.dia[hoy()] = (a.dia[hoy()] || 0) + 1;
   a.mt = Date.now(); guardar();
 }
 /** Dominio 0..1 con los últimos 10 resultados; null si aún hay pocos datos. */
@@ -278,6 +411,94 @@ function alumnosDeOtrasApps() {
   const ya = new Set(EST.alu.map(a => a.n.toLowerCase())), vistos = new Set();
   return out.filter(x => { const k = x.n.toLowerCase(); if (ya.has(k) || vistos.has(k)) return false; vistos.add(k); return true; });
 }
+
+/* ---- js/15-iconos.js ---- */
+/* ===== Iconos de línea (estilo común con Lectori y Barri) ===== */
+const ICP = {
+  play: '<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>',
+  shuffle: '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+  book: '<path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M8 7h8"/>',
+  grad: '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+  map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  star: '<path d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="currentColor" stroke="none"/>',
+  starO: '<path d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  sun: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>',
+  chev: '<path d="M9 5l7 7-7 7"/>',
+  home: '<path d="M3 11 12 3l9 8"/><path d="M5 9.5V21h14V9.5"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
+  vol: '<path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
+  bulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+  check: '<path d="M4.5 12.5l5 5 10-11"/>',
+  refresh: '<path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/>',
+  download: '<path d="M12 4v11M7 10l5 5 5-5M4 20h16"/>',
+  upload: '<path d="M12 16V5M7 10l5-5 5 5M4 20h16"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
+  chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  target: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/>',
+  family: '<circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.5 2.2-6 5-6s5 2.5 5 6M13.5 20c0-2.6 1.6-4.5 3.5-4.5s3.5 1.9 3.5 4.5"/>',
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
+  pencil: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+  monitor: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  medal: '<circle cx="12" cy="15" r="5.5"/><path d="M8.5 10.5 6 3h4l2 5 2-5h4l-2.5 7.5"/>',
+  flame: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.3 2-4.3.2 1.8 1 2.8 2 2.8 0-3.2-.6-5.6 1-8.5z"/>',
+  backspace: '<path d="M21 5H9l-6 7 6 7h12z"/><path d="M12.5 9.5l5 5M17.5 9.5l-5 5"/>',
+  game: '<rect x="3" y="7" width="18" height="11" rx="4"/><path d="M7.5 12.5h3M9 11v3"/><circle cx="15.5" cy="11.5" r=".9" fill="currentColor"/><circle cx="17.5" cy="13.5" r=".9" fill="currentColor"/>'
+};
+const ico = (n, s = 22, sw = 2) => `<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICP[n] || ''}</svg>`;
+
+/* ===== Glifo de cada estrategia (en vez de emojis): texto corto o dibujo mínimo ===== */
+const GLIFO = {
+  versincontar: '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="8.3" cy="8.3" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="15.7" cy="15.7" r="1.8" fill="currentColor"/></svg>',
+  masmenos1: '±1',
+  descomponer: '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="6" r="3.6"/><circle cx="6" cy="18" r="3.3"/><circle cx="18" cy="18" r="3.3"/><path d="M10 9 7.6 15M14 9l2.4 6"/></svg>',
+  amigos10: '10',
+  orden: '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h15l-3.5-3.5M20 16H5l3.5 3.5"/></svg>',
+  desdemayor: '8<small>+</small>',
+  haciaatras: '<small>−</small>2',
+  usar5: '5',
+  dobles: '×2',
+  casidobles: '×2<small>+1</small>',
+  familias: '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3.5 21 19H3z"/><path d="M9 14h6"/></svg>',
+  completar10: '<small>→</small>10',
+  sumar9: '+9',
+  restarsumando: '<small>−</small><small>+</small>',
+  masmenos10: '±10',
+  decenas: '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><rect x="3" y="3" width="4.2" height="18" rx="1.4"/><rect x="9.9" y="3" width="4.2" height="18" rx="1.4"/><rect x="16.8" y="3" width="4.2" height="18" rx="1.4"/></svg>'
+};
+const glifo = e => GLIFO[e.id] || esc(e.ic);
+
+/* ===== Mascota: una piedrecita (los «calculi» con los que contaban los romanos) =====
+   Flota suavemente, parpadea y cierra los ojos al alegrarse. Sin brazos ni pies.
+   estado: 'normal' | 'feliz' (ojos cerrados en arco) | 'piensa' (mira hacia arriba) */
+function mascota(tam = 120, estado = 'normal') {
+  const feliz = estado === 'feliz', mira = estado === 'piensa' ? [-3, -5] : [2, 2];
+  const ojo = (cx, cy) => feliz
+    ? `<path d="M${cx - 14} ${cy + 4}Q${cx} ${cy - 13} ${cx + 14} ${cy + 4}" fill="none" stroke="#1B1F5C" stroke-width="7" stroke-linecap="round"/>`
+    : `<g class="ojo"><circle cx="${cx}" cy="${cy}" r="17" fill="#fff"/><circle cx="${cx + mira[0]}" cy="${cy + mira[1]}" r="10.5" fill="#1B1F5C"/><circle cx="${cx + mira[0] - 4}" cy="${cy + mira[1] - 4.5}" r="3.6" fill="#fff"/></g>`;
+  const boca = feliz
+    ? '<path d="M78 124Q100 150 122 124Z" fill="#7A2A0C"/><path d="M89 135Q100 129 111 135Q106 142 100 142Q94 142 89 135Z" fill="#FDBA74"/>'
+    : estado === 'piensa' ? '<path d="M90 130Q100 126 110 130" fill="none" stroke="#7A2A0C" stroke-width="6" stroke-linecap="round"/>'
+    : '<path d="M80 122Q100 144 120 122Z" fill="#7A2A0C"/><path d="M90 133Q100 128 110 133Q105 139 100 139Q95 139 90 133Z" fill="#FDBA74"/>';
+  return `<svg class="mas ${estado}" width="${tam}" height="${tam}" viewBox="0 0 200 200" role="img" aria-label="Mascota de Calculi">
+  <ellipse class="sombra" cx="100" cy="186" rx="52" ry="7" fill="currentColor" opacity=".12"/>
+  <g class="cuerpo">
+    <path d="M100 38C146 34 178 62 178 104C178 146 148 172 102 172C56 172 24 150 24 108C24 64 56 41 100 38Z" fill="#F26B1D"/>
+    <path d="M60 62C76 48 104 44 128 50C108 52 84 60 70 76C64 82 54 72 60 62Z" fill="#FF9A52" opacity=".75"/>
+    <path d="M38 132C56 160 98 170 140 160C122 172 70 174 46 150Z" fill="#C2410C" opacity=".35"/>
+    <ellipse cx="62" cy="118" rx="11" ry="6.5" fill="#FF7E7E" opacity=".45"/><ellipse cx="140" cy="118" rx="11" ry="6.5" fill="#FF7E7E" opacity=".45"/>
+    ${ojo(78, 96)}${ojo(124, 94)}${boca}
+  </g>
+  <g class="punto"><path d="M160 26C172 25 180 32 180 42C180 52 172 58 162 58C151 58 145 51 145 42C145 32 150 27 160 26Z" fill="#3B82F6"/><path d="M152 34C156 30 162 29 167 31" stroke="#93C5FD" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+</svg>`;
+}
+const logoMini = (t = 40) => `<span class="lg" style="width:${t}px;height:${t}px">${mascota(Math.round(t * .95)).replace('class="mas ', 'class="mas quieta ')}</span>`;
 
 /* ---- js/20-visual.js ---- */
 /* ===== Modelos visuales (SVG). Cada estrategia los pide con un objeto {t:'tipo', ...}. =====
@@ -453,128 +674,211 @@ function itemsRepaso(a, n = 10) {
 /** Estrellas de un reto de 10: 9-10 → 3 · 7-8 → 2 · 5-6 → 1. */
 const estrellasDe = (ok, n) => { const p = ok / n; return p >= .9 ? 3 : p >= .7 ? 2 : p >= .5 ? 1 : 0; };
 
-/* ---- js/40-pantallas.js ---- */
-/* ===== Pantallas ===== */
-let scr = 'inicio', EID = null, SES = null, TUT = 0, NUEVO = { n: '', av: 0 }, AJ_OK = false, AJ_Q = null;
+/* ---- js/40-inicio.js ---- */
+/* ===== Navegación, cabecera y pantallas de inicio ===== */
+let scr = 'inicio', EID = null, SES = null, TUT = 0, RES = null, JG = null, WEL = 0, NUEVO = '';
 const SC = {};
 const est = () => ESTR.get(EID);
-
-function aplicarTema() {
-  const t = EST.ajustes.tema, osc = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-  document.documentElement.dataset.theme = osc ? 'dark' : 'light';
-}
-function go(s) { scr = s; VOZ.callar(); pintar(); window.scrollTo(0, 0); }
-function pintar() { aplicarTema(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; }
-const barra = (titulo, atras, der = '') => `<div class="top"><button class="ib${atras ? '' : ' hid'}" onclick="${atras || ''}" aria-label="Volver">←</button><h1>${titulo}</h1>${der || '<span class="ib hid"></span>'}</div>`;
-const avatar = a => { const [e, c] = AVATARES[a.av] || AVATARES[0]; return `<span class="av" style="background:${c}">${e}</span>`; };
-const totalEstrellas = a => Object.values(a.e).reduce((s, p) => s + (p.est || 0), 0);
 const decir = t => VOZ.decir(t);
 
-/* ---------- Inicio: elegir alumno ---------- */
+function temaOscuro() { const t = EST.ajustes.tema; return t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches); }
+function aplicarTema() {
+  document.documentElement.dataset.theme = temaOscuro() ? 'dark' : 'light';
+  // Barras del sistema (arriba y abajo en el móvil) del mismo color que el fondo: así no se ven bandas.
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#FFF8F2';
+  let m = document.querySelector('meta[name="theme-color"]'); if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+  m.content = bg; document.body.style.background = bg;
+}
+function cambiarTema() { EST.ajustes.tema = temaOscuro() ? 'light' : 'dark'; guardar(); pintar(); }
+function go(s) { scr = s; VOZ.callar(); pintar(); window.scrollTo(0, 0); }
+function pintar() { aplicarTema(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; }
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
+
+const colorAv = a => (AVATARES[a.av] || AVATARES[0])[1];
+const avatar = (a, extra = '') => `<span class="av" style="background:${colorAv(a)}" ${extra}>${esc((a.n || '?')[0].toUpperCase())}</span>`;
+const totalEstrellas = a => Object.values(a.e).reduce((s, p) => s + (p.est || 0), 0);
+const estrellasHTML = (n, max = 3, t = 16) => Array.from({ length: max }, (_, i) => `<span class="${i < n ? '' : 'off'}">${ico(i < n ? 'star' : 'starO', t, 2)}</span>`).join('');
+
+/** Cabecera común: logo + nombre · avatar, estrellas, tema */
+function cabecera() {
+  const a = alumno();
+  const der = MODO_DOCENTE
+    ? `<button class="pill" style="background:var(--md);color:#fff" onclick="salirDocente()">${ico('grad', 18)} Salir</button>`
+    : a ? `<button onclick="go('quien')" aria-label="Cambiar de alumno">${avatar(a)}</button><span class="pill">${ico('star', 18)}${totalEstrellas(a)}</span>` : '';
+  return `<div class="hd"><div class="brand">${logoMini(40)}<span class="wm">Calculi</span></div><div class="hr">${der}
+  <button class="rnd" onclick="cambiarTema()" aria-label="Cambiar tema">${ico(temaOscuro() ? 'sun' : 'moon', 20)}</button></div></div>`;
+}
+const atras = (txt, act, icono = 'back') => `<button class="back" onclick="${act}">${ico(icono, 20, 2.4)}${txt}</button>`;
+function salirDocente() { MODO_DOCENTE = false; go('inicio'); }
+
+/* ---------- Bienvenida (primera vez) ---------- */
+SC.wel = () => {
+  const pasos = `<div class="steps">${[0, 1, 2].map(i => `<i class="${i <= WEL ? 'on' : ''}"></i>`).join('')}</div>`;
+  if (WEL === 0) return `${cabecera()}<div class="wel"><div class="gcard pop">${mascota(124)}<h2>¡Bienvenido a Calculi!</h2>
+    <p class="mut">Trucos de cálculo mental explicados paso a paso y practicados jugando. Sin anuncios y sin conexión.</p>
+    <button class="bt w" onclick="WEL=1;pintar()">Empezar</button>
+    <p class="mut" style="font-size:.85rem">El progreso se guarda en este dispositivo. Más adelante podrás sincronizarlo con tu cuenta de Google.</p></div></div>`;
+  if (WEL === 1) return `${cabecera()}<div class="wel"><div class="gcard pop">${pasos}<h2>¿Quién usa Calculi?</h2>
+    <p class="mut">Elige tu perfil. Podrás cambiarlo en la Zona del tutor.</p>
+    <button class="prf" onclick="EST.ajustes.perfil='docente';WEL=2;pintar()">${ico('grad', 26)}<span><b>Perfil Docente</b><small>Toda la clase, dominio de cada truco e informes</small></span></button>
+    <button class="prf" onclick="EST.ajustes.perfil='familia';WEL=2;pintar()">${ico('home', 26)}<span><b>Perfil Familias</b><small>Practicar en casa y ver el progreso</small></span></button></div></div>`;
+  const doc = EST.ajustes.perfil === 'docente';
+  return `${cabecera()}<div class="wel"><div class="gcard pop" style="align-items:stretch;text-align:left">${pasos}<h2>Primer alumno</h2>
+    <p class="mut">${doc ? 'Escribe el nombre de un alumno. Podrás añadir al resto de la clase desde la Zona del tutor.' : 'Escribe el nombre del niño o la niña que va a practicar. Podrás añadir más después.'}</p>
+    <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')finWel(true)">
+    ${importables()}
+    <div class="acts"><button class="bt sec" onclick="finWel(false)">Lo haré después</button><button class="bt" onclick="finWel(true)">Continuar</button></div></div></div>`;
+};
+function importables() {
+  const xs = alumnosDeOtrasApps().slice(0, 12); if (!xs.length) return '';
+  return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},${EST.alu.length % AVATARES.length});toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
+}
+function finWel(conNombre) {
+  const n = conNombre && $('#nom') ? $('#nom').value.trim() : '';
+  if (conNombre && !n && !EST.alu.length) { $('#nom').focus(); return; }
+  if (n) crearAlumno(n, EST.alu.length % AVATARES.length);
+  try { localStorage.setItem('calc.wel', '1'); } catch (e) {}
+  guardar(); go('inicio');
+}
+
+/* ---------- Inicio ---------- */
+function continuar() {
+  const a = alumno(), e = sugerida(a); EID = e.id; const p = a.e[e.id] || {};
+  if (!p.tut) { TUT = 0; go('tut'); } else if (!p.n) empezar('guiada'); else empezar('reto');
+}
 SC.inicio = () => {
-  const pf = EST.alu.map(a => `<button class="pf" onclick="entrar('${a.id}')">${avatar(a)}${esc(a.n)}</button>`).join('');
-  return `${barra('', '', '<button class="ib" onclick="abrirAjustes()" aria-label="Zona adultos">⚙️</button>')}
-  <div class="splash"><div class="piedras"><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="logo">Calculi<small>Trucos de cálculo mental</small></div>
-  <div class="perfiles">${pf}<button class="pf nuevo" onclick="NUEVO={n:'',av:${EST.alu.length % AVATARES.length}};go('nuevo')"><span style="font-size:2rem">＋</span>Nuevo</button>
-  <button class="pf md" onclick="MODO_DOCENTE=true;go('mapa')"><span style="font-size:2rem">🧑‍🏫</span>Modo Docente</button></div></div>`;
+  const a = alumno();
+  if (!a) return EST.alu.length ? SC.quien() : `${cabecera()}<div class="wel"><div class="gcard">${mascota(110)}<h2>¡Hola!</h2><p class="mut">Crea un alumno para empezar a practicar.</p>
+    <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off"><button class="bt w" onclick="const n=$('#nom').value.trim();if(n){crearAlumno(n,EST.alu.length%AVATARES.length);pintar()}">Crear alumno</button>${importables()}</div>
+    <button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button></div>`;
+  const e = sugerida(a), p = a.e[e.id] || {}, hayRepaso = ESTR.lista.some(x => (a.e[x.id] || {}).n > 0);
+  const sigTxt = MODO_DOCENTE ? 'Todos los trucos abiertos, sin guardar' : !p.tut ? `Aprender: ${e.n}` : !p.n ? `Practicar: ${e.n}` : `Reto: ${e.n}`;
+  const saludo = MODO_DOCENTE ? '¡Modo Docente!' : `¡Hola, ${esc(a.n)}!`;
+  const frase = MODO_DOCENTE ? 'Proyecta y practica con la clase' : pick(['¿Practicamos un truco?', '¿Seguimos aprendiendo?', '¡Vamos a calcular!']);
+  return `${cabecera()}
+  <div class="greet">${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>
+  <div class="home-grid">
+  <button class="lc hero" onclick="${MODO_DOCENTE ? "go('mapa')" : 'continuar()'}"><span class="ico">${ico('play', 26)}</span><span class="tx2"><b>${MODO_DOCENTE ? 'Trucos' : 'Seguir'}</b><small>${esc(sigTxt)}</small></span></button>
+  <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${hayRepaso ? 'Mezcla de los trucos que ya conoces' : 'Se abre cuando practiques un truco'}</small></span></button>
+  <button class="lc" onclick="EID='${e.id}';TUT=0;go('tut')"><span class="ico">${ico('book', 24)}</span><span class="tx2"><b>Aprender</b><small>Cómo funciona: ${esc(e.n)}</small></span></button>
+  </div>
+  <div class="duo"><button class="hc" onclick="go('logros')">${ico('medal', 22)}Mis logros</button><button class="hc" onclick="go('mapa')">${ico('map', 22)}Mapa de trucos</button></div>
+  ${MODO_DOCENTE ? '' : `<button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button>`}`;
 };
-function entrar(id) { MODO_DOCENTE = false; EST.act = id; guardar(); go('mapa'); }
 
-SC.nuevo = () => {
-  const avs = AVATARES.map(([e, c], i) => `<button class="pf${NUEVO.av === i ? ' sel' : ''}" style="padding:8px;${NUEVO.av === i ? 'outline:4px solid var(--ac2)' : ''}" onclick="NUEVO.av=${i};pintar()"><span class="av" style="background:${c}">${e}</span></button>`).join('');
-  const imp = alumnosDeOtrasApps().slice(0, 30).map(x => `<button class="bt sec" style="font-size:1rem;min-height:48px;padding:8px 14px" onclick="crearAlumno('${esc(x.n)}',${EST.alu.length % AVATARES.length});pintar()">＋ ${esc(x.n)} <small style="color:var(--mu)">(${x.de})</small></button>`).join('');
-  return `${barra('Nuevo alumno', "go('inicio')")}<div class="main" style="align-items:center;text-align:center">
-  <input class="inp" id="nom" maxlength="20" placeholder="Nombre" value="${esc(NUEVO.n)}" oninput="NUEVO.n=this.value" autocomplete="off">
-  <div class="perfiles" style="grid-template-columns:repeat(6,1fr);max-width:520px">${avs}</div>
-  <button class="bt" onclick="if(NUEVO.n.trim()){crearAlumno(NUEVO.n,NUEVO.av);go('mapa')}else $('#nom').focus()">Crear</button>
-  ${imp ? `<p style="color:var(--mu);margin:10px 0 0">Alumnos de tus otras apps en este dispositivo:</p><div class="fila">${imp}</div>` : ''}</div>`;
-};
+/* ---------- ¿Quién juega? ---------- */
+SC.quien = () => `${cabecera()}${EST.alu.length && alumno() ? atras('Inicio', "go('inicio')") : ''}<h1 class="ttl">¿Quién juega?</h1>
+  <div class="quien">${EST.alu.map(a => `<button class="qa${a.id === EST.act ? ' on' : ''}" onclick="entrar('${a.id}')">${avatar(a)}${esc(a.n)}</button>`).join('')}
+  <button class="qa add" onclick="NUEVO='';go('nuevo')"><span class="av" style="background:var(--bd2);color:var(--mu)">+</span>Añadir</button></div>
+  <button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button>`;
+function entrar(id) { MODO_DOCENTE = false; EST.act = id; guardar(); go('inicio'); }
+SC.nuevo = () => `${cabecera()}${atras('Volver', "go('quien')")}<div class="gcard" style="align-items:stretch;text-align:left"><h2>Nuevo alumno</h2>
+  <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')crearDesdeForm()">${importables()}
+  <button class="bt w" onclick="crearDesdeForm()">Crear</button></div>`;
+function crearDesdeForm() { const n = $('#nom').value.trim(); if (!n) return $('#nom').focus(); crearAlumno(n, EST.alu.length % AVATARES.length); MODO_DOCENTE = false; go('inicio'); }
 
-/* ---------- Mapa de estrategias ---------- */
+/* ---------- Mapa de trucos ---------- */
 SC.mapa = () => {
-  const a = alumno(); if (!a) { scr = 'inicio'; return SC.inicio(); }
-  const sug = sugerida(a), hayRepaso = ESTR.lista.some(e => (a.e[e.id] || {}).n > 0);
+  const a = alumno(), sug = sugerida(a);
   const tri = [1, 2, 3].map(t => {
     const cs = ESTR.lista.filter(e => e.tri === t).map(e => {
-      const p = a.e[e.id] || {}, ab = abierta(a, e), s = semaforo(a, e.id);
-      return `<button class="es${ab ? '' : ' lock'}${e === sug && !MODO_DOCENTE ? ' sug' : ''}" onclick="${ab ? `EID='${e.id}';go('estr')` : 'SON.mal()'}">
-      <span class="ic">${ab ? esc(e.ic) : '🔒'}</span><span><b>${esc(e.n)}</b><small>${s !== 'g' ? `<i class="sem ${s}"></i>` : ''}${esc(e.desc)}</small></span>
-      <span class="st">${'⭐'.repeat(p.est || 0)}</span></button>`;
+      const p = a.e[e.id] || {}, ab = abierta(a, e), d = dominio(a, e.id);
+      return `<button class="mw t${t}${ab ? '' : ' lock'}${e === sug && !MODO_DOCENTE ? ' sug' : ''}" onclick="${ab ? `EID='${e.id}';go('estr')` : "toast('Consigue una estrella en el truco anterior')"}">
+      <span class="gl">${glifo(e)}</span>${ab ? '' : `<span class="lk">${ico('lock', 16)}</span>`}<b>${esc(e.n)}</b>
+      <span class="es">${p.est ? '★'.repeat(p.est) + '☆'.repeat(3 - p.est) : ''}</span><span class="br"><i style="width:${Math.round((d ?? 0) * 100)}%"></i></span></button>`;
     }).join('');
-    return cs ? `<p class="tri">${['', 'Primer', 'Segundo', 'Tercer'][t]} trimestre</p><div class="mapa">${cs}</div>` : '';
+    return `<div class="tri">${['', '1.er', '2.º', '3.er'][t]} trimestre</div><div class="mapa">${cs}</div>`;
   }).join('');
-  return `${barra(`${MODO_DOCENTE ? '🧑‍🏫' : AVATARES[a.av][0]} ${esc(a.n)}`, "MODO_DOCENTE=false;go('inicio')", `<span class="est">⭐ ${totalEstrellas(a)}</span>`)}
-  <div class="main">${hayRepaso ? `<button class="repaso" onclick="empezar('repaso')"><span>🔁</span><span>Repaso del día<small>Mezcla de los trucos que ya conoces</small></span></button>` : ''}${tri}</div>`;
+  return `${atras('Inicio', "go('inicio')", 'home')}<h1 class="ttl">Mapa de trucos</h1>${tri}`;
 };
 
-/* ---------- Menú de una estrategia ---------- */
+/* ---------- Un truco ---------- */
 SC.estr = () => {
   const e = est(), a = alumno(), p = a.e[e.id] || {};
-  const f = (n, t, s, act, extra = '') => `<button class="fase" onclick="${act}"><span class="n">${n}</span><b>${t}</b><small>${s}</small>${extra}</button>`;
-  return `${barra(esc(e.n), "go('mapa')")}<div class="main">
-  <div class="fases">
-  ${f('📖', 'Aprender', 'Mira cómo funciona el truco', 'TUT=0;go(\'tut\')', p.tut ? '<small class="ok">✓ Visto</small>' : '')}
-  ${f('✏️', 'Practicar', 'Paso a paso, con ayuda', "empezar('guiada')")}
-  ${f('🏆', 'Reto', '10 operaciones', "empezar('reto')", `<small>${p.est ? '⭐'.repeat(p.est) : 'Consigue estrellas'}</small>`)}
-  ${f('🎲', 'Jugar', e.juego && e.juego.tipo === 'parejas' ? esc(e.juego.meta) : 'Operaciones rápidas', 'empezarJuego()')}
-  </div></div>`;
+  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
+  return `${atras('Mapa de trucos', "go('mapa')")}
+  <div class="shead"><span class="gl t${e.tri}">${glifo(e)}</span><span><b>${esc(e.n)}</b><small>${esc(e.desc)}</small></span></div>
+  ${fila(1, p.tut, 'Aprender', 'Mira cómo funciona el truco', "TUT=0;go('tut')")}
+  ${fila(2, p.n > 0, 'Practicar', 'Paso a paso, con ayuda', "empezar('guiada')")}
+  ${fila(3, p.est >= 3, 'Reto', '10 operaciones para ganar estrellas', "empezar('reto')", `<span class="es">${'★'.repeat(p.est || 0)}${'☆'.repeat(3 - (p.est || 0))}</span>`)}
+  ${fila(4, false, 'Jugar', e.juego && e.juego.tipo === 'parejas' ? esc(e.juego.meta) : 'Operaciones rápidas', 'empezarJuego()')}
+  <div class="say">${mascota(60, 'piensa')}<div class="bub">Truco: «${esc(e.truco)}»</div></div>`;
 };
+
+/* ---------- Mis logros ---------- */
+SC.logros = () => {
+  const a = alumno(), nEst = totalEstrellas(a), dom = ESTR.lista.filter(e => semaforo(a, e.id) === 'v').length, ej = Object.values(a.dia).reduce((s, n) => s + n, 0);
+  const tri = t => ESTR.lista.filter(e => e.tri === t).every(e => (a.e[e.id] || {}).est >= 1);
+  const L = [['star', 'Primera estrella', 'Gana una estrella en un reto', nEst >= 1], ['flame', 'Constancia', 'Practica 5 días distintos', a.dias.length >= 5],
+    ['target', 'Puntería', 'Domina 3 trucos', dom >= 3], ['check', 'Cien cuentas', 'Haz 100 ejercicios', ej >= 100],
+    ['medal', '1.er trimestre', 'Una estrella en todos sus trucos', tri(1)], ['medal', '2.º trimestre', 'Una estrella en todos sus trucos', tri(2)],
+    ['medal', '3.er trimestre', 'Una estrella en todos sus trucos', tri(3)], ['star', 'Coleccionista', 'Consigue 30 estrellas', nEst >= 30]];
+  return `${atras('Inicio', "go('inicio')", 'home')}<h1 class="ttl">Mis logros</h1>
+  <div class="greet" style="justify-content:flex-start">${mascota(70, 'feliz')}<div><div class="hi" style="font-size:1.5rem">${nEst} estrellas</div><p>${dom} ${dom === 1 ? 'truco dominado' : 'trucos dominados'} · ${ej} ejercicios</p></div></div>
+  ${L.map(([i, t, s, ok]) => `<div class="lc" style="${ok ? '' : 'opacity:.55'}"><span class="ico" style="${ok ? 'background:#FEF3C7;color:#B45309' : ''}">${ico(i, 24)}</span><span class="tx2"><b>${t}</b><small>${s}</small></span>${ok ? `<span style="color:var(--ok)">${ico('check', 24, 3)}</span>` : ''}</div>`).join('')}`;
+};
+
+/* ---- js/45-ejercicio.js ---- */
+/* ===== Tutorial, ejercicios, juego y resultado ===== */
 
 /* ---------- Tutorial ---------- */
 SC.tut = () => {
   const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1;
-  setTimeout(() => decir(s.txt), 250);
-  return `${barra(esc(e.n), "go('estr')")}<div class="main"><div class="tut pop">
-  <div class="vis">${VIS.dibujar(s.vis)}</div>
-  <div class="txt"><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">🔊</button><span>${esc(s.txt)}</span></div>
-  <div class="puntos-n">${e.tutorial.map((_, i) => `<i class="${i <= TUT ? 'on' : ''}"></i>`).join('')}</div>
-  <div class="fila">${TUT ? '<button class="bt sec" onclick="TUT--;pintar()">← Atrás</button>' : ''}
-  ${ult ? `<button class="bt" onclick="finTutorial()">¡A practicar!</button>` : '<button class="bt" onclick="TUT++;pintar()">Siguiente →</button>'}</div></div></div>`;
+  setTimeout(() => decir(s.txt), 300);
+  return `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button>
+  <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--acx)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
+  <div class="card pop"><div class="enun"><span>${esc(e.n)}</span><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>
+  <div class="vis">${VIS.dibujar(s.vis)}</div></div>
+  <div class="say">${mascota(66)}<div class="bub tutt" style="text-align:left">${esc(s.txt)}</div></div>
+  <div class="acts">${TUT ? `<button class="bt sec" onclick="TUT--;pintar()">${ico('back', 20, 2.4)}Atrás</button>` : ''}
+  ${ult ? `<button class="bt" onclick="finTutorial()">¡A practicar!</button>` : `<button class="bt" onclick="TUT++;pintar()">Siguiente${ico('chev', 20, 2.4)}</button>`}</div>`;
 };
 function finTutorial() { const a = alumno(); progreso(a, EID).tut = true; a.mt = Date.now(); guardar(); empezar('guiada'); }
 
-/* ---------- Sesiones de ejercicios ---------- */
+/* ---------- Sesiones ---------- */
 function empezar(tipo) {
   const a = alumno(), e = est();
-  SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now() };
+  SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '' };
   if (tipo === 'guiada') { SES.items = Array.from({ length: 4 }, () => e.guiada()); SES.n = 4; }
-  else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('mapa'); }
-  else { const p = a.e[e.id] || {}; SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
+  else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('inicio'); }
+  else { SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
+  SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!' }[tipo];
   go('ej');
 }
 function nuevoItem() { const e = est(); return Object.assign({ id: e.id, nivel: SES.nivel }, prepararItem(e.item(SES.nivel), SES.nivel)); }
-/** Pregunta actual: en la guiada, el paso actual (o la operación final con opciones). */
 function actual() {
   const it = SES.items[SES.i];
   if (SES.tipo !== 'guiada') return it;
   if (SES.paso < it.pasos.length) { const ps = it.pasos[SES.paso]; return ps._p || (ps._p = prepararItem(ps, ps.teclado ? 3 : 1)); }
   return it._final || (it._final = prepararItem(it.final, 1));
 }
-const huecoHTML = (q, val, cls = '') => esc(q).split('?').join(`<span class="hueco ${cls}">${val === '' || val === undefined ? '&nbsp;' : esc(val)}</span>`);
+const huecoHTML = (q, val) => esc(q).split('?').join(`<span class="hueco">${val === '' || val === undefined ? '&nbsp;' : esc(val)}</span>`);
+const salirSesion = () => SES && SES.tipo === 'repaso' ? "SES=null;go('inicio')" : "SES=null;go('estr')";
 
 SC.ej = () => {
   const c = actual(), it = SES.items[SES.i], nivel = it.nivel || 1, guiada = SES.tipo === 'guiada';
-  const titulo = { guiada: 'Practicar', reto: 'Reto', repaso: 'Repaso', rapido: 'Rápido' }[SES.tipo];
   const verVis = c.vis && (c.visSiempre || guiada || nivel === 1 || SES.ayuda || SES.fallos > 0);
-  const usarTeclado = !c.ops;
-  let cuerpo;
-  if (c.truco) cuerpo = `<div class="enun">¿Qué truco usarías?</div><div class="op">${esc(c.q)}</div>
-    <div class="ops" style="grid-template-columns:1fr">${c.ops.map(o => `<button class="opc" style="font-size:1.3rem" onclick="responder(this.dataset.v,this)" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
-  else cuerpo = `${guiada && SES.hechos.length ? `<div class="pasos-ok">${SES.hechos.map(h => `<div>✓ ${esc(h)}</div>`).join('')}</div>` : ''}
-    ${guiada && SES.paso < it.pasos.length ? `<div class="paso">Paso ${SES.paso + 1}</div>` : ''}
-    <div class="op pop">${huecoHTML(c.q, usarTeclado ? SES.resp : '')}</div>
-    ${verVis ? `<div class="vis">${VIS.dibujar(c.vis)}</div>` : ''}
-    <div class="fb" id="fb"></div>
-    ${usarTeclado ? teclado() : `<div class="ops">${c.ops.map(o => `<button class="opc" onclick="responder(${o},this)">${o}</button>`).join('')}</div>`}
-    ${!guiada && c.vis && !verVis ? '<button class="ayuda" onclick="SES.ayuda=true;pintar()">💡 Ayuda</button>' : ''}`;
-  return `${barra(titulo, SES.tipo === 'repaso' ? "SES=null;go('mapa')" : "SES=null;go('estr')")}
-  <div class="main"><div class="ej"><div class="prog"><i style="width:${(SES.i / SES.n) * 100}%"></i></div>
-  <div class="enun"><button class="voz" onclick="decir(${esc(JSON.stringify(c.voz || c.txt || c.q))})" aria-label="Escuchar">🔊</button>${c.txt ? `<span>${esc(c.txt)}</span>` : ''}</div>${cuerpo}</div></div>`;
+  const teclado = !c.ops;
+  const chips = guiada ? `<div class="chips">${it.pasos.map((_, k) => `<span class="${k === SES.paso ? 'on' : ''}">Paso ${k + 1}</span>`).join('')}<span class="${SES.paso >= it.pasos.length ? 'on' : ''}">Operación</span></div>` : '';
+  let pregunta, respuesta;
+  if (c.truco) {
+    pregunta = `<div class="card pop"><div class="enun"><span>¿Qué truco usarías?</span></div><div class="op">${esc(c.q)}</div></div>`;
+    respuesta = `<div class="ops una">${c.ops.map(o => `<button class="opc" onclick="responder(this.dataset.v,this)" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
+  } else {
+    pregunta = `<div class="card pop">${c.txt || !guiada ? `<div class="enun"><span>${esc(c.txt || '')}</span><button class="voz" onclick="decir(${esc(JSON.stringify(c.voz || c.txt || c.q))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>` : ''}
+      ${guiada && SES.hechos.length ? `<div class="pasos">${SES.hechos.map(h => `<div>${ico('check', 18, 3)}${esc(h)}</div>`).join('')}</div>` : ''}
+      <div class="op">${huecoHTML(c.q, teclado ? SES.resp : '')}</div>${verVis ? `<div class="vis">${VIS.dibujar(c.vis)}</div>` : ''}</div>`;
+    respuesta = teclado ? tecladoHTML() : `<div class="ops">${c.ops.map(o => `<button class="opc" onclick="responder(${o},this)">${o}</button>`).join('')}</div>`;
+  }
+  const ayuda = !guiada && !c.truco && c.vis && !verVis ? `<button class="ayuda" onclick="SES.ayuda=true;SES.msg='Mira el dibujo: te ayuda a pensar.';pintar()">${ico('bulb', 18)}Ayuda</button>` : '';
+  return `<div class="top"><button class="rnd" onclick="${salirSesion()}" aria-label="Salir">${ico('x', 20, 2.4)}</button>
+  <div class="pg"><i style="width:${(SES.i / SES.n) * 100}%"></i></div><span class="pill">${ico('star', 18)}${SES.ok}</span></div>${chips}
+  <div class="ej-lado"><div class="ej-cuerpo">${pregunta}</div>
+  <div class="ej-cuerpo"><div class="say">${mascota(58, SES.fb === 'ok' ? 'feliz' : SES.fb === 'no' ? 'piensa' : 'normal')}<div class="bub ${SES.fb || ''}" id="fb">${esc(SES.msg)}</div></div>${respuesta}${ayuda}</div></div>`;
 };
-function teclado() {
-  const k = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="tecla('${n}')">${n}</button>`).join('');
-  return `<div class="teclado">${k}<button onclick="tecla('b')" aria-label="Borrar">⌫</button><button onclick="tecla('0')">0</button><button class="okb" onclick="tecla('ok')">OK</button></div>`;
+function tecladoHTML() {
+  return `<div class="kp">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="tecla('${n}')">${n}</button>`).join('')}
+  <button onclick="tecla('b')" aria-label="Borrar">${ico('backspace', 24)}</button><button onclick="tecla('0')">0</button><button class="ok" onclick="tecla('ok')">OK</button></div>`;
 }
 function tecla(t) {
   if (SES.bloq) return;
@@ -583,113 +887,232 @@ function tecla(t) {
   else if (SES.resp.length < 3) SES.resp += t;
   const h = document.querySelector('.op .hueco'); if (h) h.innerHTML = SES.resp || '&nbsp;';
 }
-const BIEN = ['¡Muy bien!', '¡Genial!', '¡Eso es!', '¡Perfecto!', '¡Bravo!'], CASI = ['Casi. Mira la ayuda y prueba otra vez.', 'Uy, otra vez. Fíjate en el dibujo.'];
-function feedback(txt, ok) { const f = $('#fb'); if (f) { f.className = 'fb ' + (ok ? 'ok' : 'no'); f.textContent = txt; } }
+const BIEN = ['¡Muy bien!', '¡Genial!', '¡Eso es!', '¡Perfecto!', '¡Bravo!', '¡Qué rápido!'];
+function feedback(txt, tipo) {
+  SES.msg = txt; SES.fb = tipo;
+  const f = $('#fb'); if (f) { f.className = 'bub ' + tipo; f.textContent = txt; }
+  const m = document.querySelector('.say .mas'); if (m) m.outerHTML = mascota(58, tipo === 'ok' ? 'feliz' : 'piensa');
+}
+function limpiarPaso() { SES.bloq = false; SES.resp = ''; SES.fallos = 0; SES.fb = ''; }
 
 function responder(v, btn) {
   if (SES.bloq) return;
-  const c = actual(), it = SES.items[SES.i], bien = String(v) === String(c.r);
-  const hueco = document.querySelector('.op .hueco');
+  const c = actual(), it = SES.items[SES.i], bien = String(v) === String(c.r), hueco = document.querySelector('.op .hueco');
   if (bien) {
     SES.bloq = true; SON.bien(); if (btn) btn.classList.add('ok');
     if (hueco) { hueco.textContent = c.r; hueco.classList.add('ok'); }
-    feedback(pick(BIEN), true);
+    feedback(pick(BIEN), 'ok');
     if (SES.tipo === 'guiada') {
       setTimeout(() => {
-        if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; SES.bloq = false; SES.resp = ''; SES.fallos = 0; pintar(); }
+        if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Ahora el siguiente paso.'; pintar(); }
         else { SES.ok++; siguiente(); }
-      }, 750);
+      }, 800);
       return;
     }
     const limpio = SES.fallos === 0 && !SES.ayuda;
     registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++;
     if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
-    setTimeout(siguiente, 800);
+    setTimeout(siguiente, 850);
   } else {
     SON.mal(); SES.fallos++; if (btn) { btn.classList.add('no'); btn.disabled = true; }
-    if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 500); }
-    SES.resp = '';
+    if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 400); }
+    SES.resp = ''; if (hueco && !c.ops) hueco.innerHTML = '&nbsp;';
     if (SES.fallos >= 2 || c.truco) {
       SES.bloq = true;
       if (SES.tipo !== 'guiada') { registrar(it.id, false); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
-      if (hueco) { hueco.textContent = c.r; hueco.classList.add('ok'); }
-      feedback(c.truco ? `Era: ${c.r}` : `Era ${c.r}. ¡La próxima sale!`, false);
-      setTimeout(() => { if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; } else { siguiente(); return; } SES.bloq = false; SES.fallos = 0; pintar(); } else siguiente(); }, 1900);
-    } else if (SES.fallos === 1 && !SES.ayuda && c.vis && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1)) { SES.ayuda = true; pintar(); feedback(pick(CASI), false); }
-    else feedback('Prueba otra vez.', false);
+      if (hueco) { hueco.textContent = c.r; hueco.classList.remove('no'); hueco.classList.add('ok'); }
+      feedback(c.truco ? `Era: «${c.r}»` : `Era ${c.r}. ¡La próxima sale!`, 'no');
+      setTimeout(() => {
+        if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', c.r)); SES.paso++; limpiarPaso(); SES.msg = 'Sigamos.'; pintar(); } else siguiente(); }
+        else siguiente();
+      }, 2000);
+    } else if (c.vis && !SES.ayuda && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1) && !c.visSiempre) { SES.ayuda = true; SES.msg = 'Casi. Mira el dibujo y prueba otra vez.'; SES.fb = 'no'; pintar(); }
+    else feedback('Casi. Prueba otra vez.', 'no');
   }
 }
 function siguiente() {
-  SES.i++; SES.paso = 0; SES.fallos = 0; SES.ayuda = false; SES.bloq = false; SES.resp = ''; SES.hechos = [];
+  SES.i++; SES.paso = 0; SES.ayuda = false; SES.hechos = []; limpiarPaso();
   if (SES.i >= SES.n) return terminar();
+  SES.msg = pick(['¿Y esta?', 'Otra más.', 'Piensa en el truco.', '¡Sigue así!']);
   if (SES.tipo === 'reto' || SES.tipo === 'rapido') SES.items.push(nuevoItem());
   pintar();
 }
 function terminar() {
-  const a = alumno(); let estrellas;
-  if (SES.tipo === 'guiada') estrellas = 3;
-  else estrellas = estrellasDe(SES.ok, SES.n);
-  if (SES.tipo === 'reto') { const p = progreso(a, SES.id); if (estrellas > p.est) p.est = estrellas; a.mt = Date.now(); guardar(); }
-  RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, seg: Math.round((Date.now() - SES.t0) / 1000) };
+  const a = alumno(), estrellas = SES.tipo === 'guiada' ? 3 : estrellasDe(SES.ok, SES.n);
+  let mejora = false;
+  if (SES.tipo === 'reto') { const p = progreso(a, SES.id); if (estrellas > p.est) { p.est = estrellas; mejora = true; } a.mt = Date.now(); guardar(); }
+  if (SES.tipo === 'guiada') { const p = progreso(a, SES.id); if (!p.n) p.n = 1; guardar(); }
+  RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, mejora };
   SON.fin(); go('res');
 }
 
 /* ---------- Juego de parejas ---------- */
-let JG = null, RES = null;
 function empezarJuego() {
   const e = est();
   if (!e.juego || e.juego.tipo !== 'parejas') return empezar('rapido');
   const pares = e.juego.pares().slice(0, 6);
-  JG = { cartas: shuffle(pares.flatMap((p, k) => [{ t: String(p[0]), k }, { t: String(p[1]), k }])), sel: null, hechas: new Set(), err: 0, t0: Date.now() };
+  JG = { cartas: shuffle(pares.flatMap((p, k) => [{ t: String(p[0]), k }, { t: String(p[1]), k }])), sel: null, hechas: new Set(), err: 0 };
   go('juego');
 }
-SC.juego = () => {
-  const e = est();
-  return `${barra('Jugar', "go('estr')")}<div class="main" style="align-items:center"><div class="meta">${esc(e.juego.meta)}</div>
-  <div class="tablero">${JG.cartas.map((c, i) => `<button class="carta${JG.hechas.has(i) ? ' hecha' : ''}${JG.sel === i ? ' sel' : ''}" onclick="carta(${i},this)">${esc(c.t)}</button>`).join('')}</div>
-  <p style="color:var(--mu);margin:0">Toca dos tarjetas que vayan juntas</p></div>`;
-};
+SC.juego = () => `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Salir">${ico('x', 20, 2.4)}</button>
+  <div class="pg"><i style="width:${(JG.hechas.size / JG.cartas.length) * 100}%"></i></div><span class="pill">${ico('game', 18)}${JG.hechas.size / 2}/6</span></div>
+  <div class="say">${mascota(58)}<div class="bub">${esc(est().juego.meta)}. Toca dos tarjetas que vayan juntas.</div></div>
+  <div class="tablero">${JG.cartas.map((c, i) => `<button class="carta${JG.hechas.has(i) ? ' hecha' : ''}${JG.sel === i ? ' sel' : ''}" onclick="carta(${i},this)">${esc(c.t)}</button>`).join('')}</div>`;
 function carta(i, el) {
   if (JG.hechas.has(i)) return;
   if (JG.sel === null) { JG.sel = i; el.classList.add('sel'); return; }
   if (JG.sel === i) { JG.sel = null; el.classList.remove('sel'); return; }
   const a = JG.cartas[JG.sel], b = JG.cartas[i];
-  if (a.k === b.k) { JG.hechas.add(JG.sel).add(i); JG.sel = null; SON.bien(); if (JG.hechas.size === JG.cartas.length) { RES = { estrellas: JG.err <= 1 ? 3 : JG.err <= 3 ? 2 : 1, tipo: 'juego', err: JG.err, seg: Math.round((Date.now() - JG.t0) / 1000) }; SON.fin(); setTimeout(() => go('res'), 500); } else pintar(); }
-  else { JG.err++; SON.mal(); el.classList.add('mal'); setTimeout(() => { JG.sel = null; pintar(); }, 380); }
+  if (a.k === b.k) {
+    JG.hechas.add(JG.sel).add(i); JG.sel = null; SON.bien();
+    if (JG.hechas.size === JG.cartas.length) { RES = { estrellas: JG.err <= 1 ? 3 : JG.err <= 3 ? 2 : 1, tipo: 'juego', err: JG.err }; SON.fin(); setTimeout(() => go('res'), 450); } else pintar();
+  } else { JG.err++; SON.mal(); el.classList.add('mal'); setTimeout(() => { JG.sel = null; pintar(); }, 380); }
 }
 
 /* ---------- Resultado ---------- */
 SC.res = () => {
-  const r = RES, s = [1, 2, 3].map(k => `<span class="${k <= r.estrellas ? '' : 'off'}">⭐</span>`).join('');
+  const r = RES;
   const titulo = r.estrellas === 3 ? '¡Fantástico!' : r.estrellas === 2 ? '¡Muy bien!' : r.estrellas === 1 ? '¡Buen trabajo!' : '¡Sigue practicando!';
-  const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.`;
+  const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.${r.mejora ? ' ¡Nuevo récord de estrellas!' : ''}`;
   setTimeout(() => decir(titulo), 300);
-  const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`;
-  const sig = r.tipo === 'guiada' ? `<button class="bt" onclick="empezar('reto')">🏆 Hacer el reto</button>` : '';
-  return `${barra('', '')}<div class="res pop"><div class="estrellas">${s}</div><h2>${titulo}</h2><p>${det}</p>
-  <div class="fila"><button class="bt sec" onclick="${otra}">↻ Otra vez</button>${sig}<button class="bt${sig ? ' sec' : ''}" onclick="go(${r.tipo === 'repaso' ? "'mapa'" : "'estr'"})">Seguir</button></div></div>`;
+  const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`, volver = r.tipo === 'repaso' ? "go('inicio')" : "go('estr')";
+  const sig = r.tipo === 'guiada' ? `<button class="bt w" onclick="empezar('reto')">${ico('star', 20)}Hacer el reto</button>` : '';
+  return `<div class="res pop">${mascota(140, r.estrellas >= 2 ? 'feliz' : 'normal')}<div class="estr">${estrellasHTML(r.estrellas, 3, 50)}</div>
+  <h2>${titulo}</h2><p class="mut" style="margin:0;font-size:1.1rem">${det}</p></div>
+  <div style="display:flex;flex-direction:column;gap:10px">${sig}<div class="acts"><button class="bt sec" onclick="${otra}">${ico('refresh', 20)}Otra vez</button><button class="bt${sig ? ' sec' : ''}" onclick="${volver}">Seguir${ico('chev', 20, 2.4)}</button></div></div>`;
 };
 
-/* ---------- Zona de adultos (sencilla; la Zona del tutor con PIN llegará en la fase 3) ---------- */
-function abrirAjustes() { AJ_OK = false; AJ_Q = [rnd(6, 9), rnd(6, 9)]; go('ajustes'); }
-SC.ajustes = () => {
-  if (!AJ_OK) return `${barra('Zona de adultos', "go('inicio')")}<div class="main adulto" style="align-items:center;text-align:center">
-  <p>Para entrar, responde: ¿cuánto es ${AJ_Q[0]} × ${AJ_Q[1]}?</p><input class="inp" id="aj" inputmode="numeric" autocomplete="off">
-  <button class="bt" onclick="if(+$('#aj').value===${AJ_Q[0] * AJ_Q[1]}){AJ_OK=true;pintar()}else{$('#aj').value='';SON.mal()}">Entrar</button></div>`;
-  const A = EST.ajustes, sw = (k, t) => `<label style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">${t}<input type="checkbox" ${A[k] ? 'checked' : ''} onchange="EST.ajustes.${k}=this.checked;guardar()" style="width:24px;height:24px"></label>`;
-  const filas = EST.alu.map(a => `<tr><td>${esc(a.n)}</td>${ESTR.lista.map(e => `<td title="${esc(e.n)}"><i class="sem ${semaforo(a, e.id)}"></i></td>`).join('')}<td><button class="bt sec" style="min-height:32px;padding:4px 10px" onclick="if(confirm('¿Borrar a ${esc(a.n)} y su progreso?')){EST.alu=EST.alu.filter(x=>x.id!=='${a.id}');guardar();pintar()}">Borrar</button></td></tr>`).join('');
-  return `${barra('Zona de adultos', "go('inicio')")}<div class="main adulto">
-  <div class="tarj"><b>Ajustes</b>${sw('voz', 'Voz')}${sw('sonido', 'Sonidos')}${sw('abierto', 'Todas las estrategias abiertas')}
-  <label style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">Tema<select onchange="EST.ajustes.tema=this.value;guardar();pintar()" style="font:inherit;padding:6px">${[['auto', 'Automático'], ['light', 'Claro'], ['dark', 'Oscuro']].map(([v, t]) => `<option value="${v}" ${A.tema === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label></div>
-  <div class="tarj" style="overflow-x:auto"><b>Dominio por estrategia</b> <small style="color:var(--mu)">(<i class="sem v"></i>≥80 % · <i class="sem a"></i>≥50 % · <i class="sem r"></i>menos · <i class="sem g"></i>sin datos)</small>
-  <table><tr><th>Alumno</th>${ESTR.lista.map(e => `<th title="${esc(e.n)}">${esc(e.ic)}</th>`).join('')}<th></th></tr>${filas || '<tr><td>Aún no hay alumnos.</td></tr>'}</table></div>
-  <div class="tarj fila" style="justify-content:flex-start"><button class="bt sec" onclick="exportar()">⬇ Copia de seguridad</button><button class="bt sec" onclick="importar()">⬆ Restaurar copia</button></div></div>`;
+/* ---- js/50-tutor.js ---- */
+/* ===== Zona del tutor (sobria, letra Inter), protegida con PIN de 4 cifras ===== */
+const TZ = { tab: 'prog', fase: '', pin: '', pin1: '', hasta: 0, destino: 'tz', sub: '' };
+
+function abrirTutor(destino = 'tz') {
+  TZ.destino = destino; TZ.pin = '';
+  if (Date.now() < TZ.hasta && EST.ajustes.pin) return irDestino();
+  TZ.fase = EST.ajustes.pin ? 'pedir' : 'crear'; go('pin');
+}
+function irDestino() { if (TZ.destino === 'docente') { MODO_DOCENTE = true; go('inicio'); } else { TZ.sub = ''; go('tz'); } }
+
+SC.pin = () => {
+  const T = { crear: ['Crea un PIN de 4 cifras', 'Se pedirá para entrar en la Zona del tutor y en el Modo Docente. Tras escribirlo, no se vuelve a pedir durante 5 minutos.'],
+    repetir: ['Repite el PIN', 'Escríbelo otra vez para confirmarlo.'], pedir: ['Zona del tutor', 'Escribe el PIN de 4 cifras.'] }[TZ.fase];
+  const k = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="pinTecla('${n}')">${n}</button>`).join('');
+  return `<div class="tz">${atras('Inicio', "go('inicio')", 'home')}</div><div class="gcard tz pinw pop" style="margin-top:6px">
+  <span class="lk">${ico('lock', 26)}</span><h2>${T[0]}</h2><p>${T[1]}</p>
+  <div class="pd" id="pd">${[0, 1, 2, 3].map(i => `<i class="${i < TZ.pin.length ? 'f' : ''}"></i>`).join('')}</div>
+  <div class="pk">${k}<span></span><button onclick="pinTecla('0')">0</button><button onclick="pinTecla('b')" aria-label="Borrar">${ico('backspace', 22)}</button></div>
+  ${TZ.fase === 'pedir' ? '<p style="font-size:.8rem">¿Lo has olvidado? Borra los datos del sitio en el navegador (se pierde el progreso) o restaura una copia.</p>' : ''}</div>`;
 };
-function exportar() { const b = new Blob([JSON.stringify(EST, null, 1)], { type: 'application/json' }), u = URL.createObjectURL(b), l = document.createElement('a'); l.href = u; l.download = `calculi-copia-${hoy()}.json`; l.click(); setTimeout(() => URL.revokeObjectURL(u), 2000); }
+function pinTecla(t) {
+  if (t === 'b') TZ.pin = TZ.pin.slice(0, -1); else if (TZ.pin.length < 4) TZ.pin += t;
+  pintar(); if (TZ.pin.length < 4) return;
+  setTimeout(() => {
+    if (TZ.fase === 'crear') { TZ.pin1 = TZ.pin; TZ.pin = ''; TZ.fase = 'repetir'; pintar(); }
+    else if (TZ.fase === 'repetir') {
+      if (TZ.pin === TZ.pin1) { EST.ajustes.pin = TZ.pin; guardarAjustes(); TZ.hasta = Date.now() + 3e5; toast('PIN guardado'); irDestino(); }
+      else { TZ.pin = ''; TZ.fase = 'crear'; mal(); }
+    } else { if (TZ.pin === EST.ajustes.pin) { TZ.hasta = Date.now() + 3e5; irDestino(); } else { TZ.pin = ''; mal(); } }
+  }, 180);
+  function mal() { SON.mal(); pintar(); const d = $('#pd'); if (d) d.classList.add('mal'); }
+}
+/** Los ajustes se guardan aunque se esté en Modo Docente (el progreso no). */
+function guardarAjustes() { const md = MODO_DOCENTE; MODO_DOCENTE = false; guardar(); MODO_DOCENTE = md; }
+
+/* ---------- Pantalla principal de la zona ---------- */
+SC.tz = () => {
+  if (TZ.sub === 'resumen') return resumenFamilias();
+  const a = EST.alu.find(x => x.id === EST.act) || null, doc = EST.ajustes.perfil === 'docente' || EST.alu.length > 1;
+  const tabs = [['prog', 'Progreso'], ...(doc ? [['clase', 'Clase']] : []), ['alu', 'Alumnos'], ['aj', 'Ajustes']];
+  if (!tabs.some(t => t[0] === TZ.tab)) TZ.tab = 'prog';
+  const cab = `<div class="tzh">${a ? avatar(a) : `<span class="av" style="background:var(--ac)">${ico('users', 22)}</span>`}<div class="tzn"><b>${a ? esc(a.n) : 'Sin alumnos'}</b><small>Zona del tutor</small></div>
+  <button class="rnd" onclick="go('inicio')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button></div>`;
+  const cuerpo = { prog: () => tzProgreso(a), clase: tzClase, alu: tzAlumnos, aj: tzAjustes }[TZ.tab]();
+  return `<div class="tz" style="display:flex;flex-direction:column;gap:14px">${cab}
+  <div class="seg">${tabs.map(([k, t]) => `<button class="${TZ.tab === k ? 'on' : ''}" onclick="TZ.tab='${k}';pintar()">${t}</button>`).join('')}</div>${cuerpo}</div>`;
+};
+const fila = (icono, t, s, act, der = `<span class="chev">${ico('chev', 18)}</span>`, cls = '') => `<button class="row ${cls}" onclick="${act}">${icono ? ico(icono, 20) : ''}<span class="tx2"><span>${t}</span>${s ? `<small>${s}</small>` : ''}</span>${der}</button>`;
+function barraDom(a, e) {
+  const d = dominio(a, e.id), s = semaforo(a, e.id);
+  return `<span class="dom"><span class="bar"><i class="${s}" style="width:${d === null ? 0 : Math.max(6, Math.round(d * 100))}%"></i></span><span class="pc">${d === null ? '—' : Math.round(d * 100) + '%'}</span></span>`;
+}
+function semana(a) {
+  const hoyD = new Date(), lunes = new Date(hoyD); lunes.setDate(hoyD.getDate() - ((hoyD.getDay() + 6) % 7));
+  return Array.from({ length: 7 }, (_, i) => { const d = new Date(lunes); d.setDate(lunes.getDate() + i); const k = d.toISOString().slice(0, 10); return { k, n: a.dia[k] || 0, l: 'LMXJVSD'[i] }; });
+}
+function racha(a) { let n = 0; const d = new Date(); for (;;) { const k = d.toISOString().slice(0, 10); if (a.dias.includes(k)) n++; else if (n || k !== hoy()) break; d.setDate(d.getDate() - 1); if (n > 400) break; } return n; }
+
+function tzProgreso(a) {
+  if (!a) return `<p class="note">Añade un alumno en la pestaña Alumnos.</p>`;
+  const sem = semana(a), max = Math.max(5, ...sem.map(x => x.n)), dom = ESTR.lista.filter(e => semaforo(a, e.id) === 'v').length;
+  const reforzar = ESTR.lista.filter(e => ['r', 'a'].includes(semaforo(a, e.id)));
+  return `<div class="stats"><div><b>${sem.reduce((s, x) => s + x.n, 0)}</b><small>Esta semana</small></div><div><b>${racha(a)} ${racha(a) === 1 ? 'día' : 'días'}</b><small>Racha</small></div>
+  <div><b>${totalEstrellas(a)}</b><small>Estrellas</small></div><div><b>${dom}/${ESTR.lista.length}</b><small>Dominados</small></div></div>
+  <div class="wk">${sem.map(x => `<div><i class="${x.n ? 'on' : ''}" style="height:${Math.round((x.n / max) * 100)}%"></i><small>${x.l}</small></div>`).join('')}</div>
+  <div class="gt">Para reforzar</div><div class="list">${reforzar.length ? reforzar.map(e => fila('', esc(e.n), `Truco: ${esc(e.truco)}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('') : `<div class="row"><span class="tx2"><span>Nada pendiente</span><small>Aparecen aquí los trucos con menos del 80 % de aciertos.</small></span></div>`}</div>
+  <div class="gt">Dominio por truco</div><div class="list">${ESTR.lista.map(e => fila('', esc(e.n), `${['', '1.er', '2.º', '3.er'][e.tri]} trimestre · ${'★'.repeat((a.e[e.id] || {}).est || 0) || 'sin estrellas'}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('')}</div>
+  <div class="gt">Seguimiento</div><div class="list">
+  ${fila('family', 'Resumen para las familias', 'Texto de la semana para enviar', "TZ.sub='resumen';pintar()")}
+  ${fila('monitor', 'Modo Docente', 'Todo abierto, sin guardar: para proyectar en clase', "MODO_DOCENTE=true;go('inicio')")}</div>
+  <p class="note">El dominio se calcula con los 10 últimos intentos sin ayuda de cada truco (verde ≥ 80 %, ámbar ≥ 50 %).</p>`;
+}
+function tzClase() {
+  if (!EST.alu.length) return '<p class="note">Aún no hay alumnos.</p>';
+  return `<div class="tbl"><table><tr><th>Alumno</th>${ESTR.lista.map(e => `<th title="${esc(e.n)}">${e.orden}</th>`).join('')}<th>★</th></tr>
+  ${EST.alu.map(a => `<tr><td><button onclick="EST.act='${a.id}';guardarAjustes();TZ.tab='prog';pintar()" style="font-weight:500">${esc(a.n)}</button></td>${ESTR.lista.map(e => `<td><i class="sem ${semaforo(a, e.id)}"></i></td>`).join('')}<td>${totalEstrellas(a)}</td></tr>`).join('')}</table></div>
+  <p class="note"><i class="sem v"></i> ≥ 80 % · <i class="sem a"></i> ≥ 50 % · <i class="sem r"></i> menos · <i class="sem g"></i> sin datos. Números = orden de los trucos:</p>
+  <div class="list">${ESTR.lista.map(e => `<div class="row"><span class="val" style="width:22px">${e.orden}</span><span class="tx2"><span>${esc(e.n)}</span></span>${(() => { const n = EST.alu.filter(a => semaforo(a, e.id) === 'v').length; return `<span class="val">${n}/${EST.alu.length} dominan</span>`; })()}</div>`).join('')}</div>`;
+}
+function tzAlumnos() {
+  const imp = alumnosDeOtrasApps();
+  return `<div style="display:flex;gap:8px"><input class="inp" id="nn" maxlength="20" placeholder="Nombre del alumno" style="font-size:1rem;padding:10px 12px;border-radius:12px" onkeydown="if(event.key==='Enter')anadirTz()"><button class="bt" onclick="anadirTz()">${ico('plus', 18)}Añadir</button></div>
+  <div class="list">${EST.alu.map(a => `<div class="row">${avatar(a, 'style="width:34px;height:34px;font-size:.9rem;box-shadow:none"')}<span class="tx2"><span>${esc(a.n)}${a.id === EST.act ? ' · activo' : ''}</span><small>${totalEstrellas(a)} estrellas · ${a.dias.length ? 'último día ' + a.dias[a.dias.length - 1].split('-').reverse().join('/') : 'sin actividad'}</small></span>
+  <button class="rnd" style="width:36px;height:36px" onclick="renombrar('${a.id}')" aria-label="Renombrar">${ico('pencil', 16)}</button><button class="rnd" style="width:36px;height:36px;color:var(--no)" onclick="borrarAlu('${a.id}')" aria-label="Borrar">${ico('trash', 16)}</button></div>`).join('') || '<div class="row"><span class="tx2"><span>Aún no hay alumnos</span></span></div>'}</div>
+  ${imp.length ? `<div class="gt">De tus otras apps en este dispositivo</div><div class="list">${imp.slice(0, 40).map(x => fila('plus', esc(x.n), x.de, `crearAlumno(${esc(JSON.stringify(x.n))},EST.alu.length%AVATARES.length);guardarAjustes();toast('Añadido');pintar()`, '')).join('')}</div>` : ''}`;
+}
+function anadirTz() { const n = $('#nn').value.trim(); if (!n) return $('#nn').focus(); const act = EST.act; crearAlumno(n, EST.alu.length % AVATARES.length); if (act) EST.act = act; guardarAjustes(); pintar(); }
+function renombrar(id) { const a = EST.alu.find(x => x.id === id), n = prompt('Nuevo nombre', a.n); if (n && n.trim()) { a.n = ss(n, 20); a.mt = Date.now(); guardarAjustes(); pintar(); } }
+function borrarAlu(id) { const a = EST.alu.find(x => x.id === id); if (!confirm(`¿Borrar a ${a.n} y todo su progreso?`)) return; EST.alu = EST.alu.filter(x => x.id !== id); if (EST.act === id) EST.act = EST.alu[0] ? EST.alu[0].id : null; guardarAjustes(); pintar(); }
+
+function tzAjustes() {
+  const A = EST.ajustes, sw = (k, t, s) => fila('', t, s, `EST.ajustes.${k}=!EST.ajustes.${k};guardarAjustes();pintar()`, `<span class="sw${A[k] ? ' on' : ''}"></span>`);
+  const tema = { auto: 'Automático', light: 'Claro', dark: 'Oscuro' }[A.tema];
+  return `<div class="gt">Aula</div><div class="list">
+  ${fila('users', 'Perfil', A.perfil === 'docente' ? 'Docente: toda la clase' : 'Familias: en casa', "EST.ajustes.perfil=EST.ajustes.perfil==='docente'?'familia':'docente';guardarAjustes();pintar()", `<span class="val">Cambiar</span>`)}
+  ${sw('abierto', 'Todos los trucos abiertos', 'Sin esperar a ganar estrellas en el anterior')}
+  ${fila('monitor', 'Modo Docente', 'Todo abierto, sin guardar progreso', "MODO_DOCENTE=true;go('inicio')")}</div>
+  <div class="gt">Sonido y aspecto</div><div class="list">${sw('voz', 'Voz', 'Lee en voz alta las explicaciones')}${sw('sonido', 'Sonidos', 'Aciertos, fallos y final')}
+  ${fila(temaOscuro() ? 'moon' : 'sun', 'Tema', '', "EST.ajustes.tema={auto:'light',light:'dark',dark:'auto'}[EST.ajustes.tema];guardarAjustes();pintar()", `<span class="val">${tema}</span>`)}</div>
+  <div class="gt">Seguridad y datos</div><div class="list">
+  ${fila('key', 'Cambiar PIN', '', "EST.ajustes.pin='';TZ.hasta=0;abrirTutor()")}
+  ${fila('download', 'Guardar copia de seguridad', 'Archivo con todos los alumnos y su progreso', 'exportar()')}
+  ${fila('upload', 'Restaurar copia', '', 'importar()')}
+  ${fila('trash', 'Borrar todos los datos', 'No se puede deshacer', 'borrarTodo()', '', 'dz')}</div>
+  <p class="note">Calculi · Los datos se guardan solo en este dispositivo. La sincronización con Google llegará pronto.</p>`;
+}
+function exportar() { const b = new Blob([JSON.stringify(EST, null, 1)], { type: 'application/json' }), u = URL.createObjectURL(b), l = document.createElement('a'); l.href = u; l.download = `calculi-copia-${hoy()}.json`; l.click(); setTimeout(() => URL.revokeObjectURL(u), 2000); try { localStorage.setItem('calc.bk', Date.now()); } catch (e) {} toast('Copia descargada'); }
 function importar() {
   const i = document.createElement('input'); i.type = 'file'; i.accept = '.json,application/json';
-  i.onchange = () => { const f = i.files[0]; if (!f) return; f.text().then(t => { try { const d = migrar(JSON.parse(t)); if (confirm(`La copia tiene ${d.alu.length} alumnos. ¿Sustituir los datos actuales?`)) { EST = d; guardar(); pintar(); } } catch (e) { alert('Ese archivo no es una copia de Calculi.'); } }); };
+  i.onchange = () => { const f = i.files[0]; if (!f) return; f.text().then(t => { try { const d = migrar(JSON.parse(t)); if (confirm(`La copia tiene ${d.alu.length} alumnos. ¿Sustituir los datos actuales?`)) { EST = d; guardarAjustes(); pintar(); toast('Copia restaurada'); } } catch (e) { alert('Ese archivo no es una copia de Calculi.'); } }); };
   i.click();
+}
+function borrarTodo() { if (!confirm('¿Borrar todos los alumnos, el progreso y los ajustes de Calculi?')) return; EST = estadoVacio(); guardarAjustes(); try { localStorage.removeItem('calc.wel'); } catch (e) {} WEL = 0; go('wel'); }
+
+/* ---------- Resumen para las familias ---------- */
+function textoResumen(a) {
+  const sem = semana(a), n = sem.reduce((s, x) => s + x.n, 0), d = sem.filter(x => x.n).length;
+  const dom = ESTR.lista.filter(e => semaforo(a, e.id) === 'v'), ref = ESTR.lista.filter(e => ['r', 'a'].includes(semaforo(a, e.id)));
+  const ahora = sugerida(a);
+  let t = `Resumen de cálculo mental de ${a.n}\n\nEsta semana ha hecho ${n} ejercicios en ${d} ${d === 1 ? 'día' : 'días'} y lleva ${totalEstrellas(a)} estrellas en total.\n`;
+  if (dom.length) t += `\nYa domina: ${dom.map(e => e.n.toLowerCase()).join(', ')}.\n`;
+  t += `\nAhora está aprendiendo: ${ahora.n.toLowerCase()} («${ahora.truco.toLowerCase()}»).\n`;
+  if (ref.length) t += `\nPara reforzar en casa:\n${ref.slice(0, 3).map(e => `· ${e.n}: ${e.truco.toLowerCase()}.`).join('\n')}\n`;
+  return t + '\nCinco minutos al día de cálculo mental marcan la diferencia. ¡Gracias por vuestra ayuda!';
+}
+function resumenFamilias() {
+  const a = alumno(), t = a ? textoResumen(a) : '';
+  return `<div class="tz" style="display:flex;flex-direction:column;gap:14px">${atras('Zona del tutor', "TZ.sub='';pintar()")}<h2 style="font-size:1.4rem;font-weight:600">Resumen para las familias</h2>
+  <p class="note">Puedes editar el texto antes de copiarlo.</p><textarea class="txa" id="txr">${esc(t)}</textarea>
+  <button class="bt" onclick="navigator.clipboard&&navigator.clipboard.writeText($('#txr').value).then(()=>toast('Texto copiado'),()=>{$('#txr').select();document.execCommand('copy');toast('Texto copiado')})">${ico('copy', 18)}Copiar texto</button></div>`;
 }
 
 /* ---- js/estrategias/01-versincontar.js ---- */
@@ -1362,7 +1785,11 @@ ESTR.add({
 /* ===== Arranque ===== */
 cargar();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => pintar());
+let primeraVez = false; try { primeraVez = !localStorage.getItem('calc.wel') && !EST.alu.length; } catch (e) {}
+if (primeraVez) { scr = 'wel'; WEL = 0; }
 pintar();
+// Presentación: mascota y nombre durante un momento, con fundido (como Lectori y Barri)
+(() => { const s = document.createElement('div'); s.className = 'splash'; s.innerHTML = mascota(150) + '<div class="wm">Calculi</div>'; document.body.appendChild(s); setTimeout(() => s.remove(), 1900); })();
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>

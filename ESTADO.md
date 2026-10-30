@@ -1,7 +1,7 @@
-# Plan de ejecución · Calculín
+# Plan de ejecución · Calculi
 
 ## Fase 0 · Esqueleto del ecosistema
-- [ ] Crear repositorio en GitHub y activar Pages (rama `main`, raíz)
+- [x] Crear repositorio en GitHub y activar Pages (rama `main`, raíz)
 - [x] `src/` + `tools/build.py` → `index.html`; `sw.js` (`calc-pwa-1`), manifest, iconos y fuentes
 - [x] Tema claro/oscuro, colores propios, tipografías Fredoka + Inter
 - [x] Perfiles de alumno y guardado en `calc.v1` con migración versionada
@@ -21,12 +21,18 @@
 - [x] Repaso espaciado (lo que falla vuelve más) y actividad «¿Qué truco usarías?»
 - [x] Lectura en voz alta de las instrucciones (voz del navegador, como Lectori)
 
+## Rediseño (v1.1)
+- [x] Mascota piedrecita animada (flota, parpadea, cierra los ojos al alegrarse)
+- [x] Inicio, bienvenida, mapa, truco, ejercicios y resultados al estilo de Lectori y Barri
+- [x] Iconos de línea y glifos propios por estrategia; barras del móvil del color del fondo
+- [ ] Nombre de la mascota
+
 ## Fase 3 · Aula
 - [x] Zona de adultos sencilla: ajustes, semáforo de dominio por alumno, copia de seguridad, importar alumnos de Lectori/Barri
-- [ ] Zona del tutor con PIN, Modo Docente y copia de seguridad
-- [ ] Panel por alumno: semáforo de dominio de cada estrategia
+- [x] Zona del tutor con PIN, Modo Docente y copia de seguridad
+- [x] Panel por alumno: semáforo de dominio de cada estrategia (y tabla de clase)
 - [ ] Modo pizarra/proyector: «5 minutos de cálculo» para toda la clase
-- [ ] Informe para familias
+- [x] Resumen para familias
 
 ## Fase 4 · Ecosistema
 - [ ] Sincronización con Firebase (colección `calculo`, subcolección `alu`)
