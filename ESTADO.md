@@ -64,4 +64,5 @@
 - [x] Errores más frecuentes de la clase y de cada alumno
 - [x] Bingo de cálculo (cartones imprimibles + proyector), reto semanal de la clase
 - [x] Informes para familias imprimibles (una página por alumno)
-- [ ] Animalitos en Lectori y Barri
+- [x] Animalitos en Lectori (mismo animal al importar en Calculi)
+- [ ] Animalitos en Barri (pendiente: su código fuente está fuera del repositorio)

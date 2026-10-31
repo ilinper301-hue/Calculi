@@ -563,10 +563,12 @@ function dominio(a, id) { const h = (a.e[id] || {}).h || []; if (h.length < 5) r
 /** Semáforo: v (≥80 %), a (≥50 %), r (<50 %), g (sin datos). */
 function semaforo(a, id) { const d = dominio(a, id); return d === null ? 'g' : d >= .8 ? 'v' : d >= .5 ? 'a' : 'r'; }
 
+/** Mismo animalito que en Lectori (mismo cálculo que su avI). */
+function avLectori(p) { if (Number.isInteger(p.av) && p.av >= 0 && p.av < AVATARES.length) return p.av; let h = 0; for (const c of String(p.id || p.n || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % AVATARES.length; }
 /** Importar alumnos de Lectori (ar2) y Barri (barri.v1) del mismo dispositivo: solo lectura. */
 function alumnosDeOtrasApps() {
   const out = [];
-  try { const L = JSON.parse(localStorage.getItem('ar2') || 'null'); (L && Array.isArray(L.ps) ? L.ps : []).forEach(p => p && p.n && out.push({ n: ss(p.n, 20), de: 'Lectori' })); } catch (e) {}
+  try { const L = JSON.parse(localStorage.getItem('ar2') || 'null'); (L && Array.isArray(L.ps) ? L.ps : []).forEach(p => p && p.n && out.push({ n: ss(p.n, 20), de: 'Lectori', av: avLectori(p) })); } catch (e) {}
   try { const B = JSON.parse(localStorage.getItem('barri.v1') || 'null'), pr = B && (B.profs || B.stu || {}); Object.values(pr && typeof pr === 'object' ? pr : {}).forEach(p => p && p.name && out.push({ n: ss(p.name, 20), de: 'Barri' })); } catch (e) {}
   const ya = new Set(EST.alu.map(a => a.n.toLowerCase())), vistos = new Set();
   return out.filter(x => { const k = x.n.toLowerCase(); if (ya.has(k) || vistos.has(k)) return false; vistos.add(k); return true; });
@@ -974,7 +976,7 @@ SC.wel = () => {
 };
 function importables() {
   const xs = alumnosDeOtrasApps().slice(0, 12); if (!xs.length) return '';
-  return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},avLibre());toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
+  return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},${x.av ?? 'avLibre()'});toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
 }
 function animalWel(i) { const v = $('#nom') ? $('#nom').value : ''; NUEVO_AV = i; pintar(); if ($('#nom')) $('#nom').value = v; }
 function cursoWel(c) { const v = $('#nom') ? $('#nom').value : ''; EST.ajustes.curso = c; pintar(); if ($('#nom')) $('#nom').value = v; }
@@ -1674,7 +1676,7 @@ function tzAlumnos() {
   return `<div style="display:flex;gap:8px"><input class="inp" id="nn" maxlength="20" placeholder="Nombre del alumno" style="font-size:1rem;padding:10px 12px;border-radius:12px" onkeydown="if(event.key==='Enter')anadirTz()"><button class="bt" onclick="anadirTz()">${ico('plus', 18)}Añadir</button></div><p class="note">Los alumnos nuevos se crean en ${nomCurso(EST.ajustes.curso || 1)} (cámbialo en Ajustes › Curso de la clase).</p>
   <div class="list">${EST.alu.map(a => `<div class="row"><button onclick="TZ.sub='animal:${a.id}';pintar()" aria-label="Cambiar animal">${avatar(a, 'style="width:38px;height:38px;font-size:1.3rem;box-shadow:none"')}</button><span class="tx2"><span>${esc(a.n)}${a.id === EST.act ? ' · activo' : ''}</span><small>${nomCurso(cursoDe(a))} · ${totalEstrellas(a)} estrellas · ${a.dias.length ? 'último día ' + a.dias[a.dias.length - 1].split('-').reverse().join('/') : 'sin actividad'}</small></span>
   <select onchange="cambiarCurso('${a.id}',+this.value)" aria-label="Curso" style="font:500 .85rem var(--fi);padding:6px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx)">${[1, 2, 3, 4, 5, 6].map(c => `<option value="${c}" ${cursoDe(a) === c ? 'selected' : ''}>${nomCurso(c)}</option>`).join('')}</select><button class="rnd" style="width:36px;height:36px" onclick="renombrar('${a.id}')" aria-label="Renombrar">${ico('pencil', 16)}</button><button class="rnd" style="width:36px;height:36px;color:var(--no)" onclick="borrarAlu('${a.id}')" aria-label="Borrar">${ico('trash', 16)}</button></div>`).join('') || '<div class="row"><span class="tx2"><span>Aún no hay alumnos</span></span></div>'}</div>
-  ${imp.length ? `<div class="gt">De tus otras apps en este dispositivo</div><div class="list">${imp.slice(0, 40).map(x => fila('plus', esc(x.n), x.de, `crearAlumno(${esc(JSON.stringify(x.n))},avLibre());guardarAjustes();toast('Añadido');pintar()`, '')).join('')}</div>` : ''}`;
+  ${imp.length ? `<div class="gt">De tus otras apps en este dispositivo</div><div class="list">${imp.slice(0, 40).map(x => fila('plus', esc(x.n), x.de, `crearAlumno(${esc(JSON.stringify(x.n))},${x.av ?? 'avLibre()'});guardarAjustes();toast('Añadido');pintar()`, '')).join('')}</div>` : ''}`;
 }
 function anadirTz() { const n = $('#nn').value.trim(); if (!n) return $('#nn').focus(); const act = EST.act; crearAlumno(n, avLibre()); if (act) EST.act = act; guardarAjustes(); pintar(); }
 function cambiarAnimal(i) { const al = EST.alu.find(x => x.id === TZ.sub.slice(7)); if (al) { al.av = i; al.mt = Date.now(); guardarAjustes(); } TZ.sub = ''; pintar(); }

@@ -65,10 +65,12 @@ function dominio(a, id) { const h = (a.e[id] || {}).h || []; if (h.length < 5) r
 /** Semáforo: v (≥80 %), a (≥50 %), r (<50 %), g (sin datos). */
 function semaforo(a, id) { const d = dominio(a, id); return d === null ? 'g' : d >= .8 ? 'v' : d >= .5 ? 'a' : 'r'; }
 
+/** Mismo animalito que en Lectori (mismo cálculo que su avI). */
+function avLectori(p) { if (Number.isInteger(p.av) && p.av >= 0 && p.av < AVATARES.length) return p.av; let h = 0; for (const c of String(p.id || p.n || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % AVATARES.length; }
 /** Importar alumnos de Lectori (ar2) y Barri (barri.v1) del mismo dispositivo: solo lectura. */
 function alumnosDeOtrasApps() {
   const out = [];
-  try { const L = JSON.parse(localStorage.getItem('ar2') || 'null'); (L && Array.isArray(L.ps) ? L.ps : []).forEach(p => p && p.n && out.push({ n: ss(p.n, 20), de: 'Lectori' })); } catch (e) {}
+  try { const L = JSON.parse(localStorage.getItem('ar2') || 'null'); (L && Array.isArray(L.ps) ? L.ps : []).forEach(p => p && p.n && out.push({ n: ss(p.n, 20), de: 'Lectori', av: avLectori(p) })); } catch (e) {}
   try { const B = JSON.parse(localStorage.getItem('barri.v1') || 'null'), pr = B && (B.profs || B.stu || {}); Object.values(pr && typeof pr === 'object' ? pr : {}).forEach(p => p && p.name && out.push({ n: ss(p.name, 20), de: 'Barri' })); } catch (e) {}
   const ya = new Set(EST.alu.map(a => a.n.toLowerCase())), vistos = new Set();
   return out.filter(x => { const k = x.n.toLowerCase(); if (ya.has(k) || vistos.has(k)) return false; vistos.add(k); return true; });
