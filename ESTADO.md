@@ -52,5 +52,5 @@
 - [x] Cálculo diario (2 minutos, récord personal) y colección de piedrecitas
 - [x] Colores para daltonismo (Ajustes)
 - [x] Resumen para Tabula en `calc.tabula` y CSV de evaluación
-- [ ] Lector en Tabula (repositorio de Tabula, ver docs/tabula.md)
+- [x] Lector en Tabula: botón «Calculi» en el Cuaderno (PR #15 de Tabula, pendiente de fusionar)
 - [ ] Sincronización con Firebase

@@ -20,9 +20,10 @@ Calculi escribe (2 s después de cada cambio) un resumen en la clave **`calc.tab
 - `semaforo`: `v` (≥ 80 %), `a` (≥ 50 %), `r` (< 50 %), `g` (sin datos).
 - Se incluyen los trucos del curso del alumno y cualquier otro que haya practicado.
 
-## Qué haría falta en Tabula (pendiente)
-1. Añadir Calculi a `APPS_AMIGAS` (js/nav-model.js) con su icono.
-2. En el Cuaderno, un botón «Traer de Calculi» que lea `localStorage['calc.tabula']`, empareje alumnos por nombre con el grupo y cree una actividad de evaluación por truco (nota = dominio/10 o nivel según el semáforo).
-3. Para otros dispositivos: leer la colección `calculo` de Firestore cuando Calculi sincronice (mismo `uid` de Google).
+## En Tabula (hecho: rama `calculi-en-cuaderno`, PR #15)
+- Cuaderno › botón **Calculi**: lee `calc.tabula`, empareja alumnos por nombre (sin adivinar si hay dos iguales; se corrige a mano) y crea una columna por truco o una con la media. Nota = dominio / 10, con comentario. Al volver a traer, actualiza las columnas (`origen: 'calculi'`, `claveCalculi`).
+- Calculi aparece en las apps amigas de Tabula.
+- `firestore.rules` de Tabula incluye ya `calculo/{uid}` para cuando Calculi sincronice.
+- Pendiente: leer de Firestore para otros dispositivos (cuando Calculi sincronice con Google).
 
 Mientras tanto, la Zona del tutor de Calculi › Aula › «Descargar evaluación (CSV)» da los mismos datos en una hoja de cálculo.
