@@ -44,3 +44,13 @@
 - [x] Motor multicurso: curso por alumno, selector en mapa y Zona del tutor, decimales con coma, dibujos matriz/barra/cien/centenas/recta decimal
 - [x] 72 trucos nuevos (2.º 15, 3.º 15, 4.º 14, 5.º 14, 6.º 14) según docs/plan-cursos.md, con revisión independiente por curso
 - [ ] Probar en el aula y ajustar
+
+## Mejoras (v1.3)
+- [x] Pistas según el error en los 88 trucos (+ pistas generales del motor)
+- [x] Un paso para tocar en cada tutorial (marco, recta, barra, matriz, elige)
+- [x] Modo proyector, duelo por equipos y fichas para imprimir (Zona del tutor › Aula)
+- [x] Cálculo diario (2 minutos, récord personal) y colección de piedrecitas
+- [x] Colores para daltonismo (Ajustes)
+- [x] Resumen para Tabula en `calc.tabula` y CSV de evaluación
+- [ ] Lector en Tabula (repositorio de Tabula, ver docs/tabula.md)
+- [ ] Sincronización con Firebase

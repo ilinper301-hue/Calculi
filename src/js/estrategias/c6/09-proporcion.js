@@ -1,13 +1,15 @@
 /* 6.º · Truco 9 · Regla de tres simple */
 (() => {
   const R = x => +x.toFixed(3);
+  const ER = (r, l) => l.filter(x => x[0] >= 0 && Math.abs(x[0] - r) > 1e-9).map(x => [+x[0].toFixed(3), x[1]]);
   // [nombre, precios por unidad razonables en €]
   const OBJ = [['cuadernos', [2, 3, 4, 5]], ['bolígrafos', [1, 2, 3, 4]], ['helados', [2, 3, 4, 5]], ['metros de cinta', [2, 3, 4, 5, 6]], ['kilos de manzanas', [2, 3, 4]], ['entradas de cine', [5, 6, 7, 8, 9]], ['paquetes de folios', [3, 4, 5, 6]]];
   const DEC = [['cuadernos', [1.5, 2.5, 3.5]], ['bolígrafos', [0.5, 1.5, 2.5]], ['helados', [1.5, 2.5, 3.5]], ['metros de cinta', [1.5, 2.5, 3.5]], ['kilos de manzanas', [1.5, 2.5, 3.5]], ['paquetes de folios', [2.5, 3.5]]];
   const vis = (a, p, u) => ({ t: 'barra', partes: a, marcadas: a, total: p, valor: u, oculto: 'valor' });
   const prob = (a, o, u, b) => {
     const p = R(a * u);
-    return { txt: `${a} ${o} cuestan ${fmt(p)} €. ¿Cuánto cuestan ${b} ${o}?`, q: `${b} ${o} = ? €`, r: R(b * u), vis: vis(a, p, u), extra: [R(p + (b - a)), R(b * u + u), R(b * u - u), R(a * b), R(p + u)] };
+    return { txt: `${a} ${o} cuestan ${fmt(p)} €. ¿Cuánto cuestan ${b} ${o}?`, q: `${b} ${o} = ? €`, r: R(b * u), vis: vis(a, p, u), extra: [R(p + (b - a)), R(b * u + u), R(b * u - u), R(a * b), R(p + u)],
+      errores: ER(R(b * u), [[R(p + (b - a)), 'No vale sumar la diferencia. Busca lo que cuesta 1 y multiplica.'], [R(b * u + u), 'Te has pasado por uno. Cuenta cuántos hay.'], [R(b * u - u), 'Te falta uno. Cuenta cuántos hay.'], [R(a * b), `Multiplica ${b} por lo que cuesta 1, no por ${a}.`], [R(p + u), 'Eso es sumar un solo precio. Hay que multiplicar.']]) };
   };
   ESTR.add({
     id: 'proporcion', curso: 6, orden: 9, tri: 2,
@@ -17,6 +19,7 @@
       { txt: '3 cuadernos cuestan 6 €. ¿Cuánto cuesta cada uno? Reparto 6 € entre 3.', vis: { t: 'barra', partes: 3, marcadas: 3, total: 6, valor: 2, oculto: 'valor' } },
       { txt: '6 : 3 = 2. Cada cuaderno cuesta 2 €. Esto se llama «buscar el valor de uno».', vis: { t: 'barra', partes: 3, marcadas: 3, total: 6, valor: 2 } },
       { txt: 'Ahora, 5 cuadernos: 5 × 2 = 10 €. Los 5 trozos valen 2 € cada uno.', vis: { t: 'barra', partes: 5, marcadas: 5, total: 10, valor: 2 } },
+      { txt: 'Tu turno: cada trozo es un cuaderno de 2 €. Toca los trozos de 5 cuadernos.', toca: { t: 'barra', partes: 8, objetivo: 5, total: 16 } },
       { txt: 'Cuidado: no vale sumar. Con 2 cuadernos más no pagas 2 € más, sino 2 × 2 = 4 € más.', vis: { t: 'barra', partes: 5, marcadas: 5, total: 10, valor: 2 } }
     ],
     guiada() {
@@ -25,10 +28,10 @@
       const p = a * u;
       return {
         pasos: [
-          { txt: `${a} ${o} cuestan ${p} €. ¿Cuánto cuesta 1?`, q: `${p} : ${a} = ?`, r: u, vis: vis(a, p, u), extra: [p - a, a, p + a, p] },
-          { txt: `Ahora, ¿cuánto cuestan ${b} ${o}? Multiplico el precio de uno:`, q: `${u} × ${b} = ?`, r: u * b, vis: { t: 'barra', partes: b, marcadas: b, total: u * b, valor: u, oculto: 'total' }, extra: [p + b - a, u + b, a * b, p] }
+          { txt: `${a} ${o} cuestan ${p} €. ¿Cuánto cuesta 1?`, q: `${p} : ${a} = ?`, r: u, vis: vis(a, p, u), extra: [p - a, a, p + a, p], errores: ER(u, [[a, 'Eso es cuántos hay. Reparte el precio entre ellos.'], [p, 'Eso es lo que cuestan todos. ¿Y uno solo?'], [p - a, 'No se resta: se reparte el precio entre los que hay.'], [p + a, 'No se suma: se reparte el precio entre los que hay.']]) },
+          { txt: `Ahora, ¿cuánto cuestan ${b} ${o}? Multiplico el precio de uno:`, q: `${u} × ${b} = ?`, r: u * b, vis: { t: 'barra', partes: b, marcadas: b, total: u * b, valor: u, oculto: 'total' }, extra: [p + b - a, u + b, a * b, p], errores: ER(u * b, [[p + b - a, 'No vale sumar la diferencia. Multiplica el precio de uno.'], [u + b, 'No es sumar: hay que multiplicar el precio de uno.'], [a * b, `Multiplica ${b} por el precio de uno (${u} €).`], [p, `Eso es lo que cuestan ${a}. Te preguntan por ${b}.`]]) }
         ],
-        final: { txt: `${a} ${o} cuestan ${p} €. ¿Cuánto cuestan ${b} ${o}?`, q: `${b} ${o} = ? €`, r: u * b, vis: vis(a, p, u), extra: [p + b - a, u * b + u, a * b] }
+        final: { txt: `${a} ${o} cuestan ${p} €. ¿Cuánto cuestan ${b} ${o}?`, q: `${b} ${o} = ? €`, r: u * b, vis: vis(a, p, u), extra: [p + b - a, u * b + u, a * b], errores: ER(u * b, [[p + b - a, 'No vale sumar la diferencia. Busca lo que cuesta 1.'], [u * b + u, 'Te has pasado por uno. Cuenta cuántos hay.'], [a * b, `Multiplica ${b} por lo que cuesta 1, no por ${a}.`], [p, `Eso es lo que cuestan ${a}. Te preguntan por ${b}.`]]) }
       };
     },
     item(nivel) {

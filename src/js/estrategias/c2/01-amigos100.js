@@ -1,5 +1,6 @@
 /* 2.º · Truco 1 · Amigos del 100 */
 {
+  const E = (r, l) => l.filter(x => x[0] >= 0 && x[0] !== r);
   ESTR.add({
     id: 'amigos100', curso: 2, orden: 1, tri: 1,
     n: 'Amigos del 100', ic: '100', desc: 'Parejas que suman 100',
@@ -9,16 +10,17 @@
       { txt: 'Cada barra es una decena. 3 barras azules y 7 naranjas llenan 10 barras: son 100.', vis: { t: 'decenas', grupos: [{ d: 3 }, { d: 7 }] } },
       { txt: '30 y 70 son amigos del 100. Se parecen a 3 y 7, los amigos del 10.', vis: { t: 'parte', total: 100, a: 30, b: 70 } },
       { txt: 'Con 45: primero sumo 5 y llego a 50. Luego sumo 50 y llego a 100.', vis: { t: 'recta', desde: 0, hasta: 100, inicio: 45, saltos: [5, 50] } },
+      { txt: 'Tu turno: toca el amigo del 100 de 65.', toca: { t: 'elige', q: '65 + ? = 100', ops: [25, 35, 45], r: 35 } },
       { txt: 'Truco: 5 + 50 = 55. El amigo del 100 de 45 es 55.', vis: { t: 'parte', total: 100, a: 45, b: 55, oculto: 'b' } }
     ],
     guiada() {
       const d = rnd(1, 8), u = rnd(1, 9), a = 10 * d + u, sig = 10 * (d + 1), r = 100 - a;
       return {
         pasos: [
-          { txt: `¿Cuánto le falta a ${a} para llegar a ${sig}?`, q: `${a} + ? = ${sig}`, r: 10 - u, vis: { t: 'recta', desde: 10 * d, hasta: sig, inicio: a, saltos: [10 - u] }, extra: [u, 10 - u + 1, 10 - u - 1].filter(x => x > 0) },
-          { txt: `Ahora, ¿cuánto falta de ${sig} a 100?`, q: `${sig} + ? = 100`, r: 100 - sig, vis: { t: 'cien', n: sig }, extra: [100 - a, 100 - sig + 10, 100 - sig - 10] }
+          { txt: `¿Cuánto le falta a ${a} para llegar a ${sig}?`, q: `${a} + ? = ${sig}`, r: 10 - u, vis: { t: 'recta', desde: 10 * d, hasta: sig, inicio: a, saltos: [10 - u] }, extra: [u, 10 - u + 1, 10 - u - 1].filter(x => x > 0), errores: E(10 - u, [[u, 'Esas son las unidades. Mira cuánto falta hasta la decena.'], [10 - u + 1, 'Cuenta otra vez lo que falta: te has pasado por uno.'], [10 - u - 1, 'Cuenta otra vez lo que falta: te falta uno.']]) },
+          { txt: `Ahora, ¿cuánto falta de ${sig} a 100?`, q: `${sig} + ? = 100`, r: 100 - sig, vis: { t: 'cien', n: sig }, extra: [100 - a, 100 - sig + 10, 100 - sig - 10], errores: E(100 - sig, [[100 - a, `Eso es lo que falta desde ${a}. Ahora parte de ${sig}.`], [100 - sig + 10, 'Te has pasado una decena. Cuenta las barras que faltan.'], [100 - sig - 10, 'Te falta una decena. Cuenta las barras que faltan.']]) }
         ],
-        final: { txt: 'Junto los dos saltos. ¿Cuál es el amigo del 100?', q: `${a} + ? = 100`, r, vis: { t: 'cien', n: a, m: r }, extra: [100 - sig, r + 10, r - 10, 100 - 10 * d] }
+        final: { txt: 'Junto los dos saltos. ¿Cuál es el amigo del 100?', q: `${a} + ? = 100`, r, vis: { t: 'cien', n: a, m: r }, extra: [100 - sig, r + 10, r - 10, 100 - 10 * d], errores: E(r, [[100 - sig, 'Te falta el primer salto. Junta los dos saltos.'], [r + 10, 'Te has pasado una decena. Revisa los saltos.'], [r - 10, 'Te falta una decena. Revisa los saltos.']]) }
       };
     },
     item(nivel) {
@@ -31,7 +33,8 @@
       const vis = { t: 'cien', n: a };
       const f = rnd(0, 2);
       const q = f === 0 ? `${a} + ? = 100` : f === 1 ? `? + ${a} = 100` : `100 = ${a} + ?`;
-      return { q, r: b, vis, extra };
+      const errores = E(b, [[b + 10, 'Te has pasado una decena. Cuenta otra vez lo que falta.'], [b - 10, 'Te falta una decena. Cuenta otra vez lo que falta.'], [100 - 10 * d, `Has llegado a ${100 - 10 * d}, pero se te olvidan las unidades.`], [a, `El ${a} ya está. Busca cuánto falta hasta 100.`]]);
+      return { q, r: b, vis, extra, errores };
     },
     juego: {
       tipo: 'parejas', meta: 'Une los amigos del 100',

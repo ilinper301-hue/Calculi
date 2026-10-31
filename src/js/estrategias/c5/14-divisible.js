@@ -1,5 +1,6 @@
 /* 5.º · Truco 14 · ¿Es divisible? (criterios del 2, 3, 5 y 10) */
 (function () {
+  const ER = (r, l) => { const v = new Set([+(+r).toFixed(3)]); return l.map(x => [+(+x[0]).toFixed(3), x[1]]).filter(x => Number.isFinite(x[0]) && x[0] >= 0 && !v.has(x[0]) && v.add(x[0])); };
   const cifras = n => String(n).split('').map(Number);
   const suma = n => cifras(n).reduce((s, c) => s + c, 0);
   // Dibujo del número con barras de 10 y cubitos (solo hasta 399, para que quepa)
@@ -16,16 +17,17 @@
       { txt: 'Entre 2: si acaba en cifra par (0, 2, 4, 6 u 8). Entre 5: si acaba en 0 o en 5.', vis: { t: 'barra', partes: 2, marcadas: 1, total: 18, valor: 9 } },
       { txt: 'Entre 10: si acaba en 0. Por eso 470 : 10 = 47.', vis: { t: 'barra', partes: 10, marcadas: 1, total: 470, valor: 47 } },
       { txt: 'Entre 3: sumo las cifras. 2 + 4 + 6 = 12. Como 12 está en la tabla del 3, 246 es divisible.', vis: num(246) },
-      { txt: 'Y ahora lo comprobamos: 246 : 3 = 82. No sobra nada.', vis: { t: 'barra', partes: 3, marcadas: 1, total: 246, valor: 82 } }
+      { txt: 'Tu turno: para saber si 135 se divide entre 3, suma sus cifras. Toca el resultado.', toca: { t: 'elige', q: '1 + 3 + 5 = ?', ops: [8, 9, 10], r: 9 } },
+    { txt: 'Y ahora lo comprobamos: 246 : 3 = 82. No sobra nada.', vis: { t: 'barra', partes: 3, marcadas: 1, total: 246, valor: 82 } }
     ],
     guiada() {
       const k = rnd(20, 130), n = 3 * k, c = cifras(n), S = suma(n);
       return {
         pasos: [
-          { txt: `Sumo las cifras de ${n}:`, q: `${c.join(' + ')} = ?`, r: S, vis: num(n), extra: [S + 1, S - 1, S + 3, c.reduce((p, x) => p * x, 1)] },
-          { txt: `¿Está el ${S} en la tabla del 3?`, q: `3 × ? = ${S}`, r: S / 3, extra: [S / 3 + 1, S / 3 - 1, S - 3] }
+          { txt: `Sumo las cifras de ${n}:`, q: `${c.join(' + ')} = ?`, r: S, vis: num(n), extra: [S + 1, S - 1, S + 3, c.reduce((p, x) => p * x, 1)], errores: ER(S, [[c.reduce((p, x) => p * x, 1), 'Las cifras se suman, no se multiplican.'], [S + 1, 'Suma otra vez las cifras, con calma.'], [S - 1, 'Suma otra vez las cifras, con calma.']]) },
+          { txt: `¿Está el ${S} en la tabla del 3?`, q: `3 × ? = ${S}`, r: S / 3, extra: [S / 3 + 1, S / 3 - 1, S - 3], errores: ER(S / 3, [[S / 3 + 1, `Piensa: ¿qué número por 3 da ${S}?`], [S / 3 - 1, `Piensa: ¿qué número por 3 da ${S}?`], [S - 3, `Eso es restar 3. Busca qué número por 3 da ${S}.`]]) }
         ],
-        final: { txt: `Está en la tabla del 3, así que ${n} se puede dividir entre 3:`, q: `${n} : 3 = ?`, r: k, vis: barra(n, 3), extra: [k + 1, k - 1, k + 10, k - 10] }
+        final: { txt: `Está en la tabla del 3, así que ${n} se puede dividir entre 3:`, q: `${n} : 3 = ?`, r: k, vis: barra(n, 3), extra: [k + 1, k - 1, k + 10, k - 10], errores: ER(k, [[k + 1, 'Comprueba: multiplica tu resultado por 3.'], [k - 1, 'Comprueba: multiplica tu resultado por 3.'], [k + 10, 'Comprueba: multiplica tu resultado por 3.'], [k - 10, 'Comprueba: multiplica tu resultado por 3.']]) }
       };
     },
     item(nivel) {
@@ -33,7 +35,7 @@
       const tipo = nivel === 1 ? pick([0, 1, 2, 3, 4]) : pick([0, 1, 1, 2, 3, 4]);
       if (tipo === 0) {
         const n = nivel === 1 ? rnd(12, 99) : nivel === 2 ? rnd(100, 399) : rnd(100, 9999), c = cifras(n), S = suma(n);
-        return { q: `${c.join(' + ')} = ?`, txt: `Suma las cifras de ${n}. Si la suma está en la tabla del 3, ${n} se divide entre 3.`, r: S, vis: num(n), extra: [S + 1, S - 1, S + 3, c.reduce((p, x) => p * x, 1)] };
+        return { q: `${c.join(' + ')} = ?`, txt: `Suma las cifras de ${n}. Si la suma está en la tabla del 3, ${n} se divide entre 3.`, r: S, vis: num(n), extra: [S + 1, S - 1, S + 3, c.reduce((p, x) => p * x, 1)], errores: ER(S, [[c.reduce((p, x) => p * x, 1), 'Las cifras se suman, no se multiplican.'], [S + 1, 'Suma otra vez las cifras, con calma.'], [S - 1, 'Suma otra vez las cifras, con calma.'], [S + 3, 'Suma otra vez las cifras, con calma.']]) };
       }
       const d = [0, 3, 2, 5, 10][tipo];
       let k;
@@ -42,7 +44,7 @@
       else k = d === 3 ? rnd(100, 3300) : d === 10 ? rnd(100, 990) : d === 2 ? rnd(100, 4900) : rnd(100, 1990);
       let n = d * k;
       if (d === 2 && n % 4 === 0 && rnd(0, 1)) { k += 1; n = d * k; }
-      return { q: `${n} : ${d} = ?`, txt: pista(n, d), r: k, vis: n <= 1000 ? barra(n, d) : undefined, extra: [k + 1, k - 1, k * 2, Math.floor(k / 2), k + 10] };
+      return { q: `${n} : ${d} = ?`, txt: pista(n, d), r: k, vis: n <= 1000 ? barra(n, d) : undefined, extra: [k + 1, k - 1, k * 2, Math.floor(k / 2), k + 10], errores: ER(k, [[k * 2, 'Eso es el doble de lo que sale. Comprueba multiplicando.'], [Math.floor(k / 2), 'Eso es la mitad. Comprueba multiplicando.'], [k + 1, `Comprueba: multiplica tu resultado por ${d}.`], [k - 1, `Comprueba: multiplica tu resultado por ${d}.`], [k + 10, `Comprueba: multiplica tu resultado por ${d}.`]]) };
     },
     juego: {
       tipo: 'parejas', meta: 'Une cada división con su resultado',

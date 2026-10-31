@@ -8,18 +8,20 @@ ESTR.add({
     { txt: 'Quito 2, así que doy 2 pasos hacia atrás: 8, 7.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [-1, -1] } },
     { txt: 'Aquí se ve igual: hay 9 fichas y tacho las 2 últimas.', vis: { t: 'marco', a: 9, tam: 10, tachar: 2 } },
     { txt: 'Me quedo en el 7. Entonces 9 − 2 = 7.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 9, saltos: [-1, -1] } },
+    { txt: 'Tu turno: en 12 − 3 empiezas en el 12. Toca el número al que llegas yendo 3 pasos hacia atrás.', toca: { t: 'recta', desde: 0, hasta: 20, inicio: 12, objetivo: 9 } },
     { txt: 'Truco: en 15 − 3 empiezo en el 15 y doy 3 pasos atrás: 14, 13, 12. El 15 no se cuenta.', vis: { t: 'recta', desde: 0, hasta: 20, inicio: 15, saltos: [-1, -1, -1] } }
   ],
   guiada() {
     const s = rnd(2, 3), a = rnd(5, 20);
-    const pasos = [{ txt: `Empiezo en ${a}. Doy un paso atrás. ¿Dónde estoy?`, q: '?', r: a - 1, ops: opciones(a - 1, 3, [a, a - 2], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1] } }];
-    if (s === 3) pasos.push({ txt: 'Otro paso atrás. ¿Y ahora?', q: '?', r: a - 2, ops: opciones(a - 2, 3, [a - 1, a - 3], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1, -1] } });
-    return { pasos, final: { txt: `Quito ${s} en total:`, q: `${a} − ${s} = ?`, r: a - s, ops: opciones(a - s, 3, [a, a - s + 1, a - s - 1], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) } } };
+    const pasos = [{ txt: `Empiezo en ${a}. Doy un paso atrás. ¿Dónde estoy?`, q: '?', r: a - 1, errores: [[a, 'Ese es donde empiezas. Da un paso atrás.'], [a - 2, 'Solo un paso. Te has pasado.']], ops: opciones(a - 1, 3, [a, a - 2], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1] } }];
+    if (s === 3) pasos.push({ txt: 'Otro paso atrás. ¿Y ahora?', q: '?', r: a - 2, errores: [[a - 1, 'Ese era el primer paso. Da otro más atrás.'], [a - 3, 'Solo dos pasos en total. Te has pasado.']], ops: opciones(a - 2, 3, [a - 1, a - 3], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: [-1, -1] } });
+    return { pasos, final: { txt: `Quito ${s} en total:`, q: `${a} − ${s} = ?`, r: a - s, errores: [[a, `Ese es donde empiezas. Da ${s} ${s === 1 ? 'paso' : 'pasos'} atrás.`], [a - s + 1, `Has contado el ${a} como paso. Ese no se cuenta.`], [a - s - 1, `Te has pasado un paso. Solo ${s}.`], [a + s, 'Es una resta: se va hacia atrás, no hacia delante.']].filter((x, i, l) => l.findIndex(y => y[0] === x[0]) === i && x[0] >= 0 && x[0] !== a - s), ops: opciones(a - s, 3, [a, a - s + 1, a - s - 1], 20), vis: { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) } } };
   },
   item(nivel) {
     const s = rnd(1, 3), a = rnd(s + 1, nivel === 1 ? 10 : 20), r = a - s;
     const vis = nivel === 1 && rnd(0, 1) ? { t: 'marco', a, tam: a > 10 ? 20 : 10, tachar: s } : { t: 'recta', desde: 0, hasta: 20, inicio: a, saltos: Array(s).fill(-1) };
-    return { q: `${a} − ${s}`, r, vis, ops: opciones(r, 3, [a, r + 1, r - 1, a + s], 20) };
+    const errores = [[a, `Ese es donde empiezas. Da ${s} ${s === 1 ? 'paso' : 'pasos'} atrás.`], [r + 1, `Has contado el ${a} como paso. Ese no se cuenta.`], [r - 1, `Te has pasado un paso. Solo ${s}.`], [a + s, 'Es una resta: se va hacia atrás, no hacia delante.']].filter((x, i, l) => l.findIndex(y => y[0] === x[0]) === i && x[0] >= 0 && x[0] !== r);
+    return { q: `${a} − ${s}`, r, vis, errores, ops: opciones(r, 3, [a, r + 1, r - 1, a + s], 20) };
   },
   juego: {
     tipo: 'parejas', meta: 'Cuenta hacia atrás',

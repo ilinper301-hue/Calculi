@@ -1,12 +1,16 @@
 /* 6.º · Truco 8 · Fracción, decimal y % */
 (() => {
   const R = x => +x.toFixed(3);
+  const ER = (r, l) => l.filter(x => x[0] >= 0 && Math.abs(x[0] - r) > 1e-9).map(x => [+x[0].toFixed(3), x[1]]);
   const FR1 = [[1, 2], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 10], [3, 10], [7, 10], [9, 10]];
   const FR2 = FR1.concat([[1, 20], [3, 20], [7, 20], [9, 20], [1, 25], [3, 25], [4, 25], [7, 25]]);
   const FR3 = FR2.concat([[1, 8], [3, 8], [5, 8], [7, 8], [1, 50], [7, 50]]);
-  const A = (n, d) => ({ q: `${n}/${d} = ? %`, r: R(n * 100 / d), vis: d <= 20 ? { t: 'barra', partes: d, marcadas: n } : undefined, extra: [n * d, R(100 / d), R(n * 10 / d), R(100 - n * 100 / d), n + d] });
-  const B = (x, v) => { const r = R(x * 100); return { q: `${fmt(x)} = ? %`, r, vis: v, extra: [R(r / 10), R(r * 10), R(x * 10), R(x)] }; };
-  const C = (k, d) => { const p = k * 100 / d; return { q: `${p} % = ?/${d}`, r: k, vis: d <= 10 ? { t: 'barra', partes: d, marcadas: k } : { t: 'cien', n: p }, extra: [p, R(p / 10), k + 1, k - 1, d - k] }; };
+  const A = (n, d) => ({ q: `${n}/${d} = ? %`, r: R(n * 100 / d), vis: d <= 20 ? { t: 'barra', partes: d, marcadas: n } : undefined, extra: [n * d, R(100 / d), R(n * 10 / d), R(100 - n * 100 / d), n + d],
+    errores: ER(R(n * 100 / d), [[n * d, 'Has multiplicado arriba por abajo. Piensa: ¿cuántos de 100?'], [R(100 / d), `Eso es lo que vale un trozo. Hay ${n}.`], [R(n * 10 / d), 'Es sobre 100, no sobre 10: te falta un cero.'], [R(100 - n * 100 / d), 'Eso es lo que falta hasta 100. Cuenta los trozos pintados.'], [n + d, 'No es sumar. Cada trozo vale 100 : ' + d + '.']]) });
+  const B = (x, v) => { const r = R(x * 100); return { q: `${fmt(x)} = ? %`, r, vis: v, extra: [R(r / 10), R(r * 10), R(x * 10), R(x)],
+    errores: ER(r, [[R(r / 10), 'Mueve la coma dos lugares a la derecha, no uno.'], [R(r * 10), 'Te has pasado: solo hay que mover la coma dos lugares.'], [R(x * 10), 'Para pasar a % se multiplica por 100.'], [R(x), 'Falta pasarlo a porcentaje: ×100.']]) }; };
+  const C = (k, d) => { const p = k * 100 / d; return { q: `${p} % = ?/${d}`, r: k, vis: d <= 10 ? { t: 'barra', partes: d, marcadas: k } : { t: 'cien', n: p }, extra: [p, R(p / 10), k + 1, k - 1, d - k],
+    errores: ER(k, [[p, `Eso es el porcentaje. Busca cuántas partes de ${d} son.`], [R(p / 10), `Piensa en cuánto vale cada parte de ${d}.`], [d - k, 'Eso es lo que sobra. Cuenta las partes que ocupa el porcentaje.'], [k + 1, 'Te has pasado por una parte.'], [k - 1, 'Te falta una parte.']]) }; };
   ESTR.add({
     id: 'fdp', curso: 6, orden: 8, tri: 2,
     n: 'Fracción, decimal y %', ic: '¾', desc: 'Tres formas de decir lo mismo',
@@ -16,16 +20,17 @@
       { txt: 'Un trozo de 4 es 25 de 100. Tres trozos: 3 × 25 = 75. Así, 3/4 = 75 %.', vis: { t: 'cien', n: 75 } },
       { txt: 'Un decimal con décimas: 0,2 son 2 décimas, es decir, 20 de 100. Así, 0,2 = 20 %.', vis: { t: 'barra', partes: 10, marcadas: 2 } },
       { txt: 'Y 0,35 son 35 centésimas: 35 casillas de 100. Así, 0,35 = 35 %.', vis: { t: 'cien', n: 35 } },
-      { txt: 'Al revés: 40 % son 40 casillas. En una barra de 5 partes, ocupan 2: 40 % = 2/5.', vis: { t: 'barra', partes: 5, marcadas: 2 } }
+      { txt: 'Tu turno: esta barra de 5 partes es el 100 %. Toca las partes que forman el 60 %.', toca: { t: 'barra', partes: 5, objetivo: 3 } },
+    { txt: 'Al revés: 40 % son 40 casillas. En una barra de 5 partes, ocupan 2: 40 % = 2/5.', vis: { t: 'barra', partes: 5, marcadas: 2 } }
     ],
     guiada() {
       const d = pick([4, 5, 10]), n = rnd(2, d - 1), u = 100 / d;
       return {
         pasos: [
-          { txt: `Una barra de ${d} partes es el 100 %. ¿Cuánto vale una parte?`, q: `100 : ${d} = ?`, r: u, vis: { t: 'barra', partes: d, marcadas: 1 }, extra: [d, u * 2, u + 5] },
-          { txt: `Ahora cojo ${n} partes:`, q: `${n} × ${u} = ?`, r: n * u, vis: { t: 'barra', partes: d, marcadas: n }, extra: [u, n * d, u + n] }
+          { txt: `Una barra de ${d} partes es el 100 %. ¿Cuánto vale una parte?`, q: `100 : ${d} = ?`, r: u, vis: { t: 'barra', partes: d, marcadas: 1 }, extra: [d, u * 2, u + 5], errores: ER(u, [[d, 'Eso es el número de partes. Reparte 100 entre ellas.'], [u * 2, 'Te has pasado: 100 entre ' + d + ' es menos.']]) },
+          { txt: `Ahora cojo ${n} partes:`, q: `${n} × ${u} = ?`, r: n * u, vis: { t: 'barra', partes: d, marcadas: n }, extra: [u, n * d, u + n], errores: ER(n * u, [[u, `Eso es una sola parte. Cogemos ${n}.`], [n * d, 'No multipliques por el nº de partes, sino por lo que vale cada una.']]) }
         ],
-        final: { txt: 'Entonces:', q: `${n}/${d} = ? %`, r: n * u, vis: { t: 'barra', partes: d, marcadas: n }, extra: [u, n * d, n * 10] }
+        final: { txt: 'Entonces:', q: `${n}/${d} = ? %`, r: n * u, vis: { t: 'barra', partes: d, marcadas: n }, extra: [u, n * d, n * 10], errores: ER(n * u, [[u, `Eso es una sola parte. Aquí hay ${n} pintadas.`], [n * d, 'Has multiplicado arriba por abajo. Cada parte vale ' + u + '.'], [n * 10, `Cada parte vale ${u}, no 10.`]]) }
       };
     },
     item(nivel) {

@@ -4,7 +4,7 @@ const KEY = 'calc.v1', VERSION_DATOS = 1;
 const AVATARES = [['', '#1E2A5A'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#EA580C']];
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
-function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false, curso: 1 }, gmt: 0 }; }
+function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false, curso: 1, dalton: false }, gmt: 0 }; }
 
 const ss = (s, n) => String(s ?? '').replace(/[<>&"'`]/g, '').trim().slice(0, n);
 function limpiarAlu(a) {
@@ -15,6 +15,7 @@ function limpiarAlu(a) {
     e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0) };
   }
   return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', curso: [1, 2, 3, 4, 5, 6].includes(a.curso) ? a.curso : 1, av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400),
+    /* cálculo diario: mejor marca y aciertos por día */ diario: { mejor: Math.max(0, (a.diario || {}).mejor | 0), d: Object.fromEntries(Object.entries((a.diario || {}).d || {}).filter(([d]) => /^\d{4}-\d\d-\d\d$/.test(d)).sort().slice(-60).map(([d, n]) => [d, Math.max(0, n | 0)])) },
     /* ejercicios por día (para la Zona del tutor) */ dia: Object.fromEntries(Object.entries(a.dia && typeof a.dia === 'object' ? a.dia : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)])) };
 }
 /** Migraciones: nunca se pierde el progreso. Añadir aquí un paso por cada cambio de VERSION_DATOS. */
@@ -27,7 +28,8 @@ function migrar(d) {
 }
 let EST = estadoVacio();
 function cargar() { try { EST = migrar(JSON.parse(localStorage.getItem(KEY) || 'null')); } catch (e) { EST = estadoVacio(); } }
-function guardar() { if (MODO_DOCENTE) return; try { localStorage.setItem(KEY, JSON.stringify(EST)); } catch (e) {} }
+let tPub = null;
+function guardar() { if (MODO_DOCENTE) return; try { localStorage.setItem(KEY, JSON.stringify(EST)); } catch (e) {} clearTimeout(tPub); tPub = setTimeout(() => typeof publicarTabula === 'function' && publicarTabula(), 2000); }
 
 /** Modo Docente: todo abierto, no se guarda nada (como en Lectori y Barri). */
 let MODO_DOCENTE = false;

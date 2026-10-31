@@ -29,14 +29,17 @@ Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/Calculi/` (lo q
 5. **Datos de menores**: no se envía nada a servicios nuevos sin preguntarme. Si cambia la estructura de datos, añade una migración: nunca se pierde el progreso.
 
 ## Estructura
-- `src/estilos.css` y `src/js/`: `00-util.js` (ayudas, voz, sonidos), `10-datos.js` (guardado y migraciones), `20-visual.js` (dibujos SVG: marco, puntos, parte, recta, decenas, dedos), `15-iconos.js` (iconos de línea, glifos y mascota), `30-motor.js` (contrato de una estrategia, desbloqueo, repaso), `40-inicio.js` (cabecera, bienvenida, inicio, mapa, logros), `45-ejercicio.js` (tutorial, ejercicios, juego, resultado), `50-tutor.js` (PIN y Zona del tutor), `zz-arranque.js`.
+- `src/estilos.css` y `src/js/`: `00-util.js` (ayudas, voz, sonidos), `10-datos.js` (guardado y migraciones), `20-visual.js` (dibujos SVG: marco, puntos, parte, recta, decenas, dedos), `15-iconos.js` (iconos de línea, glifos y mascota), `30-motor.js` (contrato de una estrategia, desbloqueo, repaso), `40-inicio.js` (cabecera, bienvenida, inicio, mapa, logros), `45-ejercicio.js` (tutorial, ejercicios, juego, resultado), `47-toca.js` (dibujos para tocar en los tutoriales), `48-extras.js` (cálculo diario, piedrecitas, daltonismo, resumen para Tabula), `50-tutor.js` (PIN y Zona del tutor), `55-aula.js` (modo proyector, duelo por equipos, fichas para imprimir), `zz-arranque.js`.
 - `src/js/estrategias/NN-id.js` (1.º) y `src/js/estrategias/cN/NN-id.js` (2.º–6.º): una estrategia por archivo con `curso`. Plantillas: `04-amigos10.js` (1.º) y `c3/04-tabla9.js` (cursos superiores). Plan de cada curso en `docs/plan-cursos.md`.
+- Pistas según el error: `errores: [[valor, 'pista']]` en ítems y pasos; si no hay, pistas generales del motor (`pistaPara`).
+- Tabula: Calculi deja el resumen en `calc.tabula` (formato en `docs/tabula.md`); falta el lector en el repositorio de Tabula.
 - Números: `fmt(n)` escribe con coma decimal; `r` puede ser decimal desde 4.º; el teclado muestra la coma cuando hace falta.
 - Cada alumno tiene `curso` (Zona del tutor › Alumnos); el mapa muestra su curso y deja consultar otros.
 - `tools/build.py` une todo en `index.html` (raíz, la que publica Pages). No editar `index.html` a mano.
 - `sw.js`, `manifest.webmanifest`, `icon-192.png`, `icon-512.png`, `fonts/` (copiadas de Barri).
 - `tests/test_motor.js` (`node tests/test_motor.js`): comprueba todas las estrategias (cuentas, opciones, coherencia dibujo ↔ pregunta, juegos, repaso).
 - `tests/muestras.js` (`node tests/muestras.js c4`): describe en palabras cada ejercicio para revisarlo a mano.
+- `tests/estres.js`: llama miles de veces a cada generador para detectar bucles lentos.
 - `ESTADO.md` lista de pasos; si escribo «Continúa», léela y sigue por el primer paso sin marcar.
 
 ## Cómo probar

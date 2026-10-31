@@ -8,6 +8,7 @@ ESTR.add({
     { txt: 'En 3,4 hay 3 unidades y 4 décimas. Mira las 4 décimas: son 40 de las 100 casillas de una unidad.', vis: { t: 'cien', n: 40 } },
     { txt: 'Al multiplicar 3,4 × 10, las 3 unidades pasan a ser 3 decenas. 4 décimas pasan a ser 4 unidades.', vis: { t: 'decenas', grupos: [{ d: 3, u: 4 }] } },
     { txt: 'Así que 3,4 × 10 = 34. La coma parece moverse un lugar a la derecha.', vis: { t: 'decenas', grupos: [{ d: 3, u: 4 }] } },
+    { txt: `Tu turno: ${fmt(5.2)} × 10. Cada cifra sube un lugar. Toca el resultado.`, toca: { t: 'elige', q: `${fmt(5.2)} × 10 = ?`, ops: [0.52, 52, 520], r: 52 } },
     { txt: 'Al dividir entre 10 pasa al revés. 56 : 10 = 5,6. Cada cifra baja un lugar.', vis: { t: 'decenas', grupos: [{ d: 5, u: 6 }] } }
   ],
   crear(nivel) {
@@ -33,25 +34,27 @@ ESTR.add({
       const a = _D(d + u / 10);
       return {
         pasos: [
-          { txt: `Primero las ${d} unidades:`, q: `${d} × 10 = ?`, r: 10 * d, vis: { t: 'decenas', grupos: [{ d }] }, extra: [d, 100 * d, d + 10] },
-          { txt: `Ahora las ${u} décimas:`, q: `${fmt(_D(u / 10))} × 10 = ?`, r: u, vis: { t: 'cien', n: 10 * u }, extra: [_D(u / 10), 10 * u, _D(u / 100)] }
+          { txt: `Primero las ${d} unidades:`, q: `${d} × 10 = ?`, r: 10 * d, vis: { t: 'decenas', grupos: [{ d }] }, extra: [d + 10], errores: _errc4(10 * d, [[d, 'Multiplicar por 10 hace el número más grande.'], [100 * d, 'Por 10 cada cifra sube un solo lugar.']]) },
+          { txt: `Ahora las ${u} décimas:`, q: `${fmt(_D(u / 10))} × 10 = ?`, r: u, vis: { t: 'cien', n: 10 * u }, extra: [_D(u / 100)], errores: _errc4(u, [[_D(u / 10), 'Al multiplicar por 10 las décimas pasan a ser unidades.'], [10 * u, 'Las décimas pasan a unidades, no a decenas.']]) }
         ],
-        final: { txt: 'Junto las dos partes:', q: `${fmt(a)} × 10 = ?`, r: 10 * d + u, vis: { t: 'decenas', grupos: [{ d, u }] }, extra: [a, 100 * d + 10 * u, _D(a / 10), 10 * d * u] }
+        final: { txt: 'Junto las dos partes:', q: `${fmt(a)} × 10 = ?`, r: 10 * d + u, vis: { t: 'decenas', grupos: [{ d, u }] }, extra: [10 * d * u], errores: _errc4(10 * d + u, [[a, 'Al multiplicar el número tiene que crecer.'], [100 * d + 10 * u, 'Has movido la coma dos lugares. Solo hay que mover uno.'], [_D(a / 10), 'Multiplicar agranda: la coma va hacia la derecha.']]) }
       };
     }
     const n = 10 * d + u;
     return {
       pasos: [
-        { txt: `Separo ${n} en ${10 * d} y ${u}. Primero ${10 * d}:`, q: `${10 * d} : 10 = ?`, r: d, vis: { t: 'decenas', grupos: [{ d }] }, extra: [10 * d, 10 * d / 100, d * 10 + 1] },
-        { txt: `Ahora ${u}:`, q: `${u} : 10 = ?`, r: _D(u / 10), vis: { t: 'cien', n: 10 * u }, extra: [u, _D(u / 100), 10 * u] }
+        { txt: `Separo ${n} en ${10 * d} y ${u}. Primero ${10 * d}:`, q: `${10 * d} : 10 = ?`, r: d, vis: { t: 'decenas', grupos: [{ d }] }, extra: [d * 10 + 1], errores: _errc4(d, [[10 * d, 'Dividir hace el número más pequeño.'], [10 * d / 100, 'Entre 10 se quita un solo cero.']]) },
+        { txt: `Ahora ${u}:`, q: `${u} : 10 = ?`, r: _D(u / 10), vis: { t: 'cien', n: 10 * u }, extra: [10 * u], errores: _errc4(_D(u / 10), [[u, 'Al dividir entre 10 el número se hace más pequeño.'], [_D(u / 100), 'Solo hay que bajar un lugar, no dos.']]) }
       ],
-      final: { txt: 'Junto las dos partes:', q: `${n} : 10 = ?`, r: _D(d + u / 10), vis: { t: 'decenas', grupos: [{ d, u }] }, extra: [n, _D(n / 100), 10 * n, _D(u / 10)] }
+      final: { txt: 'Junto las dos partes:', q: `${n} : 10 = ?`, r: _D(d + u / 10), vis: { t: 'decenas', grupos: [{ d, u }] }, extra: [10 * n], errores: _errc4(_D(d + u / 10), [[n, 'Dividir hace el número más pequeño. Mueve la coma.'], [_D(n / 100), 'Has movido la coma dos lugares. Solo hay que mover uno.'], [_D(u / 10), 'Te falta la parte de las decenas: junta las dos partes.']]) }
     };
   },
   item(nivel) {
     const o = this.crear(nivel), r = o.r, n = o.a;
-    const extra = o.op === '×' ? [n, _D(r * 10), _D(r / 10), _D(r + 0.1)] : [n, _D(n * 10), _D(r / 10), _D(r * 10)];
-    return { q: `${fmt(n)} ${o.op} 10`, r, vis: o.vis, extra };
+    const errores = _errc4(r, o.op === '×'
+      ? [[n, 'El número tiene que cambiar: cada cifra salta un lugar.'], [r * 10, 'Has movido la coma dos lugares. Solo hay que mover uno.'], [n / 10, 'Al multiplicar el número crece: la coma va a la derecha.']]
+      : [[n, 'El número tiene que cambiar: cada cifra salta un lugar.'], [n * 10, 'Al dividir el número se hace más pequeño: la coma va a la izquierda.'], [r / 10, 'Has movido la coma dos lugares. Solo hay que mover uno.']]);
+    return { q: `${fmt(n)} ${o.op} 10`, r, vis: o.vis, extra: [_D(r + 0.1)], errores };
   },
   juego: {
     tipo: 'parejas', meta: 'Une cada cuenta con su resultado',

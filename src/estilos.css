@@ -294,3 +294,73 @@ h1,h2,h3{margin:0;font-weight:500}
 .kp.dec .ok{grid-column:1/-1}
 .carta.l{font-size:clamp(1rem,4.4vw,1.45rem)}.carta.xl{font-size:clamp(.82rem,3.4vw,1.15rem);word-break:break-word}
 .op.larga{font-size:clamp(2rem,8.4vw,3.2rem)}.op.muy{font-size:clamp(1.55rem,6.4vw,2.6rem)}
+.toca-tip{display:flex;align-items:center;gap:6px;font-size:.95rem;color:var(--aci);background:var(--acs);padding:6px 12px;border-radius:12px}
+.toca-tip.ok{color:var(--ok);background:var(--okbg)}
+svg.toca{touch-action:manipulation}
+.bt:disabled{opacity:.4;pointer-events:none}
+
+/* ===== Inicio: tres accesos ===== */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.trio .hc{flex-direction:column;justify-content:center;text-align:center;gap:6px;padding:12px 6px;font-size:.98rem}
+.trio .hc svg{color:var(--aci)}
+.big-n{font-size:4.5rem;font-weight:600;line-height:1;color:var(--tx)}
+
+/* ===== Piedrecitas ===== */
+.nueva-p{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:20px;background:var(--acs);border:2px solid var(--pill);text-align:left;margin-top:6px;animation:pop .5s ease}
+.nueva-p svg{color:var(--tx)}.nueva-p b{display:block;font-size:1.05rem}.nueva-p small{color:var(--mu);font-size:.85rem}
+.piedras-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.pz{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:16px;background:var(--card);border:2px solid var(--bd);color:var(--tx)}
+.pz small{font-size:.68rem;color:var(--mu);text-align:center;line-height:1.1;min-height:1.5em}
+.pz.no{border-style:dashed;background:transparent;color:var(--bd2);justify-content:center;min-height:96px}
+
+/* ===== Modo proyector ===== */
+.proy{display:flex;flex-direction:column;gap:14px;flex:1}
+.proy-op{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:var(--card);border:2px solid var(--bd);border-radius:28px;padding:20px}
+.proy-op .op{font-size:clamp(3rem,12vw,8rem)!important}
+.proy-txt{font-size:clamp(1.2rem,3.4vw,2rem);color:var(--mu);text-align:center}
+.proy-op .vis svg{max-height:34vh;width:100%;max-width:640px}
+#app[data-sc="proy"],#app[data-sc="duelo"]{max-width:1200px}
+
+/* ===== Duelo ===== */
+.duelo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dl{border-radius:24px;padding:14px;display:flex;flex-direction:column;gap:10px;border:3px solid transparent;transition:transform .2s}
+.dl0{background:var(--t1b)}.dl1{background:rgba(249,115,22,.14)}
+.dl-h{display:flex;align-items:center;justify-content:space-between}.dl-h b{font-size:1.1rem}
+.dl-p{font-size:2rem;font-weight:600;min-width:52px;height:52px;border-radius:16px;background:var(--card);display:grid;place-items:center}
+.dl .ops{grid-template-columns:1fr}
+.dl .opc{min-height:62px;font-size:1.7rem}
+.dl.bloq{opacity:.5}.dl.gana{border-color:var(--ok);transform:scale(1.02)}
+.dl-m{min-height:22px;text-align:center;font-weight:500;color:var(--mu)}
+.dl.gana .dl-m{color:var(--ok)}
+@media (orientation:landscape) and (min-width:900px){.dl .ops{grid-template-columns:repeat(3,1fr)}}
+
+/* ===== Fichas para imprimir ===== */
+.hoja{background:#fff;color:#111;border-radius:12px;padding:28px 30px;box-shadow:var(--sh);font-family:var(--fd)}
+.hj-cab{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:10px;flex-wrap:wrap}
+.hj-cab b{font-size:1.15rem;display:block}.hj-cab small{color:#555;font-family:var(--fi);font-size:.8rem}
+.hj-nom{font-family:var(--fi);font-size:.85rem;white-space:nowrap}.hj-nom span{display:inline-block;width:150px;border-bottom:1px solid #111;margin-right:10px}.hj-nom span.c{width:80px}
+.hj-truco{font-family:var(--fi);font-size:.82rem;background:#f3f4f6;border-radius:8px;padding:6px 10px;margin-bottom:10px}
+.hj-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 22px}
+.hj-it{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed #ccc;break-inside:avoid}
+.hj-n{font:600 .75rem var(--fi);color:#777;min-width:18px;padding-top:6px}
+.hj-it small{display:block;font:400 .75rem var(--fi);color:#555}
+.hj-q{font-size:1.35rem}
+.hj-h{display:inline-block;width:2.4em;height:1.1em;border:1.5px solid #333;border-radius:6px;vertical-align:middle;margin:0 .1em}
+.hj-r{color:#15803D}
+.hj-v svg{max-width:220px;max-height:90px;height:auto}
+.hoja.salto{margin-top:14px}
+@media print{
+  @page{size:A4;margin:12mm}
+  html,body{background:#fff!important}
+  #app{padding:0;max-width:none}
+  .noimp,.toast{display:none!important}
+  .hoja{box-shadow:none;border-radius:0;padding:0}
+  .hoja.salto{break-before:page;margin-top:0}
+}
+
+/* ===== Daltonismo (Okabe-Ito) ===== */
+:root.dalton{--ok:#0072B2;--okbg:#DCEBF7;--no:#D55E00;--nobg:#FBE5D6}
+:root.dalton[data-theme="dark"]{--ok:#56B4E9;--okbg:rgba(86,180,233,.15);--no:#E69F00;--nobg:rgba(230,159,0,.15)}
+:root.dalton .sem.v,:root.dalton .bar i.v{background:#0072B2}:root.dalton .sem.a,:root.dalton .bar i.a{background:#F0E442}:root.dalton .sem.r,:root.dalton .bar i.r{background:#D55E00}
+:root.dalton .op .hueco.ok::after{content:'✓';font-size:.4em;vertical-align:super;margin-left:.1em}
+:root.dalton .op .hueco.no::after{content:'✗';font-size:.4em;vertical-align:super;margin-left:.1em}

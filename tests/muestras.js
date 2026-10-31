@@ -27,13 +27,13 @@ function describir(v) {
     default: return JSON.stringify(v);
   }
 }
-const linea = (it, n) => { const p = prepararItem(it, n); return `  ${it.txt ? `[${it.txt}] ` : ''}${it.q}   → respuesta ${F(it.r)}${p.ops ? `   opciones [${p.ops.map(F).join(' | ')}]` : ''}${it.visSiempre ? '   (dibujo siempre visible)' : ''}\n      dibujo: ${describir(it.vis)}`; };
+const linea = (it, n) => { const p = prepararItem(it, n); return `  ${it.txt ? `[${it.txt}] ` : ''}${it.q}${it.errores ? `   PISTAS: ${it.errores.map(e => F(e[0]) + ' → «' + e[1] + '»').join(' · ')}` : ''}   → respuesta ${F(it.r)}${p.ops ? `   opciones [${p.ops.map(F).join(' | ')}]` : ''}${it.visSiempre ? '   (dibujo siempre visible)' : ''}\n      dibujo: ${describir(it.vis)}`; };
 const out = path.join(__dirname, 'muestras');
 const F = x => typeof x === 'number' ? fmt(x) : x; fs.mkdirSync(out, { recursive: true });
 const pedir = process.argv.slice(2);
 for (const e of ESTR.lista.filter(e => !pedir.length || pedir.includes(e.id) || pedir.includes('c' + e.curso))) {
   let t = `#${e.orden} ${e.n} (${e.id}) · trimestre ${e.tri}${e.curso ? ' · curso ' + e.curso : ''}\n${e.desc} · Truco: «${e.truco}»\n\n== TUTORIAL ==\n`;
-  e.tutorial.forEach((s, i) => t += `${i + 1}. ${s.txt}\n   dibujo: ${describir(s.vis)}\n`);
+  e.tutorial.forEach((s, i) => t += `${i + 1}. ${s.txt}\n   ${s.toca ? 'PARA TOCAR: ' + JSON.stringify(s.toca) : 'dibujo: ' + describir(s.vis)}\n`);
   t += '\n== PRÁCTICA GUIADA (4 ejemplos) ==\n';
   for (let k = 0; k < 4; k++) { const g = e.guiada(); t += `-- ejemplo ${k + 1}\n` + g.pasos.map((p, i) => `  Paso ${i + 1}:` + linea(p, 1).slice(1)).join('\n') + '\n  FINAL:' + linea(g.final, 1).slice(1) + '\n'; }
   for (const n of [1, 2, 3]) { t += `\n== RETO nivel ${n} (6 ejemplos) ==\n`; for (let k = 0; k < 6; k++) t += linea(e.item(n), n) + '\n'; }

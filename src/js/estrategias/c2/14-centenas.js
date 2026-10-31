@@ -1,5 +1,6 @@
 /* 2.º · Truco 14 · Sumar y restar centenas */
 {
+  const E = (r, l) => l.filter(x => x[0] >= 0 && x[0] !== r);
   // Operación: {a (centenas), r (decenas sueltas 0..9), b (centenas), op}
   const val = (o) => o.a * 100 + o.r * 10;
   const gen = (nivel) => {
@@ -22,21 +23,23 @@
       { txt: 'Una placa grande es una centena: 100. Aquí hay 3 azules y 4 naranjas.', vis: { t: 'decenas', grupos: [{ c: 3 }, { c: 4 }] } },
       { txt: '3 centenas y 4 centenas son 7 centenas: 300 + 400 = 700.', vis: { t: 'decenas', grupos: [{ c: 7 }] } },
       { txt: 'Para restar es igual. 700 − 200: de 7 centenas quito 2 y quedan 5. Son 500.', vis: { t: 'recta', desde: 400, hasta: 700, paso: 100, inicio: 700, saltos: [-100, -100] } },
+      { txt: 'Tu turno: empiezas en 800. Resta 300 y toca dónde llegas.', toca: { t: 'recta', desde: 400, hasta: 800, paso: 100, inicio: 800, objetivo: 500 } },
       { txt: 'Truco: cuando hay decenas, no se tocan. 250 + 100: 2 + 1 = 3 centenas y quedan los 50. Son 350.', vis: { t: 'decenas', grupos: [{ c: 2, d: 5 }, { c: 1 }] } }
     ],
     guiada() {
       const o = gen(3), t = res(o), cen = o.op === '+' ? o.a + o.b : o.a - o.b;
       return {
         pasos: [
-          { txt: 'Primero, solo las centenas:', q: `${o.a} ${o.op} ${o.b} = ?`, r: cen, vis: o.op === '+' ? { t: 'decenas', grupos: [{ c: o.a }, { c: o.b }] } : { t: 'recta', desde: 100 * (o.a - o.b), hasta: 100 * o.a, paso: 100, inicio: 100 * o.a, saltos: [-100 * o.b] }, extra: [cen + 1, cen - 1, o.a * o.b] },
-          { txt: `${cen} ${cen === 1 ? 'centena es' : 'centenas son'} ${100 * cen}. Añado las decenas que no he tocado:`, q: `${100 * cen} + ${10 * o.r} = ?`, r: t, vis: { t: 'decenas', grupos: [{ c: cen, d: o.r }] }, extra: [100 * cen, t + 100, t - 100, 100 * cen + o.r].filter(x => x <= 999) }
+          { txt: 'Primero, solo las centenas:', q: `${o.a} ${o.op} ${o.b} = ?`, r: cen, vis: o.op === '+' ? { t: 'decenas', grupos: [{ c: o.a }, { c: o.b }] } : { t: 'recta', desde: 100 * (o.a - o.b), hasta: 100 * o.a, paso: 100, inicio: 100 * o.a, saltos: [-100 * o.b] }, extra: [cen + 1, cen - 1, o.a * o.b], errores: E(cen, [[cen + 1, 'Cuenta otra vez las centenas: te pasas por una.'], [cen - 1, 'Cuenta otra vez las centenas: te falta una.'], [o.a * o.b, 'Es sumar o restar, no multiplicar.']]) },
+          { txt: `${cen} ${cen === 1 ? 'centena es' : 'centenas son'} ${100 * cen}. Añado las decenas que no he tocado:`, q: `${100 * cen} + ${10 * o.r} = ?`, r: t, vis: { t: 'decenas', grupos: [{ c: cen, d: o.r }] }, extra: [100 * cen, t + 100, t - 100, 100 * cen + o.r].filter(x => x <= 999), errores: E(t, [[100 * cen, 'Te falta añadir las decenas, que no cambian.'], [t + 100, 'Te has pasado una centena.'], [t - 100, 'Te falta una centena.'], [100 * cen + o.r, 'Las decenas valen 10 cada una.']]) }
         ],
-        final: { txt: 'Entonces:', q: `${val(o)} ${o.op} ${100 * o.b} = ?`, r: t, vis: vis(o), extra: [100 * cen, t + 100, t - 100, t + 10 * o.r].filter(x => x <= 999) }
+        final: { txt: 'Entonces:', q: `${val(o)} ${o.op} ${100 * o.b} = ?`, r: t, vis: vis(o), extra: [100 * cen, t + 100, t - 100, t + 10 * o.r].filter(x => x <= 999), errores: E(t, [[100 * cen, 'Te has dejado las decenas. Ellas no cambian.'], [t + 100, 'Te has pasado una centena.'], [t - 100, 'Te falta una centena.']]) }
       };
     },
     item(nivel) {
       const o = gen(nivel), t = res(o), cen = o.op === '+' ? o.a + o.b : o.a - o.b;
-      return { q: `${val(o)} ${o.op} ${100 * o.b}`, r: t, vis: vis(o), extra: [t + 100, t - 100, t + 10, t - 10, 100 * cen].filter(x => x <= 999) };
+      const errores = E(t, [[t + 100, 'Te has pasado una centena. Cuenta otra vez.'], [t - 100, 'Te falta una centena. Cuenta otra vez.'], [100 * cen, 'Te has dejado las decenas. Ellas no cambian.'], [t + 10, 'Las decenas no cambian. Solo cuenta centenas.'], [t - 10, 'Las decenas no cambian. Solo cuenta centenas.']]);
+      return { q: `${val(o)} ${o.op} ${100 * o.b}`, r: t, vis: vis(o), extra: [t + 100, t - 100, t + 10, t - 10, 100 * cen].filter(x => x <= 999), errores };
     },
     juego: {
       tipo: 'parejas', meta: 'Une cada cuenta con su resultado',

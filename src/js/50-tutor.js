@@ -37,11 +37,11 @@ function guardarAjustes() { const md = MODO_DOCENTE; MODO_DOCENTE = false; guard
 SC.tz = () => {
   if (TZ.sub === 'resumen') return resumenFamilias();
   const a = EST.alu.find(x => x.id === EST.act) || null, doc = EST.ajustes.perfil === 'docente' || EST.alu.length > 1;
-  const tabs = [['prog', 'Progreso'], ...(doc ? [['clase', 'Clase']] : []), ['alu', 'Alumnos'], ['aj', 'Ajustes']];
+  const tabs = [['prog', 'Progreso'], ...(doc ? [['clase', 'Clase']] : []), ['aula', 'Aula'], ['alu', 'Alumnos'], ['aj', 'Ajustes']];
   if (!tabs.some(t => t[0] === TZ.tab)) TZ.tab = 'prog';
   const cab = `<div class="tzh">${a ? avatar(a) : `<span class="av" style="background:var(--ac)">${ico('users', 22)}</span>`}<div class="tzn"><b>${a ? esc(a.n) : 'Sin alumnos'}</b><small>Zona del tutor</small></div>
   <button class="rnd" onclick="go('inicio')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button></div>`;
-  const cuerpo = { prog: () => tzProgreso(a), clase: tzClase, alu: tzAlumnos, aj: tzAjustes }[TZ.tab]();
+  const cuerpo = { prog: () => tzProgreso(a), clase: tzClase, aula: tzAula, alu: tzAlumnos, aj: tzAjustes }[TZ.tab]();
   return `<div class="tz" style="display:flex;flex-direction:column;gap:14px">${cab}
   <div class="seg">${tabs.map(([k, t]) => `<button class="${TZ.tab === k ? 'on' : ''}" onclick="TZ.tab='${k}';pintar()">${t}</button>`).join('')}</div>${cuerpo}</div>`;
 };
@@ -67,7 +67,7 @@ function tzProgreso(a) {
   <div class="gt">Dominio por truco · ${nomCurso(cursoDe(a))}</div><div class="list">${L.map(e => fila('', esc(e.n), `${['', '1.er', '2.º', '3.er'][e.tri]} trimestre · ${'★'.repeat((a.e[e.id] || {}).est || 0) || 'sin estrellas'}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('')}</div>
   <div class="gt">Seguimiento</div><div class="list">
   ${fila('family', 'Resumen para las familias', 'Texto de la semana para enviar', "TZ.sub='resumen';pintar()")}
-  ${fila('monitor', 'Modo Docente', 'Todo abierto, sin guardar: para proyectar en clase', "MODO_DOCENTE=true;ALU_DOCENTE.curso=VCURSO=EST.ajustes.curso||1;go('inicio')")}</div>
+  ${fila('monitor', 'Herramientas de aula', 'Proyector, duelo, fichas y evaluación', "TZ.tab='aula';pintar()")}</div>
   <p class="note">El dominio se calcula con los 10 últimos intentos sin ayuda de cada truco (verde ≥ 80 %, ámbar ≥ 50 %).</p>`;
 }
 function tzClase() {
@@ -81,6 +81,17 @@ function tzClase() {
   <div class="list">${L.map(e => `<div class="row"><span class="val" style="width:22px">${e.orden}</span><span class="tx2"><span>${esc(e.n)}</span></span><span class="val">${AL.filter(a => semaforo(a, e.id) === 'v').length}/${AL.length} dominan</span></div>`).join('')}</div>`;
 }
 function cursoClase(c) { TZ.curso = c; pintar(); }
+function tzAula() {
+  return `<div class="gt">En clase</div><div class="list">
+  ${fila('monitor', 'Modo proyector', 'Una operación en grande, con cuenta atrás opcional', "abrirAula('proy')")}
+  ${fila('users', 'Duelo por equipos', 'Azul contra naranja en la pizarra digital', "abrirAula('duelo')")}
+  ${fila('grad', 'Modo Docente', 'Todo abierto, sin guardar: para explicar un truco', "MODO_DOCENTE=true;ALU_DOCENTE.curso=VCURSO=EST.ajustes.curso||1;go('inicio')")}</div>
+  <div class="gt">Para imprimir</div><div class="list">${fila('download', 'Fichas de ejercicios', 'Elige trucos y número de ejercicios; con soluciones', "abrirAula('ficha')")}</div>
+  <div class="gt">Evaluación</div><div class="list">
+  ${fila('chart', 'Descargar evaluación (CSV)', 'Dominio, estrellas e intentos de cada alumno en cada truco', 'csvTabula()')}
+  ${fila('book', 'Datos para Tabula', 'Calculi deja el resumen en este dispositivo para que Tabula lo lea', "publicarTabula();toast('Resumen actualizado para Tabula')", `<span class="val">Actualizar</span>`)}</div>
+  <p class="note">Tabula y Calculi comparten dirección (ilinper301-hue.github.io), así que en el mismo navegador Tabula puede leer el resumen sin conexión ni cuentas.</p>`;
+}
 function tzAlumnos() {
   const imp = alumnosDeOtrasApps();
   return `<div style="display:flex;gap:8px"><input class="inp" id="nn" maxlength="20" placeholder="Nombre del alumno" style="font-size:1rem;padding:10px 12px;border-radius:12px" onkeydown="if(event.key==='Enter')anadirTz()"><button class="bt" onclick="anadirTz()">${ico('plus', 18)}Añadir</button></div><p class="note">Los alumnos nuevos se crean en ${nomCurso(EST.ajustes.curso || 1)} (cámbialo en Ajustes › Curso de la clase).</p>
@@ -101,7 +112,7 @@ function tzAjustes() {
   ${fila('grad', 'Curso de la clase', 'Para los alumnos nuevos y la pestaña Clase', "EST.ajustes.curso=(EST.ajustes.curso||1)%6+1;guardarAjustes();pintar()", `<span class="val">${nomCurso(EST.ajustes.curso || 1)}</span>`)}
   ${sw('abierto', 'Todos los trucos abiertos', 'También los de cursos superiores')}
   ${fila('monitor', 'Modo Docente', 'Todo abierto, sin guardar progreso', "MODO_DOCENTE=true;ALU_DOCENTE.curso=VCURSO=EST.ajustes.curso||1;go('inicio')")}</div>
-  <div class="gt">Sonido y aspecto</div><div class="list">${sw('voz', 'Voz', 'Lee en voz alta las explicaciones')}${sw('sonido', 'Sonidos', 'Aciertos, fallos y final')}
+  <div class="gt">Sonido y aspecto</div><div class="list">${sw('voz', 'Voz', 'Lee en voz alta las explicaciones')}${sw('sonido', 'Sonidos', 'Aciertos, fallos y final')}${sw('dalton', 'Colores para daltonismo', 'Acierto en azul y error en bermellón')}
   ${fila(temaOscuro() ? 'moon' : 'sun', 'Tema', '', "EST.ajustes.tema={auto:'light',light:'dark',dark:'auto'}[EST.ajustes.tema];guardarAjustes();pintar()", `<span class="val">${tema}</span>`)}</div>
   <div class="gt">Seguridad y datos</div><div class="list">
   ${fila('key', 'Cambiar PIN', '', "EST.ajustes.pin='';TZ.hasta=0;abrirTutor()")}

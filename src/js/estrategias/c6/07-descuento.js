@@ -1,6 +1,7 @@
 /* 6.º · Truco 7 · Aumentos y descuentos */
 (() => {
   const R = x => +x.toFixed(3);
+  const ER = (r, l) => l.filter(x => x[0] >= 0 && Math.abs(x[0] - r) > 1e-9).map(x => [+x[0].toFixed(3), x[1]]);
   const OBJ = [['Un', 'balón'], ['Una', 'mochila'], ['Un', 'juego'], ['Una', 'camiseta'], ['Un', 'libro']];
   const CARO = [['Un', 'abrigo'], ['Una', 'mochila'], ['Una', 'chaqueta'], ['Un', 'videojuego'], ['Un', 'reloj']];
   const vis = (P, p) => p % 10 === 0 ? { t: 'barra', partes: 10, marcadas: p / 10, total: P, valor: R(P / 10) }
@@ -11,7 +12,11 @@
     return {
       txt: `${a} ${o} cuesta ${fmt(P)} €. ${baja ? `Le hacen un descuento del ${p} %.` : `Su precio sube un ${p} %.`} ¿Cuánto cuesta ahora?`,
       q: `${fmt(P)} ${baja ? '−' : '+'} ${p} % de ${fmt(P)} = ?`, r, vis: vis(P, p),
-      extra: [d, R(baja ? P + d : P - d), R(P - p), R(P + p), R(baja ? P - d / 2 : P + d / 2)]
+      extra: [d, R(baja ? P + d : P - d), R(P - p), R(P + p), R(baja ? P - d / 2 : P + d / 2)],
+      errores: ER(r, [[d, baja ? 'Eso es lo que te descuentan. ¿Cuánto pagas?' : 'Eso es lo que sube. ¿Cuánto cuesta ahora?'],
+        [R(baja ? P + d : P - d), baja ? 'Has sumado, pero el precio baja. Hay que restar.' : 'Has restado, pero el precio sube. Hay que sumar.'],
+        [R(baja ? P - p : P + p), `El ${p} % no son ${p} €. Calcula primero cuántos euros es.`],
+        [R(baja ? P - d / 2 : P + d / 2), `Revisa el ${p} %: ¿cuántos euros son?`]])
     };
   };
   ESTR.add({
@@ -22,16 +27,17 @@
       { txt: 'Una camiseta cuesta 80 €. Con un 20 % de descuento, ¿cuánto se paga? Primero miro el 10 %: 8 €.', vis: { t: 'barra', partes: 10, marcadas: 1, total: 80, valor: 8 } },
       { txt: 'El 20 % son dos trozos de 10 %: 8 + 8 = 16 €. Es lo que me quitan.', vis: { t: 'barra', partes: 10, marcadas: 2, total: 80, valor: 8 } },
       { txt: 'Se paga 80 − 16 = 64 €. Si en vez de bajar el precio sube un 20 %, sumo: 80 + 16 = 96 €.', vis: { t: 'recta', desde: 60, hasta: 100, inicio: 80, saltos: [-16] } },
+      { txt: 'Tu turno: te descuentan 16 € de 80 €. Toca en la recta el precio que pagas.', toca: { t: 'recta', desde: 60, hasta: 100, paso: 4, inicio: 80, objetivo: 64 } },
       { txt: 'Truco: calculo el porcentaje (10 % y sus múltiplos) y lo resto si baja o lo sumo si sube.', vis: { t: 'recta', desde: 60, hasta: 100, inicio: 80, saltos: [16] } }
     ],
     guiada() {
       const P = 10 * rnd(3, 10), p = pick([20, 30]), d = R(P * p / 100);
       return {
         pasos: [
-          { txt: `Un artículo cuesta ${P} €. Primero, ¿cuánto es el 10 %?`, q: `10 % de ${P} = ?`, r: P / 10, vis: { t: 'barra', partes: 10, marcadas: 1, total: P, valor: P / 10 }, extra: [P / 100, P / 5, P * 10] },
-          { txt: `El ${p} % son ${p / 10} trozos de 10 %. ¿Cuánto es el ${p} %?`, q: `${p / 10} × ${P / 10} = ?`, r: d, vis: { t: 'barra', partes: 10, marcadas: p / 10, total: P, valor: P / 10 }, extra: [P / 10, P - d, d + P / 10] }
+          { txt: `Un artículo cuesta ${P} €. Primero, ¿cuánto es el 10 %?`, q: `10 % de ${P} = ?`, r: P / 10, vis: { t: 'barra', partes: 10, marcadas: 1, total: P, valor: P / 10 }, extra: [P / 100, P / 5, P * 10], errores: ER(P / 10, [[P / 100, 'Eso es el 1 %. El 10 % es dividir entre 10.'], [P / 5, 'Eso es el 20 %. El 10 % es dividir entre 10.'], [P * 10, 'Has multiplicado. El 10 % es dividir entre 10.']]) },
+          { txt: `El ${p} % son ${p / 10} trozos de 10 %. ¿Cuánto es el ${p} %?`, q: `${p / 10} × ${P / 10} = ?`, r: d, vis: { t: 'barra', partes: 10, marcadas: p / 10, total: P, valor: P / 10 }, extra: [P / 10, P - d, d + P / 10], errores: ER(d, [[P / 10, `Eso es solo un trozo de 10 %. Son ${p / 10} trozos.`], [P - d, 'Eso es el precio final. Aquí solo el descuento.'], [d + P / 10, `Te has pasado: son ${p / 10} trozos, no más.`]]) }
         ],
-        final: { txt: `Con un ${p} % de descuento, pagas el precio menos el descuento:`, q: `${P} − ${p} % de ${P} = ?`, r: P - d, vis: { t: 'barra', partes: 10, marcadas: p / 10, total: P, valor: P / 10 }, extra: [d, P + d, P - p, P - P / 10] }
+        final: { txt: `Con un ${p} % de descuento, pagas el precio menos el descuento:`, q: `${P} − ${p} % de ${P} = ?`, r: P - d, vis: { t: 'barra', partes: 10, marcadas: p / 10, total: P, valor: P / 10 }, extra: [d, P + d, P - p, P - P / 10], errores: ER(P - d, [[d, 'Eso es lo que te descuentan. ¿Cuánto pagas?'], [P + d, 'Has sumado, pero es un descuento. Resta.'], [P - p, `El ${p} % no son ${p} €. Resta los euros del descuento.`], [P - P / 10, `Has restado solo el 10 %. Descuentan el ${p} %.`]]) }
       };
     },
     item(nivel) {

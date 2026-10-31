@@ -1,4 +1,5 @@
 /* 3.º · Truco 10 · Sumar descomponiendo (47 + 36 = 70 + 13) */
+const _er3_10 = (r, l) => l.filter((x, i) => x[0] >= 0 && x[0] !== r && l.findIndex(y => y[0] === x[0]) === i); // errores típicos sin repetidos ni la respuesta
 const _par2c = (n) => ({ d: Math.floor(n / 10), u: n % 10 });
 const _vis2c = (a, b) => ({ t: 'decenas', grupos: [_par2c(a), _par2c(b)] });
 // Dos números de dos cifras cuyas unidades suman 10 o más (hay llevada).
@@ -12,21 +13,22 @@ ESTR.add({
     { txt: 'Primero junto las decenas: 40 + 30 = 70.', vis: { t: 'decenas', grupos: [{ d: 4 }, { d: 3 }] } },
     { txt: 'Después junto las unidades: 7 + 6 = 13. Es más de 10, ¡me llevo una decena!', vis: { t: 'decenas', grupos: [{ u: 7 }, { u: 6 }] } },
     { txt: 'Por último sumo las dos partes: 70 + 13 = 83. Así que 47 + 36 = 83.', vis: _vis2c(47, 36) },
+    { txt: 'Tu turno: en 58 + 25, las unidades son 8 + 5. Elige cuánto suman.', toca: { t: 'elige', q: '8 + 5 = ?', ops: [12, 13, 14, 3], r: 13 } },
     { txt: 'Truco: separo decenas y unidades, las sumo por separado y junto los resultados.', vis: _vis2c(58, 25) }
   ],
   guiada() {
     const [a, b] = _pedir2c(12, 49, 99), da = a - a % 10, db = b - b % 10, ua = a % 10, ub = b % 10;
     return {
       pasos: [
-        { txt: 'Primero, las decenas:', q: `${da} + ${db} = ?`, r: da + db, vis: _vis2c(a, b), extra: [da + db + 10, da + db - 10, a + b] },
-        { txt: 'Ahora, las unidades:', q: `${ua} + ${ub} = ?`, r: ua + ub, vis: _vis2c(a, b), extra: [ua + ub + 1, ua + ub - 1, ua + ub - 10] }
+        { txt: 'Primero, las decenas:', q: `${da} + ${db} = ?`, r: da + db, vis: _vis2c(a, b), extra: [da + db + 10, da + db - 10, a + b], errores: _er3_10(da + db, [[da + db + 10, 'Eso son una decena de más. Suma solo las decenas.'], [a + b, 'Ese es el total. Ahora solo suma las decenas.']]) },
+        { txt: 'Ahora, las unidades:', q: `${ua} + ${ub} = ?`, r: ua + ub, vis: _vis2c(a, b), extra: [ua + ub + 1, ua + ub - 1, ua + ub - 10], errores: _er3_10(ua + ub, [[ua + ub - 10, 'Aquí cuenta todas las unidades, aunque pasen de 10.'], [ua + ub + 1, 'Casi: te has pasado por uno. Cuenta otra vez.'], [ua + ub - 1, 'Casi: te falta uno. Cuenta otra vez.']]) }
       ],
-      final: { txt: `Junto las dos partes: ${da + db} + ${ua + ub}.`, q: `${a} + ${b} = ?`, r: a + b, vis: _vis2c(a, b), extra: [a + b - 10, a + b + 10, da + db + ua] }
+      final: { txt: `Junto las dos partes: ${da + db} + ${ua + ub}.`, q: `${a} + ${b} = ?`, r: a + b, vis: _vis2c(a, b), extra: [a + b - 10, a + b + 10, da + db + ua], errores: _er3_10(a + b, [[a + b - 10, 'Te has olvidado de la decena que te llevas de las unidades.'], [a + b + 10, 'Te has llevado una decena de más. Revisa las decenas.'], [da + db + ua, 'Te falta sumar las unidades del segundo número.']]) }
     };
   },
   item(nivel) {
     const [a, b] = nivel === 1 ? _pedir2c(12, 49, 99) : nivel === 2 ? _pedir2c(21, 79, 150) : _pedir2c(45, 99, 198), r = a + b;
-    return { q: `${a} + ${b} = ?`, r, vis: _vis2c(a, b), extra: [r - 10, r + 10, r - 1, r + 1, Math.floor(r / 10) * 10 + ((a % 10) + (b % 10)) % 10 - 10] };
+    return { q: `${a} + ${b} = ?`, r, vis: _vis2c(a, b), extra: [r - 10, r + 10, r - 1, r + 1, Math.floor(r / 10) * 10 + ((a % 10) + (b % 10)) % 10 - 10], errores: _er3_10(r, [[r - 10, 'Te has olvidado de la decena que te llevas de las unidades.'], [r + 10, 'Te has llevado una decena de más. Revisa las decenas.'], [r - 1, 'Casi. Revisa la suma de las unidades.'], [r + 1, 'Casi. Revisa la suma de las unidades.']]) };
   },
   juego: {
     tipo: 'parejas', meta: 'Une cada suma con su descomposición',

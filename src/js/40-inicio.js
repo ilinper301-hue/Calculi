@@ -14,7 +14,7 @@ function aplicarTema() {
 }
 function cambiarTema() { EST.ajustes.tema = temaOscuro() ? 'light' : 'dark'; guardar(); pintar(); }
 function go(s) { scr = s; VOZ.callar(); pintar(); window.scrollTo(0, 0); }
-function pintar() { aplicarTema(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; }
+function pintar() { aplicarTema(); aplicarDalton(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; }
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
 const colorAv = a => (AVATARES[a.av] || AVATARES[0])[1];
@@ -89,9 +89,11 @@ SC.inicio = () => {
   <div class="home-grid">
   <button class="lc hero" onclick="${MODO_DOCENTE ? "VCURSO=cursoDe(alumno());go('mapa')" : 'continuar()'}"><span class="ico">${ico('play', 26)}</span><span class="tx2"><b>${MODO_DOCENTE ? 'Trucos' : 'Seguir'}</b><small>${esc(sigTxt)}</small></span></button>
   <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${hayRepaso ? 'Mezcla de los trucos que ya conoces' : 'Se abre cuando practiques un truco'}</small></span></button>
-  <button class="lc" onclick="EID='${e.id}';TUT=0;go('tut')"><span class="ico">${ico('book', 24)}</span><span class="tx2"><b>Aprender</b><small>Cómo funciona: ${esc(e.n)}</small></span></button>
+  ${MODO_DOCENTE ? `<button class="lc" onclick="abrirAula('proy')"><span class="ico">${ico('monitor', 24)}</span><span class="tx2"><b>Proyectar</b><small>Una operación en grande para toda la clase</small></span></button>
+  <button class="lc" onclick="abrirAula('duelo')"><span class="ico">${ico('users', 24)}</span><span class="tx2"><b>Duelo por equipos</b><small>Azul contra naranja en la pizarra</small></span></button>`
+  : `<button class="lc" onclick="empezar('diario')"><span class="ico">${ico('flame', 24)}</span><span class="tx2"><b>Cálculo diario</b><small>${diarioHoy(a) ? `Hecho hoy ✓ · Récord: ${a.diario.mejor}` : `2 minutos · Tu récord: ${a.diario.mejor || 0}`}</small></span></button>`}
   </div>
-  <div class="duo"><button class="hc" onclick="go('logros')">${ico('medal', 22)}Mis logros</button><button class="hc" onclick="VCURSO=cursoDe(alumno());go('mapa')">${ico('map', 22)}Mapa de trucos</button></div>
+  <div class="trio"><button class="hc" onclick="VCURSO=cursoDe(alumno());go('mapa')">${ico('map', 22)}Trucos</button><button class="hc" onclick="go('piedras')">${piedra(Math.max(0, piedrasDe(a) - 1), 26)}Piedras</button><button class="hc" onclick="go('logros')">${ico('medal', 22)}Logros</button></div>
   ${MODO_DOCENTE ? '' : `<button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button>`}`;
 };
 

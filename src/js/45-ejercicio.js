@@ -2,15 +2,16 @@
 
 /* ---------- Tutorial ---------- */
 SC.tut = () => {
-  const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1;
+  const e = est(), s = e.tutorial[TUT], ult = TUT === e.tutorial.length - 1, T = s.toca, st = T ? tocaEstado(s) : null, listo = !T || st.ok;
   setTimeout(() => { if (scr === 'tut') decir(s.txt); }, 300);
+  const dibujo = T ? `<div class="vis">${tocaHTML(T)}</div><div class="toca-tip${st.ok ? ' ok' : ''}">${st.ok ? ico('check', 18, 3) + '¡Muy bien!' : ico('pencil', 16) + 'Tu turno: toca el dibujo'}</div>` : `<div class="vis">${VIS.dibujar(s.vis)}</div>`;
   return `<div class="top"><button class="rnd" onclick="go('estr')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button>
   <div class="pg"><i style="width:${((TUT + 1) / e.tutorial.length) * 100}%"></i></div><span class="pill" style="background:var(--acs);color:var(--aci)">${ico('book', 18)}${TUT + 1}/${e.tutorial.length}</span></div>
   <div class="card pop"><div class="enun"><span>${esc(e.n)}</span><button class="voz" onclick="decir(${esc(JSON.stringify(s.txt))})" aria-label="Escuchar">${ico('vol', 20)}</button></div>
-  <div class="vis">${VIS.dibujar(s.vis)}</div></div>
-  <div class="say">${mascota(66)}<div class="bub tutt" style="text-align:left">${esc(s.txt)}</div></div>
+  ${dibujo}</div>
+  <div class="say">${mascota(66, T && st.ok ? 'feliz' : 'normal')}<div class="bub tutt" style="text-align:left">${esc(s.txt)}</div></div>
   <div class="acts">${TUT ? `<button class="bt sec" onclick="TUT--;pintar()">${ico('back', 20, 2.4)}Atrás</button>` : ''}
-  ${ult ? `<button class="bt" onclick="finTutorial()">¡A practicar!</button>` : `<button class="bt" onclick="TUT++;pintar()">Siguiente${ico('chev', 20, 2.4)}</button>`}</div>`;
+  ${ult ? `<button class="bt" ${listo ? '' : 'disabled'} onclick="finTutorial()">¡A practicar!</button>` : `<button class="bt" ${listo ? '' : 'disabled'} onclick="TUT++;pintar()">Siguiente${ico('chev', 20, 2.4)}</button>`}</div>`;
 };
 function finTutorial() { const a = alumno(); progreso(a, EID).tut = true; a.mt = Date.now(); guardar(); empezar('guiada'); }
 
@@ -20,9 +21,10 @@ function empezar(tipo) {
   SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '' };
   if (tipo === 'guiada') { SES.items = guiadas(e, 4); SES.n = 4; }
   else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('inicio'); }
+  else if (tipo === 'diario') { SES.n = 999; SES.lim = 120; SES.items = [itemDiario(a)]; }
   else { SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
-  SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!' }[tipo];
-  go('ej');
+  SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!', diario: '¡Dos minutos! Responde todas las que puedas.' }[tipo];
+  go('ej'); if (tipo === 'diario') relojDiario();
 }
 /** Nuevo ítem del reto, distinto de los 3 anteriores si es posible. */
 function nuevoItem() {
@@ -39,7 +41,7 @@ function actual() {
   return it._final || (it._final = prepararItem(it.final, 1));
 }
 const huecoHTML = (q, val) => esc(q).split('?').join(`<span class="hueco">${val === '' || val === undefined ? '&nbsp;' : esc(val)}</span>`);
-const salirSesion = () => SES && SES.tipo === 'repaso' ? "SES=null;go('inicio')" : "SES=null;go('estr')";
+const salirSesion = () => SES && (SES.tipo === 'repaso' || SES.tipo === 'diario') ? "SES=null;go('inicio')" : "SES=null;go('estr')";
 
 SC.ej = () => {
   const c = actual(), it = SES.items[SES.i], nivel = it.nivel || 1, guiada = SES.tipo === 'guiada';
@@ -57,8 +59,9 @@ SC.ej = () => {
     respuesta = teclado ? tecladoHTML(decimales(c.r) > 0 || c.coma) : `<div class="ops">${c.ops.map(o => `<button class="opc" onclick="responder(${o},this)">${fmt(o)}</button>`).join('')}</div>`;
   }
   const ayuda = !guiada && !c.truco && c.vis && !verVis ? `<button class="ayuda" onclick="SES.ayuda=true;SES.msg='Mira el dibujo: te ayuda a pensar.';pintar()">${ico('bulb', 18)}Ayuda</button>` : '';
+  const prog = SES.tipo === 'diario' ? Math.min(100, ((Date.now() - SES.t0) / 1000 / SES.lim) * 100) : (SES.i / SES.n) * 100;
   return `<div class="top"><button class="rnd" onclick="${salirSesion()}" aria-label="Salir">${ico('x', 20, 2.4)}</button>
-  <div class="pg"><i style="width:${(SES.i / SES.n) * 100}%"></i></div><span class="pill">${ico('star', 18)}${SES.ok}</span></div>${chips}
+  <div class="pg"><i id="pgi" style="width:${prog}%"></i></div>${SES.tipo === 'diario' ? `<span class="pill" style="background:var(--card);color:var(--tx)" id="reloj">${tiempoDiario()}</span>` : ''}<span class="pill">${ico(SES.tipo === 'diario' ? 'check' : 'star', 18)}${SES.ok}</span></div>${chips}
   <div class="ej-lado"><div class="ej-cuerpo">${pregunta}</div>
   <div class="ej-cuerpo"><div class="say">${mascota(58, SES.fb === 'ok' ? 'feliz' : SES.fb === 'no' ? 'piensa' : 'normal')}<div class="bub ${SES.fb || ''}" id="fb">${esc(SES.msg)}</div></div>${respuesta}${ayuda}</div></div>`;
 };
@@ -102,22 +105,25 @@ function responder(v, btn) {
     const limpio = SES.fallos === 0 && !SES.ayuda;
     registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++;
     if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
-    despues(850, siguiente);
+    despues(SES.tipo === 'diario' ? 450 : 850, siguiente);
   } else {
     SON.mal(); SES.fallos++; if (btn) { btn.classList.add('no'); btn.disabled = true; }
     if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 400); }
     SES.resp = ''; if (hueco && !c.ops) hueco.innerHTML = '&nbsp;';
-    if (SES.fallos >= 2 || c.truco) {
+    if (SES.fallos >= 2 || c.truco || SES.tipo === 'diario') {
       SES.bloq = true;
       if (SES.tipo !== 'guiada') { registrar(it.id, false); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
       if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.remove('no'); hueco.classList.add('ok'); }
       feedback(c.truco ? `Era: «${c.r}»` : `Era ${fmt(c.r)}. ¡La próxima sale!`, 'no');
-      despues(2000, () => {
+      despues(SES.tipo === 'diario' ? 1100 : 2000, () => {
         if (SES.tipo === 'guiada') { if (SES.paso < it.pasos.length) { SES.hechos.push((c.txt ? c.txt + ' ' : '') + c.q.replace('?', fmt(c.r))); SES.paso++; limpiarPaso(); SES.msg = 'Sigamos.'; pintar(); } else siguiente(); }
         else siguiente();
       });
-    } else if (c.vis && !SES.ayuda && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1) && !c.visSiempre) { SES.ayuda = true; SES.msg = 'Casi. Mira el dibujo y prueba otra vez.'; SES.fb = 'no'; pintar(); }
-    else feedback('Casi. Prueba otra vez.', 'no');
+    } else {
+      const pista = c.truco ? 'Piensa qué truco va mejor.' : pistaPara(c, v, ESTR.get(it.id));
+      if (c.vis && !SES.ayuda && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1) && !c.visSiempre) { SES.ayuda = true; SES.msg = pista + ' Mira el dibujo.'; SES.fb = 'no'; pintar(); }
+      else feedback(pista, 'no');
+    }
   }
 }
 function siguiente() {
@@ -125,14 +131,17 @@ function siguiente() {
   if (SES.i >= SES.n) return terminar();
   SES.msg = pick(['¿Y esta?', 'Otra más.', 'Piensa en el truco.', '¡Sigue así!']);
   if (SES.tipo === 'reto' || SES.tipo === 'rapido') SES.items.push(nuevoItem());
+  if (SES.tipo === 'diario') { if (Date.now() - SES.t0 >= SES.lim * 1000) return terminar(); SES.items.push(itemDiario(alumno(), SES.items[SES.items.length - 1])); }
   pintar();
 }
 function terminar() {
-  const a = alumno(), estrellas = SES.tipo === 'guiada' ? 3 : estrellasDe(SES.ok, SES.n);
+  const a = alumno(), antes = piedrasDe(a);
+  if (SES.tipo === 'diario') return terminarDiario(a, antes);
+  const estrellas = SES.tipo === 'guiada' ? 3 : estrellasDe(SES.ok, SES.n);
   let mejora = false;
   if (SES.tipo === 'reto') { const p = progreso(a, SES.id); if (estrellas > p.est) { p.est = estrellas; mejora = true; } a.mt = Date.now(); guardar(); }
   if (SES.tipo === 'guiada') { const p = progreso(a, SES.id); if (!p.n) p.n = 1; guardar(); }
-  RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, mejora };
+  RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, mejora, nuevas: piedrasDe(a) - antes, desde: antes };
   SON.fin(); go('res');
 }
 
@@ -163,11 +172,12 @@ function carta(i, el) {
 SC.res = () => {
   const r = RES;
   const titulo = r.estrellas === 3 ? '¡Fantástico!' : r.estrellas === 2 ? '¡Muy bien!' : r.estrellas === 1 ? '¡Buen trabajo!' : '¡Sigue practicando!';
+  if (r.tipo === 'diario') return resDiario(r);
   const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.${r.mejora ? ' ¡Nuevo récord de estrellas!' : ''}`;
   setTimeout(() => { if (scr === 'res') decir(titulo); }, 300);
   const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`, volver = r.tipo === 'repaso' ? "go('inicio')" : "go('estr')";
   const sig = r.tipo === 'guiada' ? `<button class="bt w" onclick="empezar('reto')">${ico('star', 20)}Hacer el reto</button>` : '';
   return `<div class="res pop">${mascota(140, r.estrellas >= 2 ? 'feliz' : 'normal')}<div class="estr">${estrellasHTML(r.estrellas, 3, 50)}</div>
-  <h2>${titulo}</h2><p class="mut" style="margin:0;font-size:1.1rem">${det}</p></div>
+  <h2>${titulo}</h2><p class="mut" style="margin:0;font-size:1.1rem">${det}</p>${nuevaPiedra(r)}</div>
   <div style="display:flex;flex-direction:column;gap:10px">${sig}<div class="acts"><button class="bt sec" onclick="${otra}">${ico('refresh', 20)}Otra vez</button><button class="bt${sig ? ' sec' : ''}" onclick="${volver}">Seguir${ico('chev', 20, 2.4)}</button></div></div>`;
 };

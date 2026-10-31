@@ -1,5 +1,6 @@
 /* 2.º · Truco 15 · Restar hacia delante */
 {
+  const E = (r, l) => l.filter(x => x[0] >= 0 && x[0] !== r);
   // b acaba en 6-9; salta a la decena (c1) y luego hasta a (c2)
   const gen = (nivel) => {
     const ub = rnd(nivel === 1 ? 7 : 6, 9), db = rnd(1, 8), b = 10 * db + ub, c1 = 10 - ub;
@@ -15,21 +16,23 @@
       { txt: '62 − 58. Los números están muy cerca. Cuento cuánto falta de 58 a 62.', vis: { t: 'recta', desde: 50, hasta: 70, inicio: 58 } },
       { txt: 'De 58 a 60 hay 2.', vis: { t: 'recta', desde: 50, hasta: 70, inicio: 58, saltos: [2] } },
       { txt: 'De 60 a 62 hay otros 2. Llego a 62.', vis: { t: 'recta', desde: 50, hasta: 70, inicio: 58, saltos: [2, 2] } },
+      { txt: 'Tu turno: 83 − 78. De 78 a 80 hay 2. ¿Cuánto hay de 80 a 83?', toca: { t: 'elige', q: '80 + ? = 83', ops: [2, 3, 5], r: 3 } },
       { txt: 'Truco: 2 + 2 = 4. Entonces 62 − 58 = 4. Resto contando hacia delante.', vis: { t: 'recta', desde: 50, hasta: 70, inicio: 58, saltos: [2, 2] } }
     ],
     guiada() {
       const g = gen(2), r = g.c1 + g.c2;
       return {
         pasos: [
-          { txt: `¿Cuánto hay de ${g.b} a ${g.dec}?`, q: `${g.b} + ? = ${g.dec}`, r: g.c1, vis: vis(g, 1), extra: [g.c2, g.c1 + 1, g.c1 - 1] },
-          { txt: `¿Cuánto hay de ${g.dec} a ${g.a}?`, q: `${g.dec} + ? = ${g.a}`, r: g.c2, vis: vis(g, 2), extra: [g.c1, g.c2 + 1, g.c2 - 1] }
+          { txt: `¿Cuánto hay de ${g.b} a ${g.dec}?`, q: `${g.b} + ? = ${g.dec}`, r: g.c1, vis: vis(g, 1), extra: [g.c2, g.c1 + 1, g.c1 - 1], errores: E(g.c1, [[g.c2, 'Ese es el otro salto. Aquí: de la cifra suelta a la decena.'], [g.c1 + 1, 'Cuenta otra vez el salto: te has pasado por uno.'], [g.c1 - 1, 'Cuenta otra vez el salto: te falta uno.']]) },
+          { txt: `¿Cuánto hay de ${g.dec} a ${g.a}?`, q: `${g.dec} + ? = ${g.a}`, r: g.c2, vis: vis(g, 2), extra: [g.c1, g.c2 + 1, g.c2 - 1], errores: E(g.c2, [[g.c1, 'Ese fue el primer salto. Ahora cuenta el segundo.'], [g.c2 + 1, 'Cuenta otra vez el salto: te has pasado por uno.'], [g.c2 - 1, 'Cuenta otra vez el salto: te falta uno.']]) }
         ],
-        final: { txt: `Junto los dos saltos, ${g.c1} + ${g.c2}:`, q: `${g.a} − ${g.b} = ?`, r, vis: vis(g, 2), extra: [r + 1, r - 1, Math.abs(g.a % 10 - g.b % 10), r + 10].filter(x => x > 0 && x !== r) }
+        final: { txt: `Junto los dos saltos, ${g.c1} + ${g.c2}:`, q: `${g.a} − ${g.b} = ?`, r, vis: vis(g, 2), extra: [r + 1, r - 1, Math.abs(g.a % 10 - g.b % 10), r + 10].filter(x => x > 0 && x !== r), errores: E(r, [[g.c2, 'Solo has contado el segundo salto. Suma los dos.'], [g.c1, 'Solo has contado el primer salto. Suma los dos.'], [r + 1, 'Cuenta otra vez los saltos: te has pasado por uno.'], [r - 1, 'Cuenta otra vez los saltos: te falta uno.']]) }
       };
     },
     item(nivel) {
       const g = gen(nivel), r = g.c1 + g.c2;
-      return { q: `${g.a} − ${g.b}`, r, vis: vis(g, 2), extra: [r + 1, r - 1, Math.abs(g.a % 10 - g.b % 10), r + 10, g.c2].filter(x => x > 0 && x !== r) };
+      const errores = E(r, [[g.c2, 'Solo has contado el último salto. Suma los dos saltos.'], [g.c1, 'Solo has contado el primer salto. Suma los dos saltos.'], [r + 1, 'Cuenta otra vez los saltos: te has pasado por uno.'], [r - 1, 'Cuenta otra vez los saltos: te falta uno.'], [Math.abs(g.a % 10 - g.b % 10), 'Has restado solo las unidades. Cuenta lo que hay entre los dos números.']]);
+      return { q: `${g.a} − ${g.b}`, r, vis: vis(g, 2), extra: [r + 1, r - 1, Math.abs(g.a % 10 - g.b % 10), r + 10, g.c2].filter(x => x > 0 && x !== r), errores };
     },
     juego: {
       tipo: 'parejas', meta: 'Une cada resta con su resultado',

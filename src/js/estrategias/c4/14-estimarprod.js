@@ -9,6 +9,7 @@ ESTR.add({
     { txt: 'Estimar es calcular rápido un resultado cercano. 48 × 3: ¿a qué decena se parece 48?', vis: { t: 'recta', desde: 40, hasta: 50, inicio: 48 } },
     { txt: '48 está muy cerca de 50. Redondeo: 48 ≈ 50.', vis: { t: 'recta', desde: 40, hasta: 50, inicio: 48, saltos: [2] } },
     { txt: 'Ahora multiplico lo redondeado: 50 × 3 = 150. Son 3 grupos de 5 decenas.', vis: { t: 'decenas', grupos: [{ d: 5 }, { d: 5 }, { d: 5 }] } },
+    { txt: 'Tu turno: 63 está entre 60 y 70. Toca el número redondo al que está más cerca.', toca: { t: 'recta', desde: 60, hasta: 70, inicio: 63, objetivo: 60 } },
     { txt: 'Así que 48 × 3 es más o menos 150. Lo escribo así: 48 × 3 ≈ 150.', vis: { t: 'decenas', grupos: [{ d: 5 }, { d: 5 }, { d: 5 }] } }
   ],
   // número de 2 cifras que no acaba en 0 ni en 5
@@ -25,16 +26,17 @@ ESTR.add({
     const x = this.dos(12, 58), n = rnd(2, 4), R = _redondea(x, 10), r = R * n, dif = R - x;
     return {
       pasos: [
-        { txt: `Redondeo ${x} a la decena más cercana:`, q: `${x} ≈ ?`, r: R, vis: { t: 'recta', desde: Math.floor(x / 10) * 10, hasta: Math.floor(x / 10) * 10 + 10, inicio: x, saltos: [dif] }, extra: [x < R ? R - 10 : R + 10, x, R + 1] },
-        { txt: 'Ahora multiplico el número redondeado:', q: `${R} × ${n} = ?`, r, vis: { t: 'decenas', grupos: Array.from({ length: n }, () => ({ d: R / 10 })) }, extra: [R * n / 10, R * n * 10, x * n] }
+        { txt: `Redondeo ${x} a la decena más cercana:`, q: `${x} ≈ ?`, r: R, vis: { t: 'recta', desde: Math.floor(x / 10) * 10, hasta: Math.floor(x / 10) * 10 + 10, inicio: x, saltos: [dif] }, extra: [R + 1], errores: _errc4(R, [[x < R ? R - 10 : R + 10, `Mira a cuál de las dos decenas está más cerca el ${x}.`], [x, 'Hay que redondear: el resultado acaba en 0.']]) },
+        { txt: 'Ahora multiplico el número redondeado:', q: `${R} × ${n} = ?`, r, vis: { t: 'decenas', grupos: Array.from({ length: n }, () => ({ d: R / 10 })) }, extra: [], errores: _errc4(r, [[x * n, 'Multiplica el número redondeado, no el de antes.'], [R * n / 10, 'Te falta un cero.'], [R * n * 10, 'Te sobra un cero.']]) }
       ],
-      final: { txt: 'Entonces:', q: `${x} × ${n} ≈ ?`, r, extra: [x * n, R * n / 10, R * n * 10, (R - 10) * n] }
+      final: { txt: 'Entonces:', q: `${x} × ${n} ≈ ?`, r, extra: [], errores: _errc4(r, [[x * n, 'Eso es el cálculo exacto. Aquí estimas con el número redondeado.'], [R * n / 10, 'Te falta un cero.'], [R * n * 10, 'Te sobra un cero.'], [(R - 10) * n, 'Has redondeado a la otra decena. Mira a cuál está más cerca.']]) }
     };
   },
   item(nivel) {
     const o = this.crear(nivel), r = o.r;
     const exacto = o.x * o.n, abajo = Math.floor(o.x / (o.R >= 100 && o.x > 100 ? 100 : 10)) * (o.R >= 100 && o.x > 100 ? 100 : 10) * o.n;
-    return { q: this.texto(o), txt: o.txt, r, vis: o.vis, extra: [exacto, abajo, r * 10, r / 10, r + o.n * 10] };
+    const errores = _errc4(r, [[exacto, 'Eso es el cálculo exacto. Aquí redondeas antes de multiplicar.'], [abajo, 'Has redondeado siempre hacia abajo. Mira a qué número está más cerca.'], [r + o.n * 10, 'Has redondeado a la otra decena. Mira a cuál está más cerca.'], [r * 10, 'Te sobra un cero.'], [r / 10, 'Te falta un cero.']]);
+    return { q: this.texto(o), txt: o.txt, r, vis: o.vis, extra: [], errores };
   },
   juego: {
     tipo: 'parejas', meta: 'Redondea a la decena y une cada cuenta con su estimación',

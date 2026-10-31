@@ -10,13 +10,15 @@ Cada archivo de src/js/estrategias/ registra UNA estrategia con ESTR.add({...}).
   desc:     'Parejas que suman 10'  subtítulo (corto)
   truco:    'Busco el amigo del 10'  frase para «¿Qué truco usarías?» (repaso mixto)
   tutorial: [{txt, vis}, …]      3-6 pantallas: frase corta (se lee en voz alta) + modelo visual (ver 20-visual.js)
-  guiada(): {pasos:[{txt?, q, r, vis?, ops?}], final:{txt?, q, r, vis?}}
+  guiada(): {pasos:[{txt?, q, r, vis?, ops?, errores?}], final:{txt?, q, r, vis?, errores?}}
             Práctica guiada: 2-3 pasos pequeños que llevan al resultado. q usa «?» para el hueco: '8 + ? = 10'.
             txt = instrucción corta encima (p. ej. '¿Cuánto le falta al 8 para llegar a 10?') con q:'?' o q:'8 + ? = 10'.
             Pasos y final se responden con 3 botones (opciones automáticas, o ops propias); teclado:true en un paso fuerza teclado.
   item(nivel): {q, r, txt?, vis?, ops?, voz?, extra?}
             nivel 1: con modelo visual y 3 opciones · nivel 2: sin visual (se puede pedir ayuda), 3 opciones · nivel 3: sin visual, teclado.
             vis se usa en nivel 1 y como «ayuda» en 2 y 3. extra = distractores típicos (errores frecuentes) para las opciones.
+            errores: [[valor, 'pista'], …] → si el niño responde «valor», la mascota le da esa pista (errores típicos del truco).
+                     Esos valores también se usan como opciones. Si no hay pista propia, el motor usa pistas generales.
             visSiempre:true → el visual se ve en todos los niveles (cuando el visual ES la pregunta, p. ej. «¿Cuántos hay?»).
   juego:    {tipo:'parejas', meta:'Suman 10', pares(): [[a,b]×6]}   (tarjetas que hay que emparejar; a y b son textos o números)
             {tipo:'rapido'}  (10 operaciones seguidas de nivel 2, sin cronómetro visible)
@@ -52,7 +54,8 @@ function sugerida(a) {
 function prepararItem(it, nivel) {
   it = Object.assign({}, it); it.r = Number(it.r);
   if (!String(it.q).includes('?')) it.q = it.q + ' = ?';
-  if (nivel < 3 && !it.ops) it.ops = opciones(it.r, 3, it.extra || []);
+  const deErrores = (it.errores || []).map(e => e[0]);
+  if (nivel < 3 && !it.ops) it.ops = opciones(it.r, 3, deErrores.concat(it.extra || []));
   if (it.ops && !it.ops.includes(it.r)) it.ops = shuffle([it.r, ...it.ops.slice(0, it.ops.length - 1)]);
   return it;
 }
@@ -79,3 +82,22 @@ function itemsRepaso(a, n = 10) {
 
 /** Estrellas de un reto de 10: 9-10 → 3 · 7-8 → 2 · 5-6 → 1. */
 const estrellasDe = (ok, n) => { const p = ok / n; return p >= .9 ? 3 : p >= .7 ? 2 : p >= .5 ? 1 : 0; };
+
+/** Pista para una respuesta equivocada: primero las del truco (it.errores), después pistas generales. */
+function pistaPara(it, v, e) {
+  const prop = (it.errores || []).find(x => igual(x[0], v)); if (prop) return prop[1];
+  const r = it.r, q = String(it.q).replace(/\?/g, ''), nums = (q.match(/\d+(?:,\d+)?/g) || []).map(num);
+  if (decimales(r) || decimales(v)) { if (igual(v, r * 10) || igual(v, r / 10) || igual(v, r * 100) || igual(v, r / 100)) return 'Los números están bien, pero revisa dónde va la coma.'; }
+  if (nums.length === 2) {
+    const [a, b] = nums;
+    if (q.includes('−') && igual(v, a + b)) return 'Cuidado: es una resta, no una suma.';
+    if (q.includes('+') && igual(v, Math.abs(a - b))) return 'Cuidado: es una suma, no una resta.';
+    if (q.includes('×') && igual(v, a + b)) return 'Es multiplicar, no sumar.';
+    if (q.includes(':') && igual(v, a * b)) return 'Es dividir, no multiplicar.';
+  }
+  if (Number.isInteger(r) && r > 9 && String(v) === String(r).split('').reverse().join('')) return 'Tienes las cifras, pero en otro orden.';
+  if (Number.isInteger(r) && Math.abs(v - r) === 1) return v > r ? 'Casi: te has pasado por uno.' : 'Casi: te falta uno.';
+  if (Number.isInteger(r) && r >= 10 && Math.abs(v - r) === 10) return 'Las unidades están bien; revisa las decenas.';
+  if (Number.isInteger(r) && r >= 100 && Math.abs(v - r) === 100) return 'Revisa las centenas.';
+  return e && e.truco ? `Acuérdate del truco: ${e.truco.charAt(0).toLowerCase() + e.truco.slice(1)}.` : 'Casi. Prueba otra vez.';
+}

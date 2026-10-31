@@ -1,5 +1,6 @@
 /* 6.º · Truco 13 · Raíces exactas */
 (() => {
+  const ER = (r, l) => l.filter(x => x[0] >= 0 && Math.abs(x[0] - r) > 1e-9).map(x => [+x[0].toFixed(3), x[1]]);
   const vis = r => r <= 12 ? { t: 'matriz', filas: r, cols: r } : undefined;
   ESTR.add({
     id: 'raices', curso: 6, orden: 13, tri: 3,
@@ -9,21 +10,23 @@
       { txt: '√49 se lee «raíz cuadrada de 49». Es el número que, multiplicado por sí mismo, da 49.', vis: { t: 'matriz', filas: 7, cols: 7 } },
       { txt: 'Con 49 puntos formo un cuadrado perfecto: 7 filas de 7. El lado mide 7, así que √49 = 7.', vis: { t: 'matriz', filas: 7, cols: 7 } },
       { txt: 'Si me sé las tablas, es fácil: 8 × 8 = 64, así que √64 = 8.', vis: { t: 'matriz', filas: 8, cols: 8 } },
+      { txt: 'Tu turno: estos 36 puntos forman un cuadrado. Toca todas las filas y cuéntalas: ese es el lado.', toca: { t: 'matriz', filas: 6, cols: 6, objetivo: 6 } },
       { txt: 'Para raíces grandes: 20 × 20 = 400, así que √400 = 20. Los acabados en 00 tienen una raíz acabada en 0.', vis: { t: 'barra', partes: 20, marcadas: 20, total: 400, valor: 20 } }
     ],
     guiada() {
       const r = rnd(4, 12), n = r * r;
       return {
         pasos: [
-          { txt: `Pruebo con ${r - 1}. ¿Cuánto es ${r - 1} × ${r - 1}?`, q: `${r - 1} × ${r - 1} = ?`, r: (r - 1) * (r - 1), vis: { t: 'matriz', filas: r - 1, cols: r - 1 }, extra: [n, 2 * (r - 1), (r - 1) * (r - 2)] },
-          { txt: `Se queda corto. Pruebo con ${r}:`, q: `${r} × ${r} = ?`, r: n, vis: { t: 'matriz', filas: r, cols: r }, extra: [(r - 1) * (r - 1), 2 * r, n + r] }
+          { txt: `Pruebo con ${r - 1}. ¿Cuánto es ${r - 1} × ${r - 1}?`, q: `${r - 1} × ${r - 1} = ?`, r: (r - 1) * (r - 1), vis: { t: 'matriz', filas: r - 1, cols: r - 1 }, extra: [n, 2 * (r - 1), (r - 1) * (r - 2)], errores: ER((r - 1) * (r - 1), [[n, `Eso es ${r} × ${r}. Aquí calculamos ${r - 1} × ${r - 1}.`], [2 * (r - 1), 'Eso es sumar. Hay que multiplicar el número por sí mismo.'], [(r - 1) * (r - 2), `Multiplica ${r - 1} por ${r - 1}, no por ${r - 2}.`]]) },
+          { txt: `Se queda corto. Pruebo con ${r}:`, q: `${r} × ${r} = ?`, r: n, vis: { t: 'matriz', filas: r, cols: r }, extra: [(r - 1) * (r - 1), 2 * r, n + r], errores: ER(n, [[(r - 1) * (r - 1), `Eso es ${r - 1} × ${r - 1}. Ahora prueba con ${r}.`], [2 * r, 'Eso es sumar. Hay que multiplicar el número por sí mismo.'], [n + r, 'Te has pasado: solo ' + r + ' veces ' + r + '.']]) }
         ],
-        final: { txt: `¡Justo ${n}! Entonces:`, q: `√${n} = ?`, r, vis: { t: 'matriz', filas: r, cols: r }, extra: [r - 1, r + 1, n / 2, n / 4] }
+        final: { txt: `¡Justo ${n}! Entonces:`, q: `√${n} = ?`, r, vis: { t: 'matriz', filas: r, cols: r }, extra: [r - 1, r + 1, n / 2, n / 4], errores: ER(r, [[r - 1, `${r - 1} × ${r - 1} se queda corto. Mira lo que acabas de probar.`], [r + 1, `${r + 1} × ${r + 1} se pasa de ${n}.`], [n / 2, `Eso es la mitad de ${n}. Busca el lado del cuadrado.`], [n / 4, `Eso es dividir entre 4. Busca un número que por sí mismo dé ${n}.`]]) }
       };
     },
     item(nivel) {
       const r = nivel === 1 ? rnd(2, 10) : nivel === 2 ? rnd(4, 15) : rnd(10, 20), n = r * r;
-      const it = { q: `√${n} = ?`, r, extra: [n / 2, r + 1, r - 1, 2 * r, n / 4] };
+      const errores = ER(r, [[n / 2, `Eso es la mitad de ${n}. Busca el lado del cuadrado.`], [r + 1, `${r + 1} × ${r + 1} se pasa de ${n}.`], [r - 1, `${r - 1} × ${r - 1} se queda corto.`], [2 * r, `Es multiplicar por sí mismo, no el doble: ${r} × ${r}.`], [n / 4, 'Dividir entre 4 no es la raíz. Prueba con las tablas.']]);
+      const it = { q: `√${n} = ?`, r, errores, extra: [n / 2, r + 1, r - 1, 2 * r, n / 4] };
       if (nivel === 1 || r <= 12) it.vis = vis(r);
       return it;
     },

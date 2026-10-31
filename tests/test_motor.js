@@ -47,6 +47,14 @@ const qOk = (id, it, d) => {
   if (lados.length === 2 && lados.every(l => /^[\d\s+\-*/.()]+$/.test(l))) { const [a, b] = lados.map(l => Function(`return (${l})`)()); if (Math.abs(a - b) > 1e-9) fallo(id, `${d}: cuenta incorrecta "${exp}"`); }
   const p = prepararItem(it, 1); if (!p.ops.some(o => Math.abs(o - p.r) < 1e-9) || new Set(p.ops).size !== p.ops.length || p.ops.some(o => o < 0)) fallo(id, `${d}: opciones mal ${JSON.stringify(p.ops)}`);
   visOk(id, it.vis, d); visCoh(id, it, d);
+  for (const er of it.errores || []) { if (!Array.isArray(er) || typeof er[0] !== 'number' || typeof er[1] !== 'string') { fallo(id, `${d}: errores mal formado`); break; } if (Math.abs(er[0] - it.r) < 1e-9) fallo(id, `${d}: una pista de error usa la respuesta correcta (${er[0]})`); if (er[1].length > 90) fallo(id, `${d}: pista larga (${er[1].length} > 90)`); }
+};
+const tocaOk = (id, T, d) => {
+  if (!T) return;
+  const ok = { marco: () => T.objetivo > (T.a || 0) && T.objetivo <= (T.tam || 10), recta: () => T.objetivo >= T.desde && T.objetivo <= T.hasta && T.inicio >= T.desde && T.inicio <= T.hasta && Math.abs(((T.objetivo - T.desde) / (T.paso || 1)) - Math.round((T.objetivo - T.desde) / (T.paso || 1))) < 1e-6 && (T.hasta - T.desde) / (T.paso || 1) <= 40,
+    barra: () => T.objetivo >= 1 && T.objetivo <= T.partes && T.partes <= 20, matriz: () => T.objetivo >= 1 && T.objetivo <= T.filas && T.filas <= 12 && T.cols <= 12,
+    elige: () => Array.isArray(T.ops) && T.ops.some(o => Math.abs(o - T.r) < 1e-9) && String(T.q).includes('?') }[T.t];
+  if (!ok) fallo(id, `${d}: toca de tipo desconocido "${T.t}"`); else if (!ok()) fallo(id, `${d}: toca imposible o mal definido ${JSON.stringify(T)}`);
 };
 const ordenes = new Set();
 console.log(`Estrategias: ${ESTR.lista.length} (${ESTR.cursos().map(c => c + '.º: ' + ESTR.delCurso(c).length).join(', ')})`);
@@ -57,8 +65,8 @@ for (const e of ESTR.lista) {
   if (e.curso > 1 && !/^[^\p{Extended_Pictographic}]{1,5}$/u.test(e.ic)) fallo(e.id, `ic debe ser texto corto sin emojis («${e.ic}»)`);
   if (e.n.length > 24) fallo(e.id, `nombre largo (${e.n.length} > 24)`);
   if (![1, 2, 3].includes(e.tri)) fallo(e.id, 'tri debe ser 1, 2 o 3');
-  if (!Array.isArray(e.tutorial) || e.tutorial.length < 3 || e.tutorial.length > 6) fallo(e.id, 'tutorial: 3-6 pantallas');
-  (e.tutorial || []).forEach((s, i) => { if (!s.txt || s.txt.length > 140) fallo(e.id, `tutorial ${i}: txt vacío o > 140`); visOk(e.id, s.vis, `tutorial ${i}`); });
+  if (!Array.isArray(e.tutorial) || e.tutorial.length < 3 || e.tutorial.length > 7) fallo(e.id, 'tutorial: 3-7 pantallas');
+  (e.tutorial || []).forEach((s, i) => { if (!s.txt || s.txt.length > 140) fallo(e.id, `tutorial ${i}: txt vacío o > 140`); visOk(e.id, s.vis, `tutorial ${i}`); tocaOk(e.id, s.toca, `tutorial ${i}`); });
   for (let k = 0; k < 300; k++) {
     const g = e.guiada(); if (!g || !Array.isArray(g.pasos) || !g.pasos.length || !g.final) { fallo(e.id, 'guiada sin pasos/final'); break; }
     g.pasos.forEach((p, i) => qOk(e.id, p, `guiada paso ${i}`)); qOk(e.id, g.final, 'guiada final');

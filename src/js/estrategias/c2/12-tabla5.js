@@ -1,5 +1,6 @@
 /* 2.º · Truco 12 · Tabla del 5 */
 {
+  const E = (r, l) => l.filter(x => x[0] >= 0 && x[0] !== r);
   const rect = (n) => ({ t: 'recta', desde: 0, hasta: 5 * n, paso: 5, inicio: 0, saltos: Array(n).fill(5) });
   ESTR.add({
     id: 'tabla5', curso: 2, orden: 12, tri: 3,
@@ -9,6 +10,7 @@
       { txt: 'Una mano tiene 5 dedos. Dos manos tienen 10.', vis: { t: 'dedos', n: 10 } },
       { txt: 'Cuento de 5 en 5: 5, 10, 15, 20. Son 4 saltos de 5.', vis: rect(4) },
       { txt: '4 × 5 son 4 filas de 5 puntos. Cada fila es un salto de 5: llego a 20.', vis: { t: 'matriz', filas: 4, cols: 5 } },
+      { txt: 'Tu turno: 4 × 5. Cuenta 4 saltos de 5 desde el 0 y toca dónde llegas.', toca: { t: 'recta', desde: 0, hasta: 30, paso: 5, inicio: 0, objetivo: 20 } },
       { txt: 'Truco: los resultados de la tabla del 5 acaban en 0 o en 5. Mira la recta: 5, 10, 15, 20, 25…', vis: rect(8) }
     ],
     guiada() {
@@ -16,16 +18,17 @@
       const seg2 = n === 3 ? `10 + 5 = ?` : n === 4 ? `10 + 10 = ?` : `10 + 10 + 5 = ?`;
       return {
         pasos: [
-          { txt: 'Cuento de 5 en 5. Dos saltos:', q: '5 + 5 = ?', r: 10, vis: { t: 'recta', desde: 0, hasta: r, paso: 5, inicio: 0, saltos: [5, 5] }, extra: [5, 15, 20] },
-          { txt: 'Sigo contando hasta el último salto:', q: seg2, r, vis: rect(n), extra: [r - 5, r + 5, 10 * n] }
+          { txt: 'Cuento de 5 en 5. Dos saltos:', q: '5 + 5 = ?', r: 10, vis: { t: 'recta', desde: 0, hasta: r, paso: 5, inicio: 0, saltos: [5, 5] }, extra: [5, 15, 20], errores: [[5, 'Ese es un solo salto. Cuenta dos saltos de 5.'], [15, 'Son solo dos saltos de 5. Cuenta otra vez.'], [20, 'Son solo dos saltos de 5. Cuenta otra vez.']] },
+          { txt: 'Sigo contando hasta el último salto:', q: seg2, r, vis: rect(n), extra: [r - 5, r + 5, 10 * n], errores: E(r, [[r - 5, 'Te falta un salto de 5. Cuenta otra vez.'], [r + 5, 'Te has pasado un salto de 5. Cuenta otra vez.'], [10 * n, 'Saltas de 5 en 5, no de 10 en 10.']]) }
         ],
-        final: { txt: `${n} saltos de 5:`, q: `${n} × 5 = ?`, r, vis: rect(n), extra: [r - 5, r + 5, 10 * n, n + 5] }
+        final: { txt: `${n} saltos de 5:`, q: `${n} × 5 = ?`, r, vis: rect(n), extra: [r - 5, r + 5, 10 * n, n + 5], errores: E(r, [[r - 5, 'Te falta un salto de 5. Cuenta otra vez.'], [r + 5, 'Te has pasado un salto de 5. Cuenta otra vez.'], [10 * n, 'Saltas de 5 en 5, no de 10 en 10.'], [n + 5, 'Es multiplicar, no sumar. Cuenta saltos de 5.']]) }
       };
     },
     item(nivel) {
-      if (nivel === 1) { const n = rnd(2, 6); return { q: `${n} × 5`, r: 5 * n, vis: { t: 'matriz', filas: n, cols: 5 }, extra: [10 * n, 5 * n + 5, 5 * n - 5, n + 5] }; }
+      if (nivel === 1) { const n = rnd(2, 6); return { q: `${n} × 5`, r: 5 * n, vis: { t: 'matriz', filas: n, cols: 5 }, extra: [10 * n, 5 * n + 5, 5 * n - 5, n + 5], errores: E(5 * n, [[5 * n - 5, 'Te falta una fila de 5. Cuenta de 5 en 5.'], [5 * n + 5, 'Te has pasado una fila de 5. Cuenta de 5 en 5.'], [10 * n, 'Cuentas de 5 en 5, no de 10 en 10.'], [n + 5, 'Es multiplicar, no sumar. Cuenta de 5 en 5.']]) }; }
       const n = nivel === 2 ? rnd(3, 8) : rnd(3, 10), orden = nivel === 3 && rnd(0, 1) === 1;
-      return { q: orden ? `5 × ${n}` : `${n} × 5`, r: 5 * n, vis: orden ? { t: 'matriz', filas: 5, cols: n } : rect(n), extra: [10 * n, 5 * n + 5, 5 * n - 5, n + 5, 5 * n + 1] };
+      const errores = E(5 * n, [[5 * n - 5, 'Te falta un salto de 5. Cuenta de 5 en 5.'], [5 * n + 5, 'Te has pasado un salto de 5. Cuenta de 5 en 5.'], [10 * n, 'Cuentas de 5 en 5, no de 10 en 10.'], [n + 5, 'Es multiplicar, no sumar. Cuenta de 5 en 5.']]);
+      return { q: orden ? `5 × ${n}` : `${n} × 5`, r: 5 * n, vis: orden ? { t: 'matriz', filas: 5, cols: n } : rect(n), extra: [10 * n, 5 * n + 5, 5 * n - 5, n + 5, 5 * n + 1], errores };
     },
     juego: {
       tipo: 'parejas', meta: 'Une cada multiplicación con su resultado',
