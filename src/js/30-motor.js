@@ -64,7 +64,7 @@ function prepararItem(it, nivel) {
 function itemsRepaso(a, n = 10) {
   const vistas = ESTR.lista.filter(e => e.curso <= cursoDe(a) && abierta(a, e) && (a.e[e.id] || {}).n > 0);
   if (!vistas.length) return [];
-  const peso = e => { const d = dominio(a, e.id) ?? .5, ult = (a.e[e.id] || {}).ult || '2000-01-01', dias = Math.min(14, (Date.now() - new Date(ult)) / 864e5); return .3 + (1 - d) * 2 + dias / 7; };
+  const peso = e => { const d = dominio(a, e.id) ?? .5, ult = (a.e[e.id] || {}).ult || '2000-01-01', dias = Math.min(14, (Date.now() - new Date(ult)) / 864e5); const p = a.e[e.id] || {}, toca = p.prox && p.prox <= hoy() ? 3 : 0; return .3 + (1 - d) * 2 + dias / 7 + toca; };
   const out = [];
   for (let k = 0; k < n; k++) {
     let tot = vistas.reduce((s, e) => s + peso(e), 0), x = Math.random() * tot, e = vistas[0];

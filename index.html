@@ -377,6 +377,49 @@ svg.toca{touch-action:manipulation}
 :root.dalton .sem.v,:root.dalton .bar i.v{background:#0072B2}:root.dalton .sem.a,:root.dalton .bar i.a{background:#F0E442}:root.dalton .sem.r,:root.dalton .bar i.r{background:#D55E00}
 :root.dalton .op .hueco.ok::after{content:'✓';font-size:.4em;vertical-align:super;margin-left:.1em}
 :root.dalton .op .hueco.no::after{content:'✗';font-size:.4em;vertical-align:super;margin-left:.1em}
+
+/* Animalitos */
+.av.ani{font-size:1.45rem;line-height:1;box-shadow:inset 0 0 0 2px rgba(0,0,0,.06)}
+.qa .av.ani{font-size:2rem}
+.tzh .av.ani{border-radius:12px;font-size:1.5rem}
+.animales{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+.animales button{aspect-ratio:1/1;border-radius:16px;font-size:1.7rem;display:grid;place-items:center;border:3px solid transparent}
+.animales button.on{border-color:var(--ac);transform:scale(1.06)}
+
+/* Mapa de calor de las tablas */
+.mtab{display:grid;grid-template-columns:34px repeat(10,1fr);gap:3px;align-items:center}
+.mtab b{text-align:center;font-weight:500;color:var(--mu);font-size:.85rem}
+.mtab button{height:100%;min-height:28px;border-radius:8px;background:var(--acs);color:var(--aci);font-weight:600}
+.mtab i{aspect-ratio:1/1;border-radius:6px;background:var(--bd)}
+.mtab i.v{background:#16A34A}.mtab i.a{background:#F59E0B}.mtab i.r{background:#DC2626}
+:root.dalton .mtab i.v{background:#0072B2}:root.dalton .mtab i.a{background:#F0E442}:root.dalton .mtab i.r{background:#D55E00}
+/* Reto de la clase */
+.reto{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.reto-h{display:flex;align-items:center;gap:8px}.reto-h b{flex:1;font-weight:500}.reto-h span{color:var(--mu);font-size:.92rem}
+.reto small{color:var(--mu);font-size:.85rem}
+.reto.grande{padding:18px 22px}.reto.grande .reto-h b{font-size:1.5rem}.reto.grande .pg{height:22px}
+.tz .reto{border-width:1px;border-radius:14px}
+/* Bingo */
+.cartones{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.carton{background:#fff;color:#111;border:2px solid #111;border-radius:12px;padding:10px;break-inside:avoid}
+.carton-h{display:flex;align-items:baseline;gap:8px;font-family:var(--fi);font-size:.8rem;margin-bottom:6px}.carton-h b{font-family:var(--fd);font-size:1rem;flex:1}.carton-h small{color:#666}
+.carton-g{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid #111;border-radius:6px;overflow:hidden}
+.carton-g span{aspect-ratio:1.4/1;display:grid;place-items:center;font:600 1.7rem var(--fd);border:1px solid #999}
+.cantadas{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:8px 12px;font-family:var(--fi);font-size:.9rem}
+.cantadas summary{cursor:pointer;color:var(--mu)}.cantadas div{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cantadas span{background:var(--acs);border-radius:8px;padding:2px 8px;font-weight:600}
+@media print{.cartones{grid-template-columns:1fr 1fr;gap:8mm}.carton{border-radius:0}}
+/* Informe para familias */
+.inf{font-family:var(--fi);font-size:.92rem}
+.inf h3{font:600 1.05rem var(--fd);margin:14px 0 6px}
+.inf p,.inf ul{margin:0 0 6px}
+.inf-al{display:flex;align-items:center;gap:8px}.inf-al b{display:block;font-family:var(--fd)}.inf-al small{color:#555}
+.inf-st{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}
+.inf-st div{background:#f3f4f6;border-radius:8px;padding:8px;text-align:center}.inf-st b{display:block;font:600 1.3rem var(--fd)}.inf-st small{font-size:.72rem;color:#555}
+.inf-t{width:100%;border-collapse:collapse;font-size:.85rem}.inf-t td{padding:4px 6px;border-bottom:1px solid #e5e7eb}.inf-t td:last-child{color:#B45309;text-align:right}
+.inf-pie{margin-top:12px!important;font-size:.82rem;color:#555;border-top:1px solid #ddd;padding-top:8px}
+.hoja.inf:first-of-type{margin-top:0}
+@media print{.noimp+.hoja{break-before:auto!important}}
 </style>
 </head>
 <body>
@@ -455,22 +498,34 @@ const SON = {
 /* ---- js/10-datos.js ---- */
 /* ===== Datos guardados (solo claves con prefijo calc.: comparte dominio con Lectori y Barri) ===== */
 const KEY = 'calc.v1', VERSION_DATOS = 1;
-/* Colores de avatar (inicial del nombre sobre color, como en Barri) */
-const AVATARES = [['', '#1E2A5A'], ['', '#2563EB'], ['', '#16A34A'], ['', '#7C3AED'], ['', '#DB2777'], ['', '#0891B2'], ['', '#CA8A04'], ['', '#DC2626'], ['', '#4F46E5'], ['', '#059669'], ['', '#9333EA'], ['', '#EA580C']];
+/* Avatares: animalitos sobre un color suave (30 distintos para que cada niño de la clase tenga el suyo) */
+const AVATARES = [['🦊','#FED7AA'],['🐢','#BBF7D0'],['🐼','#E2E8F0'],['🦁','#FDE68A'],['🐸','#D9F99D'],['🐙','#F5D0FE'],['🐳','#BAE6FD'],['🦉','#E7D3B5'],
+  ['🐝','#FEF08A'],['🐞','#FECACA'],['🦄','#FBCFE8'],['🐨','#CBD5E1'],['🐶','#FDE2C4'],['🐱','#FFE4B5'],['🐰','#FCE7F3'],['🐻','#E8CBA8'],
+  ['🐯','#FED7AA'],['🐷','#FBCFE8'],['🐮','#E5E7EB'],['🐵','#E7D3B5'],['🐧','#C7D2FE'],['🐤','#FEF3C7'],['🦋','#BFDBFE'],['🐬','#A5F3FC'],
+  ['🦒','#FDE68A'],['🦓','#E5E7EB'],['🐘','#CBD5E1'],['🦔','#E7D3B5'],['🐿️','#FED7AA'],['🦜','#BBF7D0']];
+/** Primer animal que no tiene ningún alumno (si están todos, se repite por orden). */
+function avLibre() { const usados = new Set(EST.alu.map(a => a.av)); for (let i = 0; i < AVATARES.length; i++) if (!usados.has(i)) return i; return EST.alu.length % AVATARES.length; }
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
-function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false, curso: 1, dalton: false }, gmt: 0 }; }
+function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false, curso: 1, dalton: false, reto: 0 }, gmt: 0 }; }
 
+const limpiarDias = o => Object.fromEntries(Object.entries(o && typeof o === 'object' ? o : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)]));
+const limpiarErr = o => Object.fromEntries(Object.entries(o && typeof o === 'object' ? o : {}).filter(([k]) => /^[a-z0-9]{2,20}$/.test(k)).map(([k, v]) => [k, Object.fromEntries(Object.entries(v && typeof v === 'object' ? v : {}).filter(([t, n]) => t.length <= 100 && n > 0).sort((x, y) => y[1] - x[1]).slice(0, 8).map(([t, n]) => [t, Math.min(9999, n | 0)]))]));
 const ss = (s, n) => String(s ?? '').replace(/[<>&"'`]/g, '').trim().slice(0, n);
 function limpiarAlu(a) {
   a = a && typeof a === 'object' ? a : {};
   const e = {};
   for (const [k, v] of Object.entries(a.e && typeof a.e === 'object' ? a.e : {})) {
     if (!/^[a-z0-9]{2,20}$/.test(k) || !v || typeof v !== 'object') continue;
-    e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0) };
+    e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0),
+      /* repaso espaciado: caja 0-5 y fecha del próximo repaso */ caja: Math.max(0, Math.min(5, v.caja | 0)), prox: /^\d{4}-\d\d-\d\d$/.test(v.prox || '') ? v.prox : '' };
   }
   return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', curso: [1, 2, 3, 4, 5, 6].includes(a.curso) ? a.curso : 1, av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400),
     /* cálculo diario: mejor marca y aciertos por día */ diario: { mejor: Math.max(0, (a.diario || {}).mejor | 0), d: Object.fromEntries(Object.entries((a.diario || {}).d || {}).filter(([d]) => /^\d{4}-\d\d-\d\d$/.test(d)).sort().slice(-60).map(([d, n]) => [d, Math.max(0, n | 0)])) },
+    /* aciertos por día (reto de clase) */ aci: limpiarDias(a.aci),
+    /* errores típicos: {truco: {pista: veces}} */ err: limpiarErr(a.err),
+    /* tablas de multiplicar: {'7x8': [1,0,1…]} */ tab: Object.fromEntries(Object.entries(a.tab && typeof a.tab === 'object' ? a.tab : {}).filter(([k, v]) => /^\d{1,2}x\d{1,2}$/.test(k) && Array.isArray(v)).map(([k, v]) => [k, v.map(x => x ? 1 : 0).slice(-8)])),
+    /* fecha de la prueba inicial */ diag: /^\d{4}-\d\d-\d\d$/.test(a.diag || '') ? a.diag : '',
     /* ejercicios por día (para la Zona del tutor) */ dia: Object.fromEntries(Object.entries(a.dia && typeof a.dia === 'object' ? a.dia : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)])) };
 }
 /** Migraciones: nunca se pierde el progreso. Añadir aquí un paso por cada cambio de VERSION_DATOS. */
@@ -492,12 +547,13 @@ const ALU_DOCENTE = limpiarAlu({ id: 'docente00', n: 'Docente', av: 5 });
 const alumno = () => MODO_DOCENTE ? ALU_DOCENTE : EST.alu.find(a => a.id === EST.act) || null;
 
 function crearAlumno(nombre, av, curso) { const a = limpiarAlu({ n: nombre, av, curso: curso || EST.ajustes.curso || 1, mt: Date.now() }); EST.alu.push(a); EST.act = a.id; guardar(); return a; }
-function progreso(a, id) { return a.e[id] || (a.e[id] = { tut: false, est: 0, h: [], ult: '', n: 0 }); }
+function progreso(a, id) { return a.e[id] || (a.e[id] = { tut: false, est: 0, h: [], ult: '', n: 0, caja: 0, prox: '' }); }
 
 /** Registra un resultado (1 acierto sin ayuda, 0 fallo o con ayuda) para el dominio y el repaso. */
 function registrar(id, ok) {
   const a = alumno(); if (!a) return;
   const p = progreso(a, id); p.h.push(ok ? 1 : 0); p.h = p.h.slice(-20); p.ult = hoy(); p.n++;
+  if (ok) a.aci[hoy()] = (a.aci[hoy()] || 0) + 1;
   if (!a.dias.includes(hoy())) a.dias.push(hoy());
   a.dia[hoy()] = (a.dia[hoy()] || 0) + 1;
   a.mt = Date.now(); guardar();
@@ -815,7 +871,7 @@ function prepararItem(it, nivel) {
 function itemsRepaso(a, n = 10) {
   const vistas = ESTR.lista.filter(e => e.curso <= cursoDe(a) && abierta(a, e) && (a.e[e.id] || {}).n > 0);
   if (!vistas.length) return [];
-  const peso = e => { const d = dominio(a, e.id) ?? .5, ult = (a.e[e.id] || {}).ult || '2000-01-01', dias = Math.min(14, (Date.now() - new Date(ult)) / 864e5); return .3 + (1 - d) * 2 + dias / 7; };
+  const peso = e => { const d = dominio(a, e.id) ?? .5, ult = (a.e[e.id] || {}).ult || '2000-01-01', dias = Math.min(14, (Date.now() - new Date(ult)) / 864e5); const p = a.e[e.id] || {}, toca = p.prox && p.prox <= hoy() ? 3 : 0; return .3 + (1 - d) * 2 + dias / 7 + toca; };
   const out = [];
   for (let k = 0; k < n; k++) {
     let tot = vistas.reduce((s, e) => s + peso(e), 0), x = Math.random() * tot, e = vistas[0];
@@ -855,7 +911,7 @@ function pistaPara(it, v, e) {
 
 /* ---- js/40-inicio.js ---- */
 /* ===== Navegación, cabecera y pantallas de inicio ===== */
-let VCURSO = 1, scr = 'inicio', EID = null, SES = null, TUT = 0, RES = null, JG = null, WEL = 0, NUEVO = '';
+let NUEVO_AV = null, VCURSO = 1, scr = 'inicio', EID = null, SES = null, TUT = 0, RES = null, JG = null, WEL = 0, NUEVO = '';
 const SC = {};
 const est = () => ESTR.get(EID);
 const decir = t => VOZ.decir(t);
@@ -874,7 +930,9 @@ function pintar() { aplicarTema(); aplicarDalton(); const A = $('#app'); A.inner
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
 const colorAv = a => (AVATARES[a.av] || AVATARES[0])[1];
-const avatar = (a, extra = '') => `<span class="av" style="background:${colorAv(a)}" ${extra}>${esc((a.n || '?')[0].toUpperCase())}</span>`;
+const avatar = (a, extra = '') => `<span class="av ani" style="background:${colorAv(a)}" ${extra}>${(AVATARES[a.av] || AVATARES[0])[0]}</span>`;
+/** Selector de animalitos. act = función que recibe el índice. */
+const elegirAnimal = (sel, act) => `<div class="animales">${AVATARES.map(([e, c], i) => `<button class="${i === sel ? 'on' : ''}" style="background:${c}" onclick="${act}(${i})" aria-label="Animal ${i + 1}">${e}</button>`).join('')}</div>`;
 const totalEstrellas = a => Object.values(a.e).reduce((s, p) => s + (p.est || 0), 0);
 const estrellasHTML = (n, max = 3, t = 16) => Array.from({ length: max }, (_, i) => `<span class="${i < n ? '' : 'off'}">${ico(i < n ? 'star' : 'starO', t, 2)}</span>`).join('');
 
@@ -910,18 +968,20 @@ SC.wel = () => {
     <p class="mut">${doc ? 'Escribe el nombre de un alumno. Podrás añadir al resto de la clase desde la Zona del tutor.' : 'Escribe el nombre del niño o la niña que va a practicar. Podrás añadir más después.'}</p>
     <p class="mut" style="margin:0;font-size:.95rem">${doc ? 'Curso de tu clase' : 'Curso'}</p>${chipsCurso(EST.ajustes.curso || 1, 'cursoWel')}
     <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')finWel(true)">
+    <p class="mut" style="margin:0;font-size:.95rem">Su animalito</p>${elegirAnimal(NUEVO_AV ?? avLibre(), 'animalWel')}
     ${importables()}
     <div class="acts"><button class="bt sec" onclick="finWel(false)">Lo haré después</button><button class="bt" onclick="finWel(true)">Continuar</button></div></div></div>`;
 };
 function importables() {
   const xs = alumnosDeOtrasApps().slice(0, 12); if (!xs.length) return '';
-  return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},${EST.alu.length % AVATARES.length});toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
+  return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},avLibre());toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
 }
+function animalWel(i) { const v = $('#nom') ? $('#nom').value : ''; NUEVO_AV = i; pintar(); if ($('#nom')) $('#nom').value = v; }
 function cursoWel(c) { const v = $('#nom') ? $('#nom').value : ''; EST.ajustes.curso = c; pintar(); if ($('#nom')) $('#nom').value = v; }
 function finWel(conNombre) {
   const n = conNombre && $('#nom') ? $('#nom').value.trim() : '';
   if (conNombre && !n && !EST.alu.length) { $('#nom').focus(); return; }
-  if (n) crearAlumno(n, EST.alu.length % AVATARES.length);
+  if (n) crearAlumno(n, NUEVO_AV ?? avLibre());
   try { localStorage.setItem('calc.wel', '1'); } catch (e) {}
   guardar(); go('inicio');
 }
@@ -934,17 +994,19 @@ function continuar() {
 SC.inicio = () => {
   const a = alumno();
   if (!a) return EST.alu.length ? SC.quien() : `${cabecera()}<div class="wel"><div class="gcard">${mascota(110)}<h2>¡Hola!</h2><p class="mut">Crea un alumno para empezar a practicar.</p>
-    <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off"><button class="bt w" onclick="const n=$('#nom').value.trim();if(n){crearAlumno(n,EST.alu.length%AVATARES.length);pintar()}">Crear alumno</button>${importables()}</div>
+    <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off"><button class="bt w" onclick="const n=$('#nom').value.trim();if(n){crearAlumno(n,avLibre());pintar()}">Crear alumno</button>${importables()}</div>
     <button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button></div>`;
   const e = sugerida(a), p = a.e[e.id] || {}, hayRepaso = ESTR.lista.some(x => (a.e[x.id] || {}).n > 0);
   const sigTxt = MODO_DOCENTE ? 'Todos los trucos abiertos, sin guardar' : !p.tut ? `Aprender: ${e.n}` : !p.n ? `Practicar: ${e.n}` : `Reto: ${e.n}`;
   const saludo = MODO_DOCENTE ? '¡Modo Docente!' : `¡Hola, ${esc(a.n)}!`;
   const frase = MODO_DOCENTE ? 'Proyecta y practica con la clase' : pick(['¿Practicamos un truco?', '¿Seguimos aprendiendo?', '¡Vamos a calcular!']);
   return `${cabecera()}
-  <div class="greet">${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>
+  <div class="greet">${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>${EST.ajustes.perfil === 'docente' ? retoHTML() : ''}
   <div class="home-grid">
   <button class="lc hero" onclick="${MODO_DOCENTE ? "VCURSO=cursoDe(alumno());go('mapa')" : 'continuar()'}"><span class="ico">${ico('play', 26)}</span><span class="tx2"><b>${MODO_DOCENTE ? 'Trucos' : 'Seguir'}</b><small>${esc(sigTxt)}</small></span></button>
-  <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${hayRepaso ? 'Mezcla de los trucos que ya conoces' : 'Se abre cuando practiques un truco'}</small></span></button>
+  ${!MODO_DOCENTE && !a.diag && !ESTR.delCurso(cursoDe(a)).some(x => (a.e[x.id] || {}).n) ? `<button class="lc" onclick="empezar('diag')"><span class="ico">${ico('target', 24)}</span><span class="tx2"><b>Prueba inicial</b><small>5 minutos para empezar por tu nivel</small></span></button>` : ''}
+  <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${!hayRepaso ? 'Se abre cuando practiques un truco' : (() => { const t = tocaRepasar(a); return t.length ? `Hoy toca: ${esc(t.slice(0, 3).map(x => x.n).join(', '))}${t.length > 3 ? '…' : ''}` : 'Mezcla de los trucos que ya conoces'; })()}</small></span></button>
+  ${cursoDe(a) >= 2 || MODO_DOCENTE ? `<button class="lc" onclick="go('tablas')"><span class="ico">${ico('chart', 24)}</span><span class="tx2"><b>Tablas de multiplicar</b><small>Tu mapa de las tablas: practica las que fallas</small></span></button>` : ''}
   ${MODO_DOCENTE ? `<button class="lc" onclick="abrirAula('proy')"><span class="ico">${ico('monitor', 24)}</span><span class="tx2"><b>Proyectar</b><small>Una operación en grande para toda la clase</small></span></button>
   <button class="lc" onclick="abrirAula('duelo')"><span class="ico">${ico('users', 24)}</span><span class="tx2"><b>Duelo por equipos</b><small>Azul contra naranja en la pizarra</small></span></button>`
   : `<button class="lc" onclick="empezar('diario')"><span class="ico">${ico('flame', 24)}</span><span class="tx2"><b>Cálculo diario</b><small>${diarioHoy(a) ? `Hecho hoy ✓ · Récord: ${a.diario.mejor}` : `2 minutos · Tu récord: ${a.diario.mejor || 0}`}</small></span></button>`}
@@ -960,9 +1022,10 @@ SC.quien = () => `${cabecera()}${EST.alu.length && alumno() ? atras('Inicio', "g
   <button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button>`;
 function entrar(id) { MODO_DOCENTE = false; EST.act = id; guardar(); go('inicio'); }
 SC.nuevo = () => `${cabecera()}${atras('Volver', "go('quien')")}<div class="gcard" style="align-items:stretch;text-align:left"><h2>Nuevo alumno</h2>
-  <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')crearDesdeForm()">${importables()}
+  <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')crearDesdeForm()">
+  <p class="mut" style="margin:0;font-size:.95rem">Elige tu animalito</p>${elegirAnimal(NUEVO_AV ?? avLibre(), 'animalWel')}${importables()}
   <button class="bt w" onclick="crearDesdeForm()">Crear</button></div>`;
-function crearDesdeForm() { const n = $('#nom').value.trim(); if (!n) return $('#nom').focus(); crearAlumno(n, EST.alu.length % AVATARES.length); MODO_DOCENTE = false; go('inicio'); }
+function crearDesdeForm() { const n = $('#nom').value.trim(); if (!n) return $('#nom').focus(); crearAlumno(n, NUEVO_AV ?? avLibre()); NUEVO_AV = null; MODO_DOCENTE = false; go('inicio'); }
 
 /* ---------- Mapa de trucos ---------- */
 SC.mapa = () => {
@@ -990,6 +1053,7 @@ SC.estr = () => {
   ${fila(2, p.n > 0, 'Practicar', 'Paso a paso, con ayuda', "empezar('guiada')")}
   ${fila(3, p.est >= 3, 'Reto', '10 operaciones para ganar estrellas', "empezar('reto')", `<span class="es">${'★'.repeat(p.est || 0)}${'☆'.repeat(3 - (p.est || 0))}</span>`)}
   ${fila(4, false, 'Jugar', e.juego && e.juego.tipo === 'parejas' ? esc(e.juego.meta) : 'Operaciones rápidas', 'empezarJuego()')}
+  ${tieneProblemas(e) ? fila(5, false, 'Problemas', 'El truco en situaciones de la vida', "empezar('problemas')") : ''}
   <div class="say">${mascota(60, 'piensa')}<div class="bub">Truco: «${esc(e.truco)}»</div></div>`;
 };
 
@@ -1027,12 +1091,15 @@ function finTutorial() { const a = alumno(); progreso(a, EID).tut = true; a.mt =
 /* ---------- Sesiones ---------- */
 function empezar(tipo) {
   const a = alumno(), e = est();
-  SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '' };
+  SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '', porTruco: {} };
   if (tipo === 'guiada') { SES.items = guiadas(e, 4); SES.n = 4; }
   else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('inicio'); }
   else if (tipo === 'diario') { SES.n = 999; SES.lim = 120; SES.items = [itemDiario(a)]; }
+  else if (tipo === 'tablas') { SES.n = 15; SES.items = [itemTabla(a)]; }
+  else if (tipo === 'problemas') { SES.n = 6; SES.items = [itemProblema(e)]; }
+  else if (tipo === 'diag') { SES.lista = ESTR.delCurso(cursoDe(a)); SES.k = 0; SES.cuenta = []; SES.res = []; SES.n = 999; SES.items = [itemDiag()]; }
   else { SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
-  SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!', diario: '¡Dos minutos! Responde todas las que puedas.' }[tipo];
+  SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!', diario: '¡Dos minutos! Responde todas las que puedas.', tablas: 'Practicamos las que más te cuestan.', problemas: 'Lee bien: ¿qué truco te ayuda?', diag: 'Vamos a ver qué trucos ya sabes. Sin prisa.' }[tipo];
   go('ej'); if (tipo === 'diario') relojDiario();
 }
 /** Nuevo ítem del reto, distinto de los 3 anteriores si es posible. */
@@ -1050,7 +1117,7 @@ function actual() {
   return it._final || (it._final = prepararItem(it.final, 1));
 }
 const huecoHTML = (q, val) => esc(q).split('?').join(`<span class="hueco">${val === '' || val === undefined ? '&nbsp;' : esc(val)}</span>`);
-const salirSesion = () => SES && (SES.tipo === 'repaso' || SES.tipo === 'diario') ? "SES=null;go('inicio')" : "SES=null;go('estr')";
+const salirSesion = () => !SES ? "go('inicio')" : SES.tipo === 'tablas' ? "SES=null;go('tablas')" : ['repaso', 'diario', 'diag'].includes(SES.tipo) ? "SES=null;go('inicio')" : "SES=null;go('estr')";
 
 SC.ej = () => {
   const c = actual(), it = SES.items[SES.i], nivel = it.nivel || 1, guiada = SES.tipo === 'guiada';
@@ -1067,8 +1134,8 @@ SC.ej = () => {
       <div class="op${c.q.length > 18 ? ' muy' : c.q.length > 12 ? ' larga' : ''}">${huecoHTML(c.q, teclado ? SES.resp : '')}</div>${verVis ? `<div class="vis">${VIS.dibujar(Object.assign({ ocultarFin: true }, c.vis))}</div>` : ''}</div>`;
     respuesta = teclado ? tecladoHTML(decimales(c.r) > 0 || c.coma) : `<div class="ops">${c.ops.map(o => `<button class="opc" onclick="responder(${o},this)">${fmt(o)}</button>`).join('')}</div>`;
   }
-  const ayuda = !guiada && !c.truco && c.vis && !verVis ? `<button class="ayuda" onclick="SES.ayuda=true;SES.msg='Mira el dibujo: te ayuda a pensar.';pintar()">${ico('bulb', 18)}Ayuda</button>` : '';
-  const prog = SES.tipo === 'diario' ? Math.min(100, ((Date.now() - SES.t0) / 1000 / SES.lim) * 100) : (SES.i / SES.n) * 100;
+  const ayuda = !guiada && !c.truco && !it.diag && c.vis && !verVis ? `<button class="ayuda" onclick="SES.ayuda=true;SES.msg='Mira el dibujo: te ayuda a pensar.';pintar()">${ico('bulb', 18)}Ayuda</button>` : '';
+  const prog = SES.tipo === 'diario' ? Math.min(100, ((Date.now() - SES.t0) / 1000 / SES.lim) * 100) : SES.tipo === 'diag' ? (SES.k / SES.lista.length) * 100 : (SES.i / SES.n) * 100;
   return `<div class="top"><button class="rnd" onclick="${salirSesion()}" aria-label="Salir">${ico('x', 20, 2.4)}</button>
   <div class="pg"><i id="pgi" style="width:${prog}%"></i></div>${SES.tipo === 'diario' ? `<span class="pill" style="background:var(--card);color:var(--tx)" id="reloj">${tiempoDiario()}</span>` : ''}<span class="pill">${ico(SES.tipo === 'diario' ? 'check' : 'star', 18)}${SES.ok}</span></div>${chips}
   <div class="ej-lado"><div class="ej-cuerpo">${pregunta}</div>
@@ -1112,16 +1179,21 @@ function responder(v, btn) {
       return;
     }
     const limpio = SES.fallos === 0 && !SES.ayuda;
+    if (SES.tipo === 'diag') { SES.ultBien = true; SES.ok++; despues(450, siguiente); return; }
     registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++;
+    registrarTabla(alumno(), c.q, limpio); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(limpio ? 1 : 0);
     if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
     despues(SES.tipo === 'diario' ? 450 : 850, siguiente);
   } else {
     SON.mal(); SES.fallos++; if (btn) { btn.classList.add('no'); btn.disabled = true; }
+    const pista = c.truco ? 'Piensa qué truco va mejor.' : pistaPara(c, v, ESTR.get(it.id));
+    if (!c.truco && !SES.errLog && pista !== 'Casi. Prueba otra vez.' && !pista.startsWith('Acuérdate')) { SES.errLog = true; registrarError(alumno(), it.id, pista); }
+    if (SES.tipo === 'diag') { SES.ultBien = false; SES.bloq = true; if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.add('ok'); } feedback('No pasa nada. Seguimos.', 'no'); despues(900, siguiente); return; }
     if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 400); }
     SES.resp = ''; if (hueco && !c.ops) hueco.innerHTML = '&nbsp;';
     if (SES.fallos >= 2 || c.truco || SES.tipo === 'diario') {
       SES.bloq = true;
-      if (SES.tipo !== 'guiada') { registrar(it.id, false); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
+      if (SES.tipo !== 'guiada') { registrar(it.id, false); registrarTabla(alumno(), c.q, false); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(0); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
       if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.remove('no'); hueco.classList.add('ok'); }
       feedback(c.truco ? `Era: «${c.r}»` : `Era ${fmt(c.r)}. ¡La próxima sale!`, 'no');
       despues(SES.tipo === 'diario' ? 1100 : 2000, () => {
@@ -1129,17 +1201,19 @@ function responder(v, btn) {
         else siguiente();
       });
     } else {
-      const pista = c.truco ? 'Piensa qué truco va mejor.' : pistaPara(c, v, ESTR.get(it.id));
       if (c.vis && !SES.ayuda && !(SES.tipo !== 'guiada' && (it.nivel || 1) === 1) && !c.visSiempre) { SES.ayuda = true; SES.msg = pista + ' Mira el dibujo.'; SES.fb = 'no'; pintar(); }
       else feedback(pista, 'no');
     }
   }
 }
 function siguiente() {
-  SES.i++; SES.paso = 0; SES.ayuda = false; SES.hechos = []; limpiarPaso();
+  SES.i++; SES.paso = 0; SES.ayuda = false; SES.hechos = []; SES.errLog = false; limpiarPaso();
+  if (SES.tipo === 'diag') { const nx = avanzarDiag(SES.ultBien); if (!nx) return terminarDiag(alumno()); SES.items.push(nx); SES.msg = pick(['Otra.', '¿Y esta?', 'Sigue así.']); return pintar(); }
   if (SES.i >= SES.n) return terminar();
   SES.msg = pick(['¿Y esta?', 'Otra más.', 'Piensa en el truco.', '¡Sigue así!']);
   if (SES.tipo === 'reto' || SES.tipo === 'rapido') SES.items.push(nuevoItem());
+  if (SES.tipo === 'tablas') SES.items.push(itemTabla(alumno(), SES.items[SES.items.length - 1]));
+  if (SES.tipo === 'problemas') SES.items.push(itemProblema(est(), SES.items[SES.items.length - 1]));
   if (SES.tipo === 'diario') { if (Date.now() - SES.t0 >= SES.lim * 1000) return terminar(); SES.items.push(itemDiario(alumno(), SES.items[SES.items.length - 1])); }
   pintar();
 }
@@ -1149,6 +1223,8 @@ function terminar() {
   const estrellas = SES.tipo === 'guiada' ? 3 : estrellasDe(SES.ok, SES.n);
   let mejora = false;
   if (SES.tipo === 'reto') { const p = progreso(a, SES.id); if (estrellas > p.est) { p.est = estrellas; mejora = true; } a.mt = Date.now(); guardar(); }
+  if (SES.tipo === 'reto') { agendar(a, SES.id, estrellas >= 2); guardar(); }
+  if (SES.tipo === 'repaso' || SES.tipo === 'problemas') { for (const [id, h] of Object.entries(SES.porTruco)) if (ESTR.get(id)) agendar(a, id, h.reduce((x, y) => x + y, 0) / h.length >= .75); guardar(); }
   if (SES.tipo === 'guiada') { const p = progreso(a, SES.id); if (!p.n) p.n = 1; guardar(); }
   RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, mejora, nuevas: piedrasDe(a) - antes, desde: antes };
   SON.fin(); go('res');
@@ -1182,9 +1258,10 @@ SC.res = () => {
   const r = RES;
   const titulo = r.estrellas === 3 ? '¡Fantástico!' : r.estrellas === 2 ? '¡Muy bien!' : r.estrellas === 1 ? '¡Buen trabajo!' : '¡Sigue practicando!';
   if (r.tipo === 'diario') return resDiario(r);
+  if (r.tipo === 'diag') return resDiag(r);
   const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.${r.mejora ? ' ¡Nuevo récord de estrellas!' : ''}`;
   setTimeout(() => { if (scr === 'res') decir(titulo); }, 300);
-  const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`, volver = r.tipo === 'repaso' ? "go('inicio')" : "go('estr')";
+  const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`, volver = r.tipo === 'repaso' ? "go('inicio')" : r.tipo === 'tablas' ? "go('tablas')" : "go('estr')";
   const sig = r.tipo === 'guiada' ? `<button class="bt w" onclick="empezar('reto')">${ico('star', 20)}Hacer el reto</button>` : '';
   return `<div class="res pop">${mascota(140, r.estrellas >= 2 ? 'feliz' : 'normal')}<div class="estr">${estrellasHTML(r.estrellas, 3, 50)}</div>
   <h2>${titulo}</h2><p class="mut" style="margin:0;font-size:1.1rem">${det}</p>${nuevaPiedra(r)}</div>
@@ -1349,6 +1426,146 @@ function csvTabula() {
   l.href = u; l.download = `calculi-evaluacion-${hoy()}.csv`; l.click(); setTimeout(() => URL.revokeObjectURL(u), 2000); toast('CSV descargado');
 }
 
+/* ---- js/49-plus.js ---- */
+/* ===== Repaso por días, errores frecuentes, tablas, problemas, prueba inicial y reto de clase ===== */
+
+/* ---------- Repaso espaciado (cajas de Leitner) ----------
+   Cada truco practicado tiene una «caja» (0-5). Si sale bien, sube de caja y vuelve más tarde; si sale mal, vuelve mañana. */
+const INTERVALOS = [1, 1, 3, 7, 15, 30];
+const masDias = (n, d = new Date()) => { const x = new Date(d); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); };
+function agendar(a, id, bien) {
+  if (!a || MODO_DOCENTE) return; const p = progreso(a, id);
+  p.caja = bien ? Math.min(5, (p.caja || 0) + 1) : Math.max(0, Math.min(1, (p.caja || 0) - 1));
+  p.prox = masDias(INTERVALOS[p.caja]);
+}
+/** Trucos que tocan repasar hoy (ya practicados y con la fecha cumplida). */
+const tocaRepasar = a => a ? ESTR.lista.filter(e => { const p = a.e[e.id]; return p && p.n > 0 && p.prox && p.prox <= hoy() && e.curso <= cursoDe(a); }) : [];
+
+/* ---------- Errores frecuentes ---------- */
+function registrarError(a, id, pista) {
+  if (!a || MODO_DOCENTE || !pista) return;
+  const m = a.err[id] || (a.err[id] = {}); m[pista] = (m[pista] || 0) + 1;
+}
+/** Errores de un grupo de alumnos: [{id, truco, pista, alumnos, veces}] ordenados por nº de alumnos. */
+function erroresClase(alumnos) {
+  const m = new Map();
+  for (const a of alumnos) for (const [id, ps] of Object.entries(a.err || {})) for (const [pista, n] of Object.entries(ps)) {
+    const k = id + '|' + pista, x = m.get(k) || { id, truco: (ESTR.get(id) || {}).n || id, pista, alumnos: [], veces: 0 };
+    x.alumnos.push(a.n); x.veces += n; m.set(k, x);
+  }
+  return [...m.values()].sort((x, y) => y.alumnos.length - x.alumnos.length || y.veces - x.veces);
+}
+
+/* ---------- Tablas de multiplicar: dominio de cada multiplicación ---------- */
+const claveTab = (x, y) => `${Math.min(x, y)}x${Math.max(x, y)}`;
+function registrarTabla(a, q, ok) {
+  const m = /^(\d{1,2}) × (\d{1,2}) = \?$/.exec(q); if (!a || !m || MODO_DOCENTE) return;
+  const x = +m[1], y = +m[2]; if (x < 1 || y < 1 || x > 10 || y > 10) return;
+  const k = claveTab(x, y), h = a.tab[k] || (a.tab[k] = []); h.push(ok ? 1 : 0); a.tab[k] = h.slice(-8);
+}
+function nivelTab(a, x, y) { const h = (a.tab || {})[claveTab(x, y)] || []; if (h.length < 2) return 'g'; const u = h.slice(-5), p = u.reduce((s, v) => s + v, 0) / u.length; return p >= .8 ? 'v' : p >= .5 ? 'a' : 'r'; }
+let TABSEL = 0; // 0 = todas; n = solo la tabla del n
+function itemTabla(a, prev) {
+  const cand = [];
+  for (let x = 2; x <= 10; x++) for (let y = 1; y <= 10; y++) {
+    if (TABSEL && x !== TABSEL) continue;
+    const nv = nivelTab(a, x, y), peso = { r: 6, a: 4, g: 3, v: 1 }[nv];
+    for (let k = 0; k < peso; k++) cand.push([x, y]);
+  }
+  let x, y; for (let k = 0; k < 10; k++) { [x, y] = pick(cand); if (!prev || prev.q !== `${x} × ${y} = ?`) break; }
+  if (rnd(0, 1)) [x, y] = [y, x];
+  const r = x * y, vis = { t: 'matriz', filas: x, cols: y };
+  const errores = [[r + x, `Eso es ${x} × ${y + 1}. Una vez menos.`], [r - x, `Eso es ${x} × ${y - 1}. Una vez más.`], [r + y, `Eso es ${x + 1} × ${y}.`], [x + y, 'Has sumado. Hay que multiplicar.']].filter(e => e[0] > 0 && e[0] !== r);
+  return Object.assign({ id: 'tablas', nivel: 3 }, prepararItem({ q: `${x} × ${y} = ?`, r, vis, errores }, 3));
+}
+SC.tablas = () => {
+  const a = alumno(), N = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const resumen = { v: 0, a: 0, r: 0, g: 0 }; for (const x of N) for (const y of N) resumen[nivelTab(a, x, y)]++;
+  return `${atras('Inicio', "go('inicio')", 'home')}<h1 class="ttl">Tablas de multiplicar</h1>
+  <p class="mut" style="margin:0">Cada casilla es una multiplicación. Verde: la sabes. Ámbar: casi. Rojo: a practicar. Toca un número para practicar su tabla.</p>
+  <div class="mtab"><span></span>${N.map(y => `<b>${y}</b>`).join('')}${N.map(x => `<button onclick="TABSEL=${x};empezar('tablas')" aria-label="Practicar la tabla del ${x}">${x}</button>${N.map(y => `<i class="${nivelTab(a, x, y)}" title="${x} × ${y}"></i>`).join('')}`).join('')}</div>
+  <p class="note" style="font-family:var(--fi)"><i class="sem v"></i> ${resumen.v} sabidas · <i class="sem a"></i> ${resumen.a} casi · <i class="sem r"></i> ${resumen.r} a practicar · <i class="sem g"></i> ${resumen.g} sin probar</p>
+  <button class="bt w" onclick="TABSEL=0;empezar('tablas')">${ico('target', 20)}Practicar las que más fallo</button>`;
+};
+
+/* ---------- Problemas cortos con el truco ----------
+   Se construyen a partir de la operación del truco (a + b, a − b, a × b, a : b, % de, fracción de…) con plantillas de la vida diaria. */
+const COSAS = [['cromos', 'm'], ['canicas', 'f'], ['pegatinas', 'f'], ['galletas', 'f'], ['cuentos', 'm'], ['lápices', 'm'], ['conchas', 'f'], ['piedrecitas', 'f'], ['coches de juguete', 'm'], ['flores', 'f'], ['caramelos', 'm'], ['botones', 'm']];
+const NOMBRES = ['Lucía', 'Mateo', 'Sara', 'Hugo', 'Martina', 'Leo', 'Vega', 'Daniel', 'Alba', 'Marco', 'Noa', 'Pablo'];
+function problemaDe(e, nivel) {
+  const it = e.item(nivel); if (!it || typeof it.q !== 'string') return null;
+  let q = it.q.replace(/\s+/g, ' ').replace(/[–-]/g, '−').trim(); if (!q.includes('?')) q += ' = ?';
+  const N = '(\\d+(?:[.,]\\d+)*)';
+  const nm = t => num(t), dec = !Number.isInteger(it.r) || /,/.test(q);
+  const [cosa, g] = pick(COSAS), quien = pick(NOMBRES), cuantos = g === 'f' ? 'Cuántas' : 'Cuántos', otro = pick(NOMBRES.filter(n => n !== quien));
+  let txt = null, ud = dec ? '€' : cosa, m;
+  const R = (re) => (m = new RegExp('^' + re + '$').exec(q)) && m.slice(1).every(x => nm(x) > 0);
+  if (R(`${N} \\+ ${N} = \\?`)) { const [a, b] = [m[1], m[2]];
+    txt = dec ? `Un cuaderno cuesta ${a} € y un lápiz ${b} €. ¿Cuánto cuestan juntos?` : pick([`${quien} tiene ${a} ${cosa}. ${otro} le da ${b} más. ¿${cuantos} ${cosa} tiene ahora?`, `En una caja hay ${a} ${cosa} y en otra ${b}. ¿${cuantos} hay en total?`]); }
+  else if (R(`${N} − ${N} = \\?`)) { const [a, b] = [m[1], m[2]];
+    txt = dec ? `${quien} tiene ${a} € y gasta ${b} €. ¿Cuánto dinero le queda?` : pick([`${quien} tiene ${a} ${cosa} y regala ${b}. ¿${cuantos} le quedan?`, `Había ${a} ${cosa} en la mesa. Se llevan ${b}. ¿${cuantos} quedan?`]); }
+  else if (R(`${N} \\+ \\? = ${N}`) || R(`\\? \\+ ${N} = ${N}`) || R(`${N} = ${N} \\+ \\?`)) { const v = m.slice(1).map(nm), tot = Math.max(...v), a = Math.min(...v);
+    txt = dec ? `${quien} tiene ${fmt(a)} € y quiere un libro de ${fmt(tot)} €. ¿Cuánto dinero le falta?` : `${quien} tiene ${fmt(a)} ${cosa}. Quiere tener ${fmt(tot)}. ¿${cuantos} le faltan?`; }
+  else if (R(`${N} × ${N} = \\?`)) { let [a, b] = [m[1], m[2]];
+    if (dec) { if (!Number.isInteger(nm(a)) && Number.isInteger(nm(b))) [a, b] = [b, a]; if (!Number.isInteger(nm(a)) || nm(a) > 60 || nm(a) < 2) return null;
+      txt = `Una entrada cuesta ${b} €. ¿Cuánto cuestan ${a} entradas?`; }
+    else { if (nm(a) > 30 && nm(b) <= 30) [a, b] = [b, a]; txt = pick([`Hay ${a} cajas con ${b} ${cosa} cada una. ¿${cuantos} ${cosa} hay en total?`, `${quien} hace ${a} montones de ${b} ${cosa}. ¿${cuantos} ${cosa} tiene en total?`]); } }
+  else if (R(`${N} : ${N} = \\?`)) { const [a, b] = [m[1], m[2]];
+    if (dec || nm(b) > 20 || !Number.isInteger(nm(b))) return null;
+    txt = `${quien} reparte ${a} ${cosa} entre ${b} amigos a partes iguales. ¿${cuantos} le tocan a cada uno?`; }
+  else if (R(`${N} % de ${N} = \\?`)) { const [p, t] = [m[1], m[2]]; ud = '€';
+    txt = `Una mochila cuesta ${t} € y tiene un ${p} % de descuento. ¿Cuántos euros te descuentan?`; }
+  else if (R(`(\\d+)/(\\d+) de ${N} = \\?`)) { const [n, d, t] = [m[1], m[2], m[3]];
+    txt = `${quien} tiene ${t} ${cosa} y regala ${n}/${d}. ¿${cuantos} regala?`; }
+  else return null;
+  return Object.assign({}, it, { txt, q: `? ${ud}`, voz: txt, visSiempre: false });
+}
+const tieneProblemas = e => { for (let k = 0; k < 6; k++) if (problemaDe(e, 2)) return true; return false; };
+function itemProblema(e, prev) {
+  let it = null;
+  for (let k = 0; k < 20 && !it; k++) { const p = problemaDe(e, k < 10 ? 2 : 1); if (p && (!prev || p.txt !== prev.txt)) it = p; }
+  return Object.assign({ id: e.id, nivel: 2 }, prepararItem(it || { txt: 'Sin problemas para este truco', q: '?', r: 0 }, 2));
+}
+
+/* ---------- Prueba inicial: decide dónde empieza cada alumno ----------
+   Dos operaciones de cada truco de su curso, en orden y sin ayudas. Si acierta las dos, ese truco queda superado (1 estrella).
+   Termina al fallar dos trucos seguidos (o al acabar el curso). */
+function itemDiag() {
+  const e = SES.lista[SES.k]; return Object.assign({ id: e.id, nivel: 2, diag: true }, prepararItem(e.item(2), 2));
+}
+function avanzarDiag(bien) {
+  SES.cuenta.push(bien);
+  if (SES.cuenta.length < 2 && bien) return itemDiag();          // segunda pregunta del mismo truco
+  const ok = SES.cuenta.length === 2 && SES.cuenta.every(Boolean);
+  SES.res.push({ id: SES.lista[SES.k].id, ok }); SES.fallos2 = ok ? 0 : (SES.fallos2 || 0) + 1; SES.cuenta = []; SES.k++;
+  if (SES.fallos2 >= 2 || SES.k >= SES.lista.length) return null;
+  return itemDiag();
+}
+function terminarDiag(a) {
+  const sup = SES.res.filter(x => x.ok).map(x => x.id);
+  if (!MODO_DOCENTE) { for (const id of sup) { const p = progreso(a, id); if (!p.est) p.est = 1; p.tut = true; if (!p.n) p.n = 1; p.h = (p.h || []).concat([1, 1]).slice(-20); agendar(a, id, true); } a.diag = hoy(); a.mt = Date.now(); guardar(); }
+  const sig = ESTR.delCurso(cursoDe(a)).find(e => !sup.includes(e.id));
+  RES = { tipo: 'diag', sup, sig: sig && sig.id };
+  SON.fin(); go('res');
+}
+function resDiag(r) {
+  const s = ESTR.get(r.sig);
+  return `<div class="res pop">${mascota(130, 'feliz')}<h2>¡Prueba terminada!</h2>
+  <p class="mut" style="margin:0;font-size:1.1rem">${r.sup.length ? `Ya sabes ${r.sup.length} ${r.sup.length === 1 ? 'truco' : 'trucos'}: ${esc(r.sup.map(id => ESTR.get(id).n).join(', '))}.` : 'Empezamos desde el principio. ¡Vas a aprender mucho!'}</p>
+  ${s ? `<div class="bub" style="text-align:left">Empiezas por: <b>${esc(s.n)}</b></div>` : '<div class="bub">¡Ya dominas todos los trucos de tu curso!</div>'}</div>
+  <div class="acts"><button class="bt" onclick="${s ? `EID='${s.id}';TUT=0;go('tut')` : "go('inicio')"}">${s ? 'Aprender ese truco' : 'Seguir'}${ico('chev', 20, 2.4)}</button></div>`;
+}
+
+/* ---------- Reto de la clase: meta de aciertos de la semana entre todos ---------- */
+function retoClase() {
+  const meta = EST.ajustes.reto | 0; if (!meta) return null;
+  const lunes = new Date(); lunes.setDate(lunes.getDate() - ((lunes.getDay() + 6) % 7)); const desde = lunes.toISOString().slice(0, 10);
+  const hechos = EST.alu.reduce((s, a) => s + Object.entries(a.aci || {}).filter(([d]) => d >= desde).reduce((t, [, n]) => t + n, 0), 0);
+  return { meta, hechos, pc: Math.min(100, Math.round((hechos / meta) * 100)) };
+}
+const retoHTML = (grande = false) => { const r = retoClase(); if (!r) return '';
+  return `<div class="reto${grande ? ' grande' : ''}"><div class="reto-h">${ico('users', grande ? 26 : 18)}<b>Reto de la clase</b><span>${r.hechos} / ${r.meta} aciertos</span></div><div class="pg"><i style="width:${r.pc}%"></i></div>${r.hechos >= r.meta ? '<small>¡Reto conseguido! 🎉</small>' : `<small>Entre todos, esta semana. ¡Faltan ${r.meta - r.hechos}!</small>`}</div>`; };
+
 /* ---- js/50-tutor.js ---- */
 /* ===== Zona del tutor (sobria, letra Inter), protegida con PIN de 4 cifras ===== */
 const TZ = { curso: 0, tab: 'prog', fase: '', pin: '', pin1: '', hasta: 0, destino: 'tz', sub: '' };
@@ -1388,6 +1605,7 @@ function guardarAjustes() { const md = MODO_DOCENTE; MODO_DOCENTE = false; guard
 /* ---------- Pantalla principal de la zona ---------- */
 SC.tz = () => {
   if (TZ.sub === 'resumen') return resumenFamilias();
+  if (TZ.sub.startsWith('animal:')) { const al = EST.alu.find(x => x.id === TZ.sub.slice(7)); if (al) return `<div class="tz" style="display:flex;flex-direction:column;gap:14px">${atras('Alumnos', "TZ.sub='';pintar()")}<h2 style="font-size:1.3rem;font-weight:600">Animalito de ${esc(al.n)}</h2>${elegirAnimal(al.av, 'cambiarAnimal')}<p class="note">Los animalitos que ya tiene otro alumno también se pueden elegir.</p></div>`; }
   const a = EST.alu.find(x => x.id === EST.act) || null, doc = EST.ajustes.perfil === 'docente' || EST.alu.length > 1;
   const tabs = [['prog', 'Progreso'], ...(doc ? [['clase', 'Clase']] : []), ['aula', 'Aula'], ['alu', 'Alumnos'], ['aj', 'Ajustes']];
   if (!tabs.some(t => t[0] === TZ.tab)) TZ.tab = 'prog';
@@ -1417,7 +1635,9 @@ function tzProgreso(a) {
   <div class="wk">${sem.map(x => `<div><i class="${x.n ? 'on' : ''}" style="height:${Math.round((x.n / max) * 100)}%"></i><small>${x.l}</small></div>`).join('')}</div>
   <div class="gt">Para reforzar</div><div class="list">${reforzar.length ? reforzar.map(e => fila('', esc(e.n), `Truco: ${esc(e.truco)}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('') : `<div class="row"><span class="tx2"><span>Nada pendiente</span><small>Aparecen aquí los trucos con menos del 80 % de aciertos.</small></span></div>`}</div>
   <div class="gt">Dominio por truco · ${nomCurso(cursoDe(a))}</div><div class="list">${L.map(e => fila('', esc(e.n), `${['', '1.er', '2.º', '3.er'][e.tri]} trimestre · ${'★'.repeat((a.e[e.id] || {}).est || 0) || 'sin estrellas'}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('')}</div>
+  ${(() => { const E = erroresClase([a]).slice(0, 4); return E.length ? `<div class="gt">Sus errores más repetidos</div><div class="list">${E.map(x => `<div class="row"><span class="tx2"><span>${esc(x.pista)}</span><small>${esc(x.truco)} · ${x.veces} ${x.veces === 1 ? 'vez' : 'veces'}</small></span></div>`).join('')}</div>` : ''; })()}
   <div class="gt">Seguimiento</div><div class="list">
+  ${fila('target', 'Prueba inicial', a.diag ? `Hecha el ${a.diag.split('-').reverse().join('/')}. Se puede repetir.` : 'Decide por qué truco empieza', "EST.act='" + a.id + "';guardarAjustes();empezar('diag')")}
   ${fila('family', 'Resumen para las familias', 'Texto de la semana para enviar', "TZ.sub='resumen';pintar()")}
   ${fila('monitor', 'Herramientas de aula', 'Proyector, duelo, fichas y evaluación', "TZ.tab='aula';pintar()")}</div>
   <p class="note">El dominio se calcula con los 10 últimos intentos sin ayuda de cada truco (verde ≥ 80 %, ámbar ≥ 50 %).</p>`;
@@ -1429,6 +1649,7 @@ function tzClase() {
   if (!AL.length) return sel + `<p class="note">No hay alumnos de ${nomCurso(c)}. Cambia el curso de cada alumno en la pestaña Alumnos.</p>`;
   return `${sel}<div class="tbl"><table><tr><th>Alumno</th>${L.map(e => `<th title="${esc(e.n)}">${e.orden}</th>`).join('')}<th>★</th></tr>
   ${AL.map(a => `<tr><td><button onclick="EST.act='${a.id}';guardarAjustes();TZ.tab='prog';pintar()" style="font-weight:500">${esc(a.n)}</button></td>${L.map(e => `<td><i class="sem ${semaforo(a, e.id)}"></i></td>`).join('')}<td>${totalEstrellas(a)}</td></tr>`).join('')}</table></div>
+  ${(() => { const E = erroresClase(AL).filter(x => (ESTR.get(x.id) || {}).curso === c).slice(0, 8); return `<div class="gt">Errores más frecuentes de la clase</div>` + (E.length ? `<div class="list">${E.map(x => `<div class="row"><span class="tx2"><span>${esc(x.pista)}</span><small>${esc(x.truco)} · ${x.alumnos.length} ${x.alumnos.length === 1 ? 'alumno' : 'alumnos'} (${esc(x.alumnos.slice(0, 4).join(', '))}${x.alumnos.length > 4 ? '…' : ''}) · ${x.veces} veces</small></span></div>`).join('')}</div><p class="note">Ideas para trabajar en la pizarra: empieza por el error que comparten más alumnos.</p>` : '<p class="note">Aún no hay errores registrados.</p>'); })()}
   <p class="note"><i class="sem v"></i> ≥ 80 % · <i class="sem a"></i> ≥ 50 % · <i class="sem r"></i> menos · <i class="sem g"></i> sin datos. Números = orden de los trucos:</p>
   <div class="list">${L.map(e => `<div class="row"><span class="val" style="width:22px">${e.orden}</span><span class="tx2"><span>${esc(e.n)}</span></span><span class="val">${AL.filter(a => semaforo(a, e.id) === 'v').length}/${AL.length} dominan</span></div>`).join('')}</div>`;
 }
@@ -1437,8 +1658,12 @@ function tzAula() {
   return `<div class="gt">En clase</div><div class="list">
   ${fila('monitor', 'Modo proyector', 'Una operación en grande, con cuenta atrás opcional', "abrirAula('proy')")}
   ${fila('users', 'Duelo por equipos', 'Azul contra naranja en la pizarra digital', "abrirAula('duelo')")}
+  ${fila('grad', 'Bingo de cálculo', 'Cartones para imprimir y operaciones en la pizarra', "abrirAula('bingo')")}
+  ${fila('star', 'Reto de la clase', 'Meta de aciertos de la semana entre todos', "EST.ajustes.reto=({0:200,200:500,500:1000,1000:2000,2000:0})[EST.ajustes.reto|0]??0;guardarAjustes();pintar()", `<span class="val">${EST.ajustes.reto ? EST.ajustes.reto + ' aciertos' : 'Desactivado'}</span>`)}
   ${fila('grad', 'Modo Docente', 'Todo abierto, sin guardar: para explicar un truco', "MODO_DOCENTE=true;ALU_DOCENTE.curso=VCURSO=EST.ajustes.curso||1;go('inicio')")}</div>
-  <div class="gt">Para imprimir</div><div class="list">${fila('download', 'Fichas de ejercicios', 'Elige trucos y número de ejercicios; con soluciones', "abrirAula('ficha')")}</div>
+  ${retoHTML()}
+  <div class="gt">Para imprimir</div><div class="list">${fila('download', 'Fichas de ejercicios', 'Elige trucos y número de ejercicios; con soluciones', "abrirAula('ficha')")}
+  ${fila('family', 'Informes para familias', 'Una página por alumno con su progreso y consejos', "INF.ids=null;go('informe')")}</div>
   <div class="gt">Evaluación</div><div class="list">
   ${fila('chart', 'Descargar evaluación (CSV)', 'Dominio, estrellas e intentos de cada alumno en cada truco', 'csvTabula()')}
   ${fila('book', 'Datos para Tabula', 'Calculi deja el resumen en este dispositivo para que Tabula lo lea', "publicarTabula();toast('Resumen actualizado para Tabula')", `<span class="val">Actualizar</span>`)}</div>
@@ -1447,11 +1672,12 @@ function tzAula() {
 function tzAlumnos() {
   const imp = alumnosDeOtrasApps();
   return `<div style="display:flex;gap:8px"><input class="inp" id="nn" maxlength="20" placeholder="Nombre del alumno" style="font-size:1rem;padding:10px 12px;border-radius:12px" onkeydown="if(event.key==='Enter')anadirTz()"><button class="bt" onclick="anadirTz()">${ico('plus', 18)}Añadir</button></div><p class="note">Los alumnos nuevos se crean en ${nomCurso(EST.ajustes.curso || 1)} (cámbialo en Ajustes › Curso de la clase).</p>
-  <div class="list">${EST.alu.map(a => `<div class="row">${avatar(a, 'style="width:34px;height:34px;font-size:.9rem;box-shadow:none"')}<span class="tx2"><span>${esc(a.n)}${a.id === EST.act ? ' · activo' : ''}</span><small>${nomCurso(cursoDe(a))} · ${totalEstrellas(a)} estrellas · ${a.dias.length ? 'último día ' + a.dias[a.dias.length - 1].split('-').reverse().join('/') : 'sin actividad'}</small></span>
+  <div class="list">${EST.alu.map(a => `<div class="row"><button onclick="TZ.sub='animal:${a.id}';pintar()" aria-label="Cambiar animal">${avatar(a, 'style="width:38px;height:38px;font-size:1.3rem;box-shadow:none"')}</button><span class="tx2"><span>${esc(a.n)}${a.id === EST.act ? ' · activo' : ''}</span><small>${nomCurso(cursoDe(a))} · ${totalEstrellas(a)} estrellas · ${a.dias.length ? 'último día ' + a.dias[a.dias.length - 1].split('-').reverse().join('/') : 'sin actividad'}</small></span>
   <select onchange="cambiarCurso('${a.id}',+this.value)" aria-label="Curso" style="font:500 .85rem var(--fi);padding:6px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx)">${[1, 2, 3, 4, 5, 6].map(c => `<option value="${c}" ${cursoDe(a) === c ? 'selected' : ''}>${nomCurso(c)}</option>`).join('')}</select><button class="rnd" style="width:36px;height:36px" onclick="renombrar('${a.id}')" aria-label="Renombrar">${ico('pencil', 16)}</button><button class="rnd" style="width:36px;height:36px;color:var(--no)" onclick="borrarAlu('${a.id}')" aria-label="Borrar">${ico('trash', 16)}</button></div>`).join('') || '<div class="row"><span class="tx2"><span>Aún no hay alumnos</span></span></div>'}</div>
-  ${imp.length ? `<div class="gt">De tus otras apps en este dispositivo</div><div class="list">${imp.slice(0, 40).map(x => fila('plus', esc(x.n), x.de, `crearAlumno(${esc(JSON.stringify(x.n))},EST.alu.length%AVATARES.length);guardarAjustes();toast('Añadido');pintar()`, '')).join('')}</div>` : ''}`;
+  ${imp.length ? `<div class="gt">De tus otras apps en este dispositivo</div><div class="list">${imp.slice(0, 40).map(x => fila('plus', esc(x.n), x.de, `crearAlumno(${esc(JSON.stringify(x.n))},avLibre());guardarAjustes();toast('Añadido');pintar()`, '')).join('')}</div>` : ''}`;
 }
-function anadirTz() { const n = $('#nn').value.trim(); if (!n) return $('#nn').focus(); const act = EST.act; crearAlumno(n, EST.alu.length % AVATARES.length); if (act) EST.act = act; guardarAjustes(); pintar(); }
+function anadirTz() { const n = $('#nn').value.trim(); if (!n) return $('#nn').focus(); const act = EST.act; crearAlumno(n, avLibre()); if (act) EST.act = act; guardarAjustes(); pintar(); }
+function cambiarAnimal(i) { const al = EST.alu.find(x => x.id === TZ.sub.slice(7)); if (al) { al.av = i; al.mt = Date.now(); guardarAjustes(); } TZ.sub = ''; pintar(); }
 function cambiarCurso(id, c) { const a = EST.alu.find(x => x.id === id); a.curso = c; a.mt = Date.now(); guardarAjustes(); pintar(); }
 function renombrar(id) { const a = EST.alu.find(x => x.id === id), n = prompt('Nuevo nombre', a.n); if (n && n.trim()) { a.n = ss(n, 20); a.mt = Date.now(); guardarAjustes(); pintar(); } }
 function borrarAlu(id) { const a = EST.alu.find(x => x.id === id); if (!confirm(`¿Borrar a ${a.n} y todo su progreso?`)) return; EST.alu = EST.alu.filter(x => x.id !== id); if (EST.act === id) EST.act = EST.alu[0] ? EST.alu[0].id : null; guardarAjustes(); pintar(); }
@@ -1502,7 +1728,7 @@ function resumenFamilias() {
 /* ---- js/55-aula.js ---- */
 /* ===== Herramientas de aula: modo proyector, duelo por equipos, fichas para imprimir ===== */
 /* Configuración común: curso, trucos elegidos y nivel. */
-const AULA = { curso: 0, ids: null, nivel: 2, tiempo: 0, meta: 5, n: 20, sol: true, dib: false, modo: 'proy' };
+const AULA = { curso: 0, ids: null, nivel: 2, tiempo: 0, meta: 5, n: 20, sol: true, dib: false, modo: 'proy', cartones: 0 };
 function aulaCurso() { return AULA.curso || EST.ajustes.curso || 1; }
 function aulaTrucos() { const L = ESTR.delCurso(aulaCurso()); const ids = AULA.ids && AULA.ids.filter(id => L.some(e => e.id === id)); return ids && ids.length ? L.filter(e => ids.includes(e.id)) : L; }
 function abrirAula(modo) { AULA.modo = modo; if (!AULA.curso) AULA.curso = EST.ajustes.curso || 1; go('aulacfg'); }
@@ -1517,9 +1743,10 @@ const segBtns = (val, opciones, clave) => `<div class="cchips">${opciones.map(([
 /* ---------- Configuración ---------- */
 SC.aulacfg = () => {
   const L = ESTR.delCurso(aulaCurso()), sel = new Set(aulaTrucos().map(e => e.id)), m = AULA.modo;
-  const titulo = { proy: 'Modo proyector', duelo: 'Duelo por equipos', ficha: 'Fichas para imprimir' }[m];
-  const desc = { proy: 'Una operación en grande para toda la clase. Tú decides cuándo se ve la respuesta.', duelo: 'Dos equipos responden a la vez en la pizarra. El primero que acierta gana el punto.', ficha: 'Ejercicios de los trucos elegidos, con hoja de soluciones.' }[m];
+  const titulo = { proy: 'Modo proyector', duelo: 'Duelo por equipos', ficha: 'Fichas para imprimir', bingo: 'Bingo de cálculo' }[m];
+  const desc = { bingo: 'Cartones con resultados para imprimir y operaciones que se cantan en la pizarra.', proy: 'Una operación en grande para toda la clase. Tú decides cuándo se ve la respuesta.', duelo: 'Dos equipos responden a la vez en la pizarra. El primero que acierta gana el punto.', ficha: 'Ejercicios de los trucos elegidos, con hoja de soluciones.' }[m];
   const extra = m === 'proy' ? `<div class="gt">Cuenta atrás</div>${segBtns(AULA.tiempo, [[0, 'Sin tiempo'], [10, '10 s'], [20, '20 s'], [30, '30 s']], 'tiempo')}`
+    : m === 'bingo' ? `<div class="gt">Número de cartones</div>${segBtns(AULA.cartones || Math.max(EST.alu.length, 10), [[10, '10'], [20, '20'], [25, '25'], [30, '30']], 'cartones')}`
     : m === 'duelo' ? `<div class="gt">Gana el primero en llegar a</div>${segBtns(AULA.meta, [[5, '5 puntos'], [10, '10 puntos'], [15, '15 puntos']], 'meta')}`
     : `<div class="gt">Número de ejercicios</div>${segBtns(AULA.n, [[12, '12'], [20, '20'], [30, '30'], [40, '40']], 'n')}
        <div class="list">${fila('', 'Hoja de soluciones', 'Una segunda página con las respuestas', 'AULA.sol=!AULA.sol;pintar()', `<span class="sw${AULA.sol ? ' on' : ''}"></span>`)}${fila('', 'Con dibujos', 'Ayuda visual en los primeros ejercicios', 'AULA.dib=!AULA.dib;pintar()', `<span class="sw${AULA.dib ? ' on' : ''}"></span>`)}</div>`;
@@ -1530,7 +1757,7 @@ SC.aulacfg = () => {
   ${extra}
   <div class="gt">Trucos (${sel.size} de ${L.length})</div>
   <div class="list">${fila('', 'Todos', '', 'AULA.ids=null;pintar()', `<span class="sw${sel.size === L.length ? ' on' : ''}"></span>`)}${L.map(e => fila('', esc(e.n), `${['', '1.er', '2.º', '3.er'][e.tri]} trimestre`, `aulaToggle('${e.id}')`, `<span class="sw${sel.has(e.id) ? ' on' : ''}"></span>`)).join('')}</div>
-  <button class="bt" onclick="${m === 'proy' ? 'empezarProy()' : m === 'duelo' ? 'empezarDuelo()' : "go('ficha')"}">${ico(m === 'ficha' ? 'download' : 'play', 18)}${m === 'ficha' ? 'Ver la ficha' : 'Empezar'}</button></div>`;
+  <button class="bt" onclick="${m === 'proy' ? 'empezarProy()' : m === 'duelo' ? 'empezarDuelo()' : m === 'bingo' ? 'prepararBingo()' : "go('ficha')"}">${ico(m === 'ficha' ? 'download' : 'play', 18)}${m === 'ficha' ? 'Ver la ficha' : m === 'bingo' ? 'Preparar el bingo' : 'Empezar'}</button></div>`;
 };
 function aulaSet(k, v) { AULA[k] = v; pintar(); }
 function aulaCursoSet(c) { AULA.curso = c; AULA.ids = null; pintar(); }
@@ -1554,7 +1781,7 @@ SC.proy = () => {
   return `<div class="proy"><div class="top"><button class="rnd" onclick="clearInterval(PRY.int);go('aulacfg')" aria-label="Salir">${ico('x', 20, 2.4)}</button>
   <span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span>${q !== null ? `<span class="pill" id="prt">${q}</span>` : ''}<span class="pill" style="background:var(--card);color:var(--mu)">${PRY.n}</span></div>
   <div class="proy-op">${it.txt ? `<div class="proy-txt">${esc(it.txt)}</div>` : ''}<div class="op">${huecoHTML(it.q, PRY.ver ? fmt(it.r) : '')}</div>
-  ${PRY.dib && it.vis ? `<div class="vis">${VIS.dibujar(Object.assign({ ocultarFin: !PRY.ver }, it.vis))}</div>` : ''}</div>
+  ${PRY.dib && it.vis ? `<div class="vis">${VIS.dibujar(Object.assign({ ocultarFin: !PRY.ver }, it.vis))}</div>` : ''}</div>${retoHTML(true)}
   <div class="acts">${it.vis ? `<button class="bt sec" onclick="PRY.dib=!PRY.dib;pintar()">${ico('bulb', 20)}${PRY.dib ? 'Quitar dibujo' : 'Dibujo'}</button>` : ''}
   ${PRY.ver ? `<button class="bt" onclick="proySig()">Siguiente${ico('chev', 20, 2.4)}</button>` : `<button class="bt" onclick="PRY.ver=true;SON.bien();pintar()">${ico('check', 20, 3)}Respuesta</button>`}</div></div>`;
 };
@@ -1597,6 +1824,55 @@ SC.ficha = () => {
   <div class="acts"><button class="bt sec" onclick="pintar()">${ico('refresh', 18)}Otros ejercicios</button><button class="bt" onclick="window.print()">${ico('download', 18)}Imprimir o guardar PDF</button></div></div>
   <div class="hoja">${cab(false)}${truco}<div class="hj-grid">${items.map((it, k) => celda(it, k, false)).join('')}</div></div>
   ${AULA.sol ? `<div class="hoja salto">${cab(true)}<div class="hj-grid">${items.map((it, k) => celda(it, k, true)).join('')}</div></div>` : ''}`;
+};
+
+/* ---------- Bingo de cálculo ----------
+   Se prepara un «bombo» de operaciones con resultados distintos; cada cartón tiene 9 de esos resultados.
+   Se imprimen los cartones y la pizarra va cantando operaciones: quien tenga el resultado lo tacha. */
+let BINGO = null;
+function prepararBingo() {
+  const pool = [], vistos = new Set(), L = aulaTrucos();
+  for (let k = 0; pool.length < 30 && k < 600; k++) { const e = pick(L), it = prepararItem(e.item(AULA.nivel), 3); if (!Number.isInteger(it.r) || vistos.has(it.r)) continue; vistos.add(it.r); pool.push(Object.assign(it, { nombre: e.n })); }
+  if (pool.length < 12) { toast('Estos trucos dan pocos resultados distintos: elige más trucos'); return; }
+  const n = AULA.cartones || Math.max(EST.alu.length, 10);
+  const cartones = Array.from({ length: n }, () => shuffle(pool.map(x => x.r)).slice(0, 9).sort((a, b) => a - b));
+  BINGO = { pool, cartones, cantadas: [], ver: false, actual: null }; go('bingo');
+}
+SC.bingo = () => `<div class="tz" style="display:flex;flex-direction:column;gap:12px">${atras('Ajustes del bingo', "go('aulacfg')")}
+  <h2 style="font-size:1.4rem;font-weight:600">Bingo preparado</h2>
+  <p class="note">${BINGO.pool.length} operaciones en el bombo y ${BINGO.cartones.length} cartones de 9 números. Imprime los cartones y repártelos; después empieza a cantar en la pizarra. Quien tache sus 9 números canta «¡Bingo!» y se comprueba con la lista de números cantados.</p>
+  <div class="list">${fila('download', 'Imprimir cartones', `${BINGO.cartones.length} cartones, 6 por página`, "go('bingocart')")}${fila('play', 'Empezar a cantar', 'Operaciones en grande, una a una', "BINGO.cantadas=[];bingoSacar();go('bingojuego')")}${fila('refresh', 'Preparar otro bingo', 'Otras operaciones y otros cartones', 'prepararBingo()')}</div></div>`;
+SC.bingocart = () => `<div class="noimp tz" style="display:flex;flex-direction:column;gap:10px">${atras('Bingo', "go('bingo')")}<div class="acts"><button class="bt" onclick="window.print()">${ico('download', 18)}Imprimir o guardar PDF</button></div></div>
+  <div class="cartones">${BINGO.cartones.map((c, k) => `<div class="carton"><div class="carton-h"><b>Bingo de cálculo</b><span>Nombre: ____________</span><small>Nº ${k + 1}</small></div><div class="carton-g">${c.map(n => `<span>${fmt(n)}</span>`).join('')}</div></div>`).join('')}</div>`;
+function bingoSacar() { const quedan = BINGO.pool.filter(x => !BINGO.cantadas.includes(x)); BINGO.actual = quedan.length ? pick(quedan) : null; BINGO.ver = false; if (BINGO.actual) BINGO.cantadas.push(BINGO.actual); }
+SC.bingojuego = () => {
+  const it = BINGO.actual;
+  if (!it) return `<div class="res pop">${mascota(140, 'feliz')}<h2>¡Se acabó el bombo!</h2></div><div class="acts"><button class="bt" onclick="go('bingo')">Volver</button></div>`;
+  return `<div class="proy"><div class="top"><button class="rnd" onclick="go('bingo')" aria-label="Salir">${ico('x', 20, 2.4)}</button><span class="pill" style="background:var(--acs);color:var(--aci)">Bingo · ${BINGO.cantadas.length} de ${BINGO.pool.length}</span></div>
+  <div class="proy-op">${it.txt ? `<div class="proy-txt">${esc(it.txt)}</div>` : ''}<div class="op">${huecoHTML(it.q, BINGO.ver ? fmt(it.r) : '')}</div></div>
+  <details class="cantadas"><summary>Números cantados (para comprobar un bingo)</summary><div>${BINGO.cantadas.filter(x => x !== it || BINGO.ver).map(x => fmt(x.r)).sort((a, b) => num(a) - num(b)).map(n => `<span>${n}</span>`).join('')}</div></details>
+  <div class="acts">${BINGO.ver ? `<button class="bt" onclick="bingoSacar();pintar()">Siguiente${ico('chev', 20, 2.4)}</button>` : `<button class="bt" onclick="BINGO.ver=true;SON.bien();pintar()">${ico('check', 20, 3)}Resultado</button>`}</div></div>`;
+};
+
+/* ---------- Informes para familias (imprimibles, una página por alumno) ---------- */
+const INF = { ids: null };
+SC.informe = () => {
+  const AL = INF.ids ? EST.alu.filter(a => INF.ids.includes(a.id)) : EST.alu, f = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+  const pagina = a => {
+    const L = ESTR.delCurso(cursoDe(a)), dom = L.filter(e => semaforo(a, e.id) === 'v'), ref = ESTR.lista.filter(e => e.curso <= cursoDe(a) && ['r', 'a'].includes(semaforo(a, e.id))).slice(0, 3);
+    const ahora = sugerida(a), sem = semana(a), ejSem = sem.reduce((s, x) => s + x.n, 0), ejemplo = e => { const it = e.item(1); return it.q.includes('?') ? `${it.q.replace('?', fmt(it.r))}` : ''; };
+    const est = { v: 'Lo domina', a: 'Casi', r: 'Practicar', g: 'Sin empezar' };
+    return `<div class="hoja salto inf"><div class="hj-cab"><div><b>Calculi · Informe de cálculo mental</b><small>${f}</small></div><div class="inf-al">${avatar(a)}<span><b>${esc(a.n)}</b><small>${nomCurso(cursoDe(a))} de Primaria</small></span></div></div>
+    <div class="inf-st"><div><b>${totalEstrellas(a)}</b><small>estrellas</small></div><div><b>${piedrasDe(a)}</b><small>piedrecitas</small></div><div><b>${a.dias.length}</b><small>días practicando</small></div><div><b>${ejSem}</b><small>ejercicios esta semana</small></div><div><b>${dom.length}/${L.length}</b><small>trucos dominados</small></div></div>
+    <h3>Sus trucos de ${nomCurso(cursoDe(a))}</h3><table class="inf-t">${L.map(e => `<tr><td>${esc(e.n)}</td><td><i class="sem ${semaforo(a, e.id)}"></i> ${est[semaforo(a, e.id)]}</td><td>${'★'.repeat((a.e[e.id] || {}).est || 0)}</td></tr>`).join('')}</table>
+    <h3>Ahora está aprendiendo</h3><p><b>${esc(ahora.n)}</b>: ${esc(ahora.truco.charAt(0).toLowerCase() + ahora.truco.slice(1))}.${ejemplo(ahora) ? ` Por ejemplo: ${esc(ejemplo(ahora))}.` : ''}</p>
+    ${ref.length ? `<h3>Para practicar en casa</h3><ul>${ref.map(e => `<li><b>${esc(e.n)}</b>: ${esc(e.truco.charAt(0).toLowerCase() + e.truco.slice(1))}.${ejemplo(e) ? ` Ejemplo: ${esc(ejemplo(e))}.` : ''}</li>`).join('')}</ul>` : ''}
+    <p class="inf-pie">Cinco minutos al día de cálculo mental marcan la diferencia: en el coche, en la compra o poniendo la mesa («¿cuántos platos faltan para 10?»). ¡Gracias por vuestra ayuda!</p></div>`;
+  };
+  return `<div class="noimp tz" style="display:flex;flex-direction:column;gap:10px">${atras('Zona del tutor', "go('tz')")}<h2 style="font-size:1.4rem;font-weight:600">Informes para familias</h2>
+  <div class="cchips"><button class="${!INF.ids ? 'on' : ''}" onclick="INF.ids=null;pintar()">Toda la clase</button>${EST.alu.map(a => `<button class="${INF.ids && INF.ids[0] === a.id ? 'on' : ''}" onclick="INF.ids=['${a.id}'];pintar()">${esc(a.n)}</button>`).join('')}</div>
+  <div class="acts"><button class="bt" onclick="window.print()">${ico('download', 18)}Imprimir o guardar PDF</button></div></div>
+  ${AL.length ? AL.map(pagina).join('') : '<p class="note">Aún no hay alumnos.</p>'}`;
 };
 
 /* ---- js/estrategias/01-versincontar.js ---- */

@@ -1,5 +1,5 @@
 /* ===== Navegación, cabecera y pantallas de inicio ===== */
-let VCURSO = 1, scr = 'inicio', EID = null, SES = null, TUT = 0, RES = null, JG = null, WEL = 0, NUEVO = '';
+let NUEVO_AV = null, VCURSO = 1, scr = 'inicio', EID = null, SES = null, TUT = 0, RES = null, JG = null, WEL = 0, NUEVO = '';
 const SC = {};
 const est = () => ESTR.get(EID);
 const decir = t => VOZ.decir(t);
@@ -18,7 +18,9 @@ function pintar() { aplicarTema(); aplicarDalton(); const A = $('#app'); A.inner
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
 const colorAv = a => (AVATARES[a.av] || AVATARES[0])[1];
-const avatar = (a, extra = '') => `<span class="av" style="background:${colorAv(a)}" ${extra}>${esc((a.n || '?')[0].toUpperCase())}</span>`;
+const avatar = (a, extra = '') => `<span class="av ani" style="background:${colorAv(a)}" ${extra}>${(AVATARES[a.av] || AVATARES[0])[0]}</span>`;
+/** Selector de animalitos. act = función que recibe el índice. */
+const elegirAnimal = (sel, act) => `<div class="animales">${AVATARES.map(([e, c], i) => `<button class="${i === sel ? 'on' : ''}" style="background:${c}" onclick="${act}(${i})" aria-label="Animal ${i + 1}">${e}</button>`).join('')}</div>`;
 const totalEstrellas = a => Object.values(a.e).reduce((s, p) => s + (p.est || 0), 0);
 const estrellasHTML = (n, max = 3, t = 16) => Array.from({ length: max }, (_, i) => `<span class="${i < n ? '' : 'off'}">${ico(i < n ? 'star' : 'starO', t, 2)}</span>`).join('');
 
@@ -54,18 +56,20 @@ SC.wel = () => {
     <p class="mut">${doc ? 'Escribe el nombre de un alumno. Podrás añadir al resto de la clase desde la Zona del tutor.' : 'Escribe el nombre del niño o la niña que va a practicar. Podrás añadir más después.'}</p>
     <p class="mut" style="margin:0;font-size:.95rem">${doc ? 'Curso de tu clase' : 'Curso'}</p>${chipsCurso(EST.ajustes.curso || 1, 'cursoWel')}
     <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')finWel(true)">
+    <p class="mut" style="margin:0;font-size:.95rem">Su animalito</p>${elegirAnimal(NUEVO_AV ?? avLibre(), 'animalWel')}
     ${importables()}
     <div class="acts"><button class="bt sec" onclick="finWel(false)">Lo haré después</button><button class="bt" onclick="finWel(true)">Continuar</button></div></div></div>`;
 };
 function importables() {
   const xs = alumnosDeOtrasApps().slice(0, 12); if (!xs.length) return '';
-  return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},${EST.alu.length % AVATARES.length});toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
+  return `<p class="mut" style="margin:0;font-size:.9rem">O añade alumnos de tus otras apps:</p><div class="fila" style="justify-content:flex-start">${xs.map(x => `<button class="bt sec" style="min-height:42px;font-size:1rem;padding:0 14px" onclick="crearAlumno(${esc(JSON.stringify(x.n))},avLibre());toast('Añadido: ${esc(x.n)}');pintar()">${ico('plus', 16)}${esc(x.n)}</button>`).join('')}</div>`;
 }
+function animalWel(i) { const v = $('#nom') ? $('#nom').value : ''; NUEVO_AV = i; pintar(); if ($('#nom')) $('#nom').value = v; }
 function cursoWel(c) { const v = $('#nom') ? $('#nom').value : ''; EST.ajustes.curso = c; pintar(); if ($('#nom')) $('#nom').value = v; }
 function finWel(conNombre) {
   const n = conNombre && $('#nom') ? $('#nom').value.trim() : '';
   if (conNombre && !n && !EST.alu.length) { $('#nom').focus(); return; }
-  if (n) crearAlumno(n, EST.alu.length % AVATARES.length);
+  if (n) crearAlumno(n, NUEVO_AV ?? avLibre());
   try { localStorage.setItem('calc.wel', '1'); } catch (e) {}
   guardar(); go('inicio');
 }
@@ -78,17 +82,19 @@ function continuar() {
 SC.inicio = () => {
   const a = alumno();
   if (!a) return EST.alu.length ? SC.quien() : `${cabecera()}<div class="wel"><div class="gcard">${mascota(110)}<h2>¡Hola!</h2><p class="mut">Crea un alumno para empezar a practicar.</p>
-    <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off"><button class="bt w" onclick="const n=$('#nom').value.trim();if(n){crearAlumno(n,EST.alu.length%AVATARES.length);pintar()}">Crear alumno</button>${importables()}</div>
+    <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off"><button class="bt w" onclick="const n=$('#nom').value.trim();if(n){crearAlumno(n,avLibre());pintar()}">Crear alumno</button>${importables()}</div>
     <button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button></div>`;
   const e = sugerida(a), p = a.e[e.id] || {}, hayRepaso = ESTR.lista.some(x => (a.e[x.id] || {}).n > 0);
   const sigTxt = MODO_DOCENTE ? 'Todos los trucos abiertos, sin guardar' : !p.tut ? `Aprender: ${e.n}` : !p.n ? `Practicar: ${e.n}` : `Reto: ${e.n}`;
   const saludo = MODO_DOCENTE ? '¡Modo Docente!' : `¡Hola, ${esc(a.n)}!`;
   const frase = MODO_DOCENTE ? 'Proyecta y practica con la clase' : pick(['¿Practicamos un truco?', '¿Seguimos aprendiendo?', '¡Vamos a calcular!']);
   return `${cabecera()}
-  <div class="greet">${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>
+  <div class="greet">${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>${EST.ajustes.perfil === 'docente' ? retoHTML() : ''}
   <div class="home-grid">
   <button class="lc hero" onclick="${MODO_DOCENTE ? "VCURSO=cursoDe(alumno());go('mapa')" : 'continuar()'}"><span class="ico">${ico('play', 26)}</span><span class="tx2"><b>${MODO_DOCENTE ? 'Trucos' : 'Seguir'}</b><small>${esc(sigTxt)}</small></span></button>
-  <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${hayRepaso ? 'Mezcla de los trucos que ya conoces' : 'Se abre cuando practiques un truco'}</small></span></button>
+  ${!MODO_DOCENTE && !a.diag && !ESTR.delCurso(cursoDe(a)).some(x => (a.e[x.id] || {}).n) ? `<button class="lc" onclick="empezar('diag')"><span class="ico">${ico('target', 24)}</span><span class="tx2"><b>Prueba inicial</b><small>5 minutos para empezar por tu nivel</small></span></button>` : ''}
+  <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${!hayRepaso ? 'Se abre cuando practiques un truco' : (() => { const t = tocaRepasar(a); return t.length ? `Hoy toca: ${esc(t.slice(0, 3).map(x => x.n).join(', '))}${t.length > 3 ? '…' : ''}` : 'Mezcla de los trucos que ya conoces'; })()}</small></span></button>
+  ${cursoDe(a) >= 2 || MODO_DOCENTE ? `<button class="lc" onclick="go('tablas')"><span class="ico">${ico('chart', 24)}</span><span class="tx2"><b>Tablas de multiplicar</b><small>Tu mapa de las tablas: practica las que fallas</small></span></button>` : ''}
   ${MODO_DOCENTE ? `<button class="lc" onclick="abrirAula('proy')"><span class="ico">${ico('monitor', 24)}</span><span class="tx2"><b>Proyectar</b><small>Una operación en grande para toda la clase</small></span></button>
   <button class="lc" onclick="abrirAula('duelo')"><span class="ico">${ico('users', 24)}</span><span class="tx2"><b>Duelo por equipos</b><small>Azul contra naranja en la pizarra</small></span></button>`
   : `<button class="lc" onclick="empezar('diario')"><span class="ico">${ico('flame', 24)}</span><span class="tx2"><b>Cálculo diario</b><small>${diarioHoy(a) ? `Hecho hoy ✓ · Récord: ${a.diario.mejor}` : `2 minutos · Tu récord: ${a.diario.mejor || 0}`}</small></span></button>`}
@@ -104,9 +110,10 @@ SC.quien = () => `${cabecera()}${EST.alu.length && alumno() ? atras('Inicio', "g
   <button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button>`;
 function entrar(id) { MODO_DOCENTE = false; EST.act = id; guardar(); go('inicio'); }
 SC.nuevo = () => `${cabecera()}${atras('Volver', "go('quien')")}<div class="gcard" style="align-items:stretch;text-align:left"><h2>Nuevo alumno</h2>
-  <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')crearDesdeForm()">${importables()}
+  <input class="inp" id="nom" maxlength="20" placeholder="Nombre" autocomplete="off" onkeydown="if(event.key==='Enter')crearDesdeForm()">
+  <p class="mut" style="margin:0;font-size:.95rem">Elige tu animalito</p>${elegirAnimal(NUEVO_AV ?? avLibre(), 'animalWel')}${importables()}
   <button class="bt w" onclick="crearDesdeForm()">Crear</button></div>`;
-function crearDesdeForm() { const n = $('#nom').value.trim(); if (!n) return $('#nom').focus(); crearAlumno(n, EST.alu.length % AVATARES.length); MODO_DOCENTE = false; go('inicio'); }
+function crearDesdeForm() { const n = $('#nom').value.trim(); if (!n) return $('#nom').focus(); crearAlumno(n, NUEVO_AV ?? avLibre()); NUEVO_AV = null; MODO_DOCENTE = false; go('inicio'); }
 
 /* ---------- Mapa de trucos ---------- */
 SC.mapa = () => {
@@ -134,6 +141,7 @@ SC.estr = () => {
   ${fila(2, p.n > 0, 'Practicar', 'Paso a paso, con ayuda', "empezar('guiada')")}
   ${fila(3, p.est >= 3, 'Reto', '10 operaciones para ganar estrellas', "empezar('reto')", `<span class="es">${'★'.repeat(p.est || 0)}${'☆'.repeat(3 - (p.est || 0))}</span>`)}
   ${fila(4, false, 'Jugar', e.juego && e.juego.tipo === 'parejas' ? esc(e.juego.meta) : 'Operaciones rápidas', 'empezarJuego()')}
+  ${tieneProblemas(e) ? fila(5, false, 'Problemas', 'El truco en situaciones de la vida', "empezar('problemas')") : ''}
   <div class="say">${mascota(60, 'piensa')}<div class="bub">Truco: «${esc(e.truco)}»</div></div>`;
 };
 

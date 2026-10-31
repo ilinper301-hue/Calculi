@@ -364,3 +364,46 @@ svg.toca{touch-action:manipulation}
 :root.dalton .sem.v,:root.dalton .bar i.v{background:#0072B2}:root.dalton .sem.a,:root.dalton .bar i.a{background:#F0E442}:root.dalton .sem.r,:root.dalton .bar i.r{background:#D55E00}
 :root.dalton .op .hueco.ok::after{content:'✓';font-size:.4em;vertical-align:super;margin-left:.1em}
 :root.dalton .op .hueco.no::after{content:'✗';font-size:.4em;vertical-align:super;margin-left:.1em}
+
+/* Animalitos */
+.av.ani{font-size:1.45rem;line-height:1;box-shadow:inset 0 0 0 2px rgba(0,0,0,.06)}
+.qa .av.ani{font-size:2rem}
+.tzh .av.ani{border-radius:12px;font-size:1.5rem}
+.animales{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+.animales button{aspect-ratio:1/1;border-radius:16px;font-size:1.7rem;display:grid;place-items:center;border:3px solid transparent}
+.animales button.on{border-color:var(--ac);transform:scale(1.06)}
+
+/* Mapa de calor de las tablas */
+.mtab{display:grid;grid-template-columns:34px repeat(10,1fr);gap:3px;align-items:center}
+.mtab b{text-align:center;font-weight:500;color:var(--mu);font-size:.85rem}
+.mtab button{height:100%;min-height:28px;border-radius:8px;background:var(--acs);color:var(--aci);font-weight:600}
+.mtab i{aspect-ratio:1/1;border-radius:6px;background:var(--bd)}
+.mtab i.v{background:#16A34A}.mtab i.a{background:#F59E0B}.mtab i.r{background:#DC2626}
+:root.dalton .mtab i.v{background:#0072B2}:root.dalton .mtab i.a{background:#F0E442}:root.dalton .mtab i.r{background:#D55E00}
+/* Reto de la clase */
+.reto{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.reto-h{display:flex;align-items:center;gap:8px}.reto-h b{flex:1;font-weight:500}.reto-h span{color:var(--mu);font-size:.92rem}
+.reto small{color:var(--mu);font-size:.85rem}
+.reto.grande{padding:18px 22px}.reto.grande .reto-h b{font-size:1.5rem}.reto.grande .pg{height:22px}
+.tz .reto{border-width:1px;border-radius:14px}
+/* Bingo */
+.cartones{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.carton{background:#fff;color:#111;border:2px solid #111;border-radius:12px;padding:10px;break-inside:avoid}
+.carton-h{display:flex;align-items:baseline;gap:8px;font-family:var(--fi);font-size:.8rem;margin-bottom:6px}.carton-h b{font-family:var(--fd);font-size:1rem;flex:1}.carton-h small{color:#666}
+.carton-g{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid #111;border-radius:6px;overflow:hidden}
+.carton-g span{aspect-ratio:1.4/1;display:grid;place-items:center;font:600 1.7rem var(--fd);border:1px solid #999}
+.cantadas{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:8px 12px;font-family:var(--fi);font-size:.9rem}
+.cantadas summary{cursor:pointer;color:var(--mu)}.cantadas div{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cantadas span{background:var(--acs);border-radius:8px;padding:2px 8px;font-weight:600}
+@media print{.cartones{grid-template-columns:1fr 1fr;gap:8mm}.carton{border-radius:0}}
+/* Informe para familias */
+.inf{font-family:var(--fi);font-size:.92rem}
+.inf h3{font:600 1.05rem var(--fd);margin:14px 0 6px}
+.inf p,.inf ul{margin:0 0 6px}
+.inf-al{display:flex;align-items:center;gap:8px}.inf-al b{display:block;font-family:var(--fd)}.inf-al small{color:#555}
+.inf-st{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}
+.inf-st div{background:#f3f4f6;border-radius:8px;padding:8px;text-align:center}.inf-st b{display:block;font:600 1.3rem var(--fd)}.inf-st small{font-size:.72rem;color:#555}
+.inf-t{width:100%;border-collapse:collapse;font-size:.85rem}.inf-t td{padding:4px 6px;border-bottom:1px solid #e5e7eb}.inf-t td:last-child{color:#B45309;text-align:right}
+.inf-pie{margin-top:12px!important;font-size:.82rem;color:#555;border-top:1px solid #ddd;padding-top:8px}
+.hoja.inf:first-of-type{margin-top:0}
+@media print{.noimp+.hoja{break-before:auto!important}}

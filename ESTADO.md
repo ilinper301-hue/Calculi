@@ -54,3 +54,14 @@
 - [x] Resumen para Tabula en `calc.tabula` y CSV de evaluación
 - [x] Lector en Tabula: botón «Calculi» en el Cuaderno (PR #15 de Tabula, pendiente de fusionar)
 - [ ] Sincronización con Firebase
+
+## Mejoras (v1.4)
+- [x] Animalitos como avatar (30), elegibles al crear y en la Zona del tutor
+- [x] Prueba inicial por curso (2 operaciones por truco; para al fallar dos seguidos)
+- [x] Repaso por días (cajas de Leitner: 1, 3, 7, 15, 30 días) y «Hoy toca» en el inicio
+- [x] Tablas de multiplicar con mapa de calor y práctica de las que más fallan
+- [x] Problemas cortos generados a partir del truco (73 de 88 trucos)
+- [x] Errores más frecuentes de la clase y de cada alumno
+- [x] Bingo de cálculo (cartones imprimibles + proyector), reto semanal de la clase
+- [x] Informes para familias imprimibles (una página por alumno)
+- [ ] Animalitos en Lectori y Barri
