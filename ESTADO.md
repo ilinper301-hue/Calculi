@@ -71,5 +71,5 @@
 - [x] Tablet apaisada (≥900 px horizontal): ejercicio y tutorial a dos columnas, tamaños grandes; tablet vertical más grande
 - [x] Proyector y duelo: pantalla completa y atajos (Espacio/→/mando = respuesta y siguiente; D = dibujo)
 - [ ] Probar en tablet y pizarra digital reales (pantalla completa y mando presentador)
-- [ ] Tablet vertical: hueco vacío en la tarjeta del ejercicio
-- [ ] Zona del tutor a dos columnas en tablet apaisada
+- [x] Tablet vertical: hueco vacío en la tarjeta del ejercicio
+- [x] Zona del tutor a dos columnas en tablet apaisada

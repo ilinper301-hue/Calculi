@@ -212,6 +212,7 @@ h1,h2,h3{margin:0;font-weight:500}
 /* ================= Zona del tutor (sobria, Inter) ================= */
 .tz{font-family:var(--fi);font-size:15px;font-weight:400}
 .tz h2,.tz h3,.tz b{font-family:var(--fi)}
+.tzc{display:flex;flex-direction:column;gap:14px}
 .tzh{display:flex;align-items:center;gap:12px}
 .tzh .av{width:44px;height:44px;border-radius:12px;box-shadow:none;font:600 1.1rem var(--fi)}
 .tzh .tzn{flex:1;min-width:0}.tzh .tzn b{font-size:1.4rem;font-weight:600;display:block;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tzh .tzn small{color:var(--mu);font-size:.85rem}
@@ -480,6 +481,10 @@ svg.toca{touch-action:manipulation}
   /* Zona del tutor */
   #app[data-sc="tz"],#app[data-sc="aulacfg"]{max-width:1100px}
   .tz{font-size:16px}
+  .tzc{display:block;column-count:2;column-gap:28px}
+  .tzc>*{break-inside:avoid;margin-bottom:14px}
+  .tzc>.gt{break-after:avoid;margin-bottom:-6px}
+  .tzc>.stats,.tzc>.wk{column-span:all}
 }
 @media (min-width:1500px) and (orientation:landscape){#app[data-sc="ej"],#app[data-sc="tut"],#app[data-sc="inicio"]{max-width:1400px}}
 /* Tablet vertical */
@@ -495,7 +500,7 @@ svg.toca{touch-action:manipulation}
   .lc b{font-size:1.45rem}.lc small{font-size:1.08rem}.lc .ico{width:64px;height:64px}
   .mapa{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
   #app[data-sc="tut"] .vis svg{max-width:640px;max-height:44vh}
-  #app[data-sc="ej"] .vis svg{max-width:560px;max-height:34vh}
+  #app[data-sc="ej"] .vis svg{max-width:620px;max-height:44vh}
   .proy-op .vis svg{max-height:40vh;max-width:none}
   .dl .opc{min-height:86px;font-size:2.4rem}
 }
@@ -1695,7 +1700,7 @@ SC.tz = () => {
   <button class="rnd" onclick="go('inicio')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button></div>`;
   const cuerpo = { prog: () => tzProgreso(a), clase: tzClase, aula: tzAula, alu: tzAlumnos, aj: tzAjustes }[TZ.tab]();
   return `<div class="tz" style="display:flex;flex-direction:column;gap:14px">${cab}
-  <div class="seg">${tabs.map(([k, t]) => `<button class="${TZ.tab === k ? 'on' : ''}" onclick="TZ.tab='${k}';pintar()">${t}</button>`).join('')}</div>${cuerpo}</div>`;
+  <div class="seg">${tabs.map(([k, t]) => `<button class="${TZ.tab === k ? 'on' : ''}" onclick="TZ.tab='${k}';pintar()">${t}</button>`).join('')}</div><div class="tzc">${cuerpo}</div></div>`;
 };
 const fila = (icono, t, s, act, der = `<span class="chev">${ico('chev', 18)}</span>`, cls = '') => `<button class="row ${cls}" onclick="${act}">${icono ? ico(icono, 20) : ''}<span class="tx2"><span>${t}</span>${s ? `<small>${s}</small>` : ''}</span>${der}</button>`;
 function barraDom(a, e) {

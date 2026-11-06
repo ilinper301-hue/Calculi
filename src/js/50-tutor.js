@@ -44,7 +44,7 @@ SC.tz = () => {
   <button class="rnd" onclick="go('inicio')" aria-label="Cerrar">${ico('x', 20, 2.4)}</button></div>`;
   const cuerpo = { prog: () => tzProgreso(a), clase: tzClase, aula: tzAula, alu: tzAlumnos, aj: tzAjustes }[TZ.tab]();
   return `<div class="tz" style="display:flex;flex-direction:column;gap:14px">${cab}
-  <div class="seg">${tabs.map(([k, t]) => `<button class="${TZ.tab === k ? 'on' : ''}" onclick="TZ.tab='${k}';pintar()">${t}</button>`).join('')}</div>${cuerpo}</div>`;
+  <div class="seg">${tabs.map(([k, t]) => `<button class="${TZ.tab === k ? 'on' : ''}" onclick="TZ.tab='${k}';pintar()">${t}</button>`).join('')}</div><div class="tzc">${cuerpo}</div></div>`;
 };
 const fila = (icono, t, s, act, der = `<span class="chev">${ico('chev', 18)}</span>`, cls = '') => `<button class="row ${cls}" onclick="${act}">${icono ? ico(icono, 20) : ''}<span class="tx2"><span>${t}</span>${s ? `<small>${s}</small>` : ''}</span>${der}</button>`;
 function barraDom(a, e) {
