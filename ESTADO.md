@@ -66,3 +66,10 @@
 - [x] Informes para familias imprimibles (una página por alumno)
 - [x] Animalitos en Lectori (mismo animal al importar en Calculi)
 - [ ] Animalitos en Barri (pendiente: su código fuente está fuera del repositorio)
+
+## Tablet y proyector (nov 2026)
+- [x] Tablet apaisada (≥900 px horizontal): ejercicio y tutorial a dos columnas, tamaños grandes; tablet vertical más grande
+- [x] Proyector y duelo: pantalla completa y atajos (Espacio/→/mando = respuesta y siguiente; D = dibujo)
+- [ ] Probar en tablet y pizarra digital reales (pantalla completa y mando presentador)
+- [ ] Tablet vertical: hueco vacío en la tarjeta del ejercicio
+- [ ] Zona del tutor a dos columnas en tablet apaisada
