@@ -12,6 +12,17 @@ Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/Calculi/` (lo q
 - No cambies diseño, textos ni orden de estrategias sin pedírmelo; propón mejoras aparte.
 - Commits pequeños con mensaje claro en español.
 
+## Ahorro de tokens y elección de modelo
+- Busca antes de leer: usa grep/listados y lee solo los fragmentos necesarios, nunca archivos enteros ni `index.html` (es generado). Edita con cambios puntuales.
+- Al terminar: 1-2 frases con el resultado y qué archivos cambiaste; no repitas el código.
+- Agrupa tareas pequeñas parecidas en un solo commit.
+- Antes de cada tarea, dime en una línea: modelo + esfuerzo + motivo. Empieza por el modelo más barato y sube solo si falla.
+- **Haiku (esfuerzo bajo)**: textos, colores, estilos, iconos, renombrar/formatear, buscar dónde está algo, README y commits.
+- **Sonnet (medio)**: casi todo: estrategias y actividades nuevas, tutoriales, pantallas, niveles y puntuación, errores normales, tests. **Sonnet (alto)**: errores difíciles, generadores con reglas de dificultad, sincronización con Firebase.
+- **Opus (alto)**, solo para: arquitectura o reorganización grande, diseño pedagógico (progresión, adaptación al niño), fallos que Sonnet no resuelve tras 2 intentos, revisión final antes de publicar. Opus planifica; Sonnet/Haiku implementan.
+- **Chat nuevo**: avísame cuando lleve ~30-40 mensajes o muchas lecturas de archivos, al cambiar de funcionalidad, al cerrar una tarea con commit o si olvidas decisiones. Al avisar, dame un resumen de 5-8 líneas (hecho y pendiente) y el modelo y esfuerzo recomendados para el siguiente chat.
+- Mantén `ESTADO.md` al día: es el puente entre chats.
+
 ## Reglas del ecosistema (iguales que Lectori y Barri)
 1. **Mismo dominio** (`ilinper301-hue.github.io`): el navegador comparte `localStorage` entre las tres apps.
    - Todas las claves llevan prefijo `calc.` (`calc.v1`, `calc.fb`, `calc.sync.uid`, `calc.sync.t`, `calc.bk`, `calc.wel`, `calc.th`).
