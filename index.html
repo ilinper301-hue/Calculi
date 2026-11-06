@@ -420,6 +420,85 @@ svg.toca{touch-action:manipulation}
 .inf-pie{margin-top:12px!important;font-size:.82rem;color:#555;border-top:1px solid #ddd;padding-top:8px}
 .hoja.inf:first-of-type{margin-top:0}
 @media print{.noimp+.hoja{break-before:auto!important}}
+
+/* ===== Tablet apaisada ===== */
+@media (min-width:900px) and (orientation:landscape) and (min-height:600px){
+  body{font-size:20px}
+  #app{max-width:1180px;gap:18px;padding-left:28px;padding-right:28px}
+  .bt{min-height:64px;font-size:1.3rem;padding:0 30px}
+  .opc{min-height:clamp(80px,13vh,120px);font-size:clamp(2.2rem,6vh,3.4rem)}
+  .ops.una .opc{font-size:1.5rem}
+  .kp{max-width:440px;gap:10px}.kp button{height:clamp(56px,8.6vh,84px);font-size:clamp(1.6rem,4vh,2.2rem)}
+  .kp .ok{font-size:1.5rem}
+  .op{font-size:clamp(3rem,9vh,5.4rem)}.op.larga{font-size:clamp(2.4rem,7vh,4.2rem)}.op.muy{font-size:clamp(1.9rem,5.4vh,3.2rem)}
+  .voz{transform:scale(1.2)}
+  .pill{font-size:1.15rem}.chips span,.cchips button{font-size:1.05rem}
+  .bub{font-size:1.2rem;padding:14px 18px}
+  .card{padding:24px 22px;gap:16px}.card .enun{font-size:1.25rem}
+  /* Inicio */
+  .greet .hi{font-size:2.4rem}.greet p{font-size:1.25rem}
+  .home-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .lc{padding:18px 22px}.lc .ico{width:64px;height:64px}.lc b{font-size:1.45rem}.lc small{font-size:1.08rem}
+  .trio .hc{font-size:1.15rem;padding:18px 8px}
+  .mapa{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+  .mw{min-height:158px}.mw b{font-size:1.1rem}
+  .piedras-g{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+  /* Ejercicio: dos columnas a toda altura */
+  #app[data-sc="ej"]{min-height:100dvh}
+  #app[data-sc="ej"] .ej-lado{flex:1;display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:stretch}
+  #app[data-sc="ej"] .ej-cuerpo{justify-content:center;gap:22px}
+  #app[data-sc="ej"] .ops .opc{min-height:clamp(100px,19vh,170px);font-size:clamp(2.6rem,8vh,4.4rem)}
+  #app[data-sc="ej"] .kp button{height:clamp(60px,10.5vh,100px)}
+  #app[data-sc="ej"] .ops.una .opc{min-height:84px;font-size:1.6rem}
+  #app[data-sc="duelo"]{min-height:100dvh}
+  #app[data-sc="duelo"] .duelo{flex:1}
+  #app[data-sc="duelo"]>.card{padding:clamp(20px,5vh,56px)}
+  #app[data-sc="duelo"] .dl{justify-content:space-around}
+  #app[data-sc="ej"] .ej-cuerpo:first-child .card{flex:1;justify-content:center}
+  #app[data-sc="ej"] .vis svg{max-width:none;max-height:48vh;width:100%}
+  #app[data-sc="ej"] .say .mas,#app[data-sc="tut"] .say .mas{transform:scale(1.2);transform-origin:bottom left}
+  #app[data-sc="ej"] .kp,#app[data-sc="ej"] .ops{max-width:none}
+  #app[data-sc="ej"] .ops{gap:14px}
+  /* Tutorial: dibujo a la izquierda, mascota y botones a la derecha */
+  #app[data-sc="tut"]{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto 1fr auto;column-gap:28px;row-gap:18px;min-height:100dvh}
+  #app[data-sc="tut"]>.top{grid-column:1/-1}
+  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4}
+  #app[data-sc="tut"]>.say{grid-column:2;grid-row:2;align-self:center;flex-direction:column;align-items:center;gap:14px}
+  #app[data-sc="tut"]>.say .bub{width:100%;box-sizing:border-box}
+  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3}
+  #app[data-sc="tut"] .tutt{font-size:clamp(1.5rem,3.6vh,2.1rem)}
+  #app[data-sc="tut"] .vis svg{max-width:none;max-height:56vh}
+  /* Proyector y duelo */
+  #app[data-sc="proy"],#app[data-sc="duelo"]{max-width:none;padding-left:40px;padding-right:40px}
+  .proy-op .op{font-size:clamp(4rem,18vh,11rem)!important}
+  .proy-txt{font-size:clamp(1.4rem,4vh,2.6rem)}
+  .proy-op .vis svg{max-height:50vh;max-width:none}
+  .proy .acts .bt{min-height:72px;font-size:1.5rem}
+  .dl .opc{min-height:clamp(100px,18vh,190px);font-size:clamp(2.4rem,8vh,4.6rem)}
+  .dl-h b{font-size:1.5rem}.dl-p{font-size:2.6rem;min-width:68px;height:68px}
+  .dl-m{font-size:1.2rem}
+  /* Zona del tutor */
+  #app[data-sc="tz"],#app[data-sc="aulacfg"]{max-width:1100px}
+  .tz{font-size:16px}
+}
+@media (min-width:1500px) and (orientation:landscape){#app[data-sc="ej"],#app[data-sc="tut"],#app[data-sc="inicio"]{max-width:1400px}}
+/* Tablet vertical */
+@media (min-width:700px) and (min-height:900px) and (orientation:portrait){
+  body{font-size:20px}
+  #app{max-width:860px;gap:20px}
+  .bt{min-height:64px;font-size:1.3rem}
+  .opc{min-height:96px;font-size:2.6rem}.ops.una .opc{font-size:1.5rem}
+  .kp{max-width:480px;gap:10px}.kp button{height:78px;font-size:2rem}
+  .op{font-size:clamp(3.4rem,10vw,5.4rem)}.op.larga{font-size:clamp(2.6rem,8vw,4.2rem)}.op.muy{font-size:clamp(2rem,6vw,3.2rem)}
+  .bub{font-size:1.25rem}.tutt{font-size:1.7rem}
+  .card{padding:26px 22px}
+  .lc b{font-size:1.45rem}.lc small{font-size:1.08rem}.lc .ico{width:64px;height:64px}
+  .mapa{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  #app[data-sc="tut"] .vis svg{max-width:640px;max-height:44vh}
+  #app[data-sc="ej"] .vis svg{max-width:560px;max-height:34vh}
+  .proy-op .vis svg{max-height:40vh;max-width:none}
+  .dl .opc{min-height:86px;font-size:2.4rem}
+}
 </style>
 </head>
 <body>
@@ -607,6 +686,7 @@ const ICP = {
   plus: '<path d="M12 5v14M5 12h14"/>',
   key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
   pencil: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+  expand: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
   monitor: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
   medal: '<circle cx="12" cy="15" r="5.5"/><path d="M8.5 10.5 6 3h4l2 5 2-5h4l-2.5 7.5"/>',
   flame: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.3 2-4.3.2 1.8 1 2.8 2 2.8 0-3.2-.6-5.6 1-8.5z"/>',
@@ -1771,6 +1851,17 @@ function aulaToggle(id) {
 
 /* ---------- Modo proyector ---------- */
 let PRY = null;
+function pantallaCompleta() { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { } }
+/* Atajos para mando presentador: Espacio, →, AvPág, Intro = respuesta / siguiente; D = dibujo. */
+document.addEventListener('keydown', ev => {
+  if (scr !== 'proy' || !PRY || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  const t = ev.target; if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+  if (t && t.tagName === 'BUTTON' && (ev.key === ' ' || ev.key === 'Enter')) return;
+  if ([' ', 'ArrowRight', 'PageDown', 'Enter'].includes(ev.key)) {
+    ev.preventDefault();
+    if (PRY.ver) proySig(); else { PRY.ver = true; SON.bien(); pintar(); }
+  } else if (ev.key === 'd' || ev.key === 'D') { PRY.dib = !PRY.dib; pintar(); }
+});
 function empezarProy() { PRY = { it: aulaItem(), n: 1, ver: false, dib: false, t0: Date.now() }; go('proy'); proyReloj(); }
 function proyReloj() {
   clearInterval(PRY && PRY.int); if (!PRY || !AULA.tiempo) return;
@@ -1781,7 +1872,7 @@ function proySig() { PRY = Object.assign(PRY, { it: aulaItem(AULA.nivel, PRY.it)
 SC.proy = () => {
   const it = PRY.it, q = AULA.tiempo ? Math.max(0, AULA.tiempo - Math.floor((Date.now() - PRY.t0) / 1000)) : null;
   return `<div class="proy"><div class="top"><button class="rnd" onclick="clearInterval(PRY.int);go('aulacfg')" aria-label="Salir">${ico('x', 20, 2.4)}</button>
-  <span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span>${q !== null ? `<span class="pill" id="prt">${q}</span>` : ''}<span class="pill" style="background:var(--card);color:var(--mu)">${PRY.n}</span></div>
+  <span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span>${document.fullscreenEnabled ? `<button class="rnd" onclick="pantallaCompleta()" aria-label="Pantalla completa">${ico('expand', 20, 2.2)}</button>` : ''}${q !== null ? `<span class="pill" id="prt">${q}</span>` : ''}<span class="pill" style="background:var(--card);color:var(--mu)">${PRY.n}</span></div>
   <div class="proy-op">${it.txt ? `<div class="proy-txt">${esc(it.txt)}</div>` : ''}<div class="op">${huecoHTML(it.q, PRY.ver ? fmt(it.r) : '')}</div>
   ${PRY.dib && it.vis ? `<div class="vis">${VIS.dibujar(Object.assign({ ocultarFin: !PRY.ver }, it.vis))}</div>` : ''}</div>${retoHTML(true)}
   <div class="acts">${it.vis ? `<button class="bt sec" onclick="PRY.dib=!PRY.dib;pintar()">${ico('bulb', 20)}${PRY.dib ? 'Quitar dibujo' : 'Dibujo'}</button>` : ''}
@@ -1801,7 +1892,7 @@ SC.duelo = () => {
   };
   if (DUE.gana !== null) return `<div class="res pop">${mascota(150, 'feliz')}<h2>¡Gana el ${['equipo azul', 'equipo naranja'][DUE.gana]}!</h2><p class="mut" style="margin:0;font-size:1.2rem">${DUE.p[0]} – ${DUE.p[1]}</p></div>
     <div class="acts"><button class="bt sec" onclick="go('aulacfg')">Ajustes</button><button class="bt" onclick="empezarDuelo()">${ico('refresh', 20)}Revancha</button></div>`;
-  return `<div class="top"><button class="rnd" onclick="go('aulacfg')" aria-label="Salir">${ico('x', 20, 2.4)}</button><span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span><span class="pill">A ${AULA.meta}</span></div>
+  return `<div class="top"><button class="rnd" onclick="go('aulacfg')" aria-label="Salir">${ico('x', 20, 2.4)}</button><span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span>${document.fullscreenEnabled ? `<button class="rnd" onclick="pantallaCompleta()" aria-label="Pantalla completa">${ico('expand', 20, 2.2)}</button>` : ''}<span class="pill">A ${AULA.meta}</span></div>
   <div class="card"><div class="op">${huecoHTML(it.q, DUE.ganaRonda !== null || (DUE.bloq[0] && DUE.bloq[1]) ? fmt(it.r) : '')}</div></div>
   <div class="duelo">${lado(0)}${lado(1)}</div>
   ${DUE.ganaRonda !== null || (DUE.bloq[0] && DUE.bloq[1]) ? `<button class="bt" onclick="dueloRonda();pintar()">Siguiente${ico('chev', 20, 2.4)}</button>` : ''}`;

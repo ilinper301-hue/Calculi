@@ -407,3 +407,82 @@ svg.toca{touch-action:manipulation}
 .inf-pie{margin-top:12px!important;font-size:.82rem;color:#555;border-top:1px solid #ddd;padding-top:8px}
 .hoja.inf:first-of-type{margin-top:0}
 @media print{.noimp+.hoja{break-before:auto!important}}
+
+/* ===== Tablet apaisada ===== */
+@media (min-width:900px) and (orientation:landscape) and (min-height:600px){
+  body{font-size:20px}
+  #app{max-width:1180px;gap:18px;padding-left:28px;padding-right:28px}
+  .bt{min-height:64px;font-size:1.3rem;padding:0 30px}
+  .opc{min-height:clamp(80px,13vh,120px);font-size:clamp(2.2rem,6vh,3.4rem)}
+  .ops.una .opc{font-size:1.5rem}
+  .kp{max-width:440px;gap:10px}.kp button{height:clamp(56px,8.6vh,84px);font-size:clamp(1.6rem,4vh,2.2rem)}
+  .kp .ok{font-size:1.5rem}
+  .op{font-size:clamp(3rem,9vh,5.4rem)}.op.larga{font-size:clamp(2.4rem,7vh,4.2rem)}.op.muy{font-size:clamp(1.9rem,5.4vh,3.2rem)}
+  .voz{transform:scale(1.2)}
+  .pill{font-size:1.15rem}.chips span,.cchips button{font-size:1.05rem}
+  .bub{font-size:1.2rem;padding:14px 18px}
+  .card{padding:24px 22px;gap:16px}.card .enun{font-size:1.25rem}
+  /* Inicio */
+  .greet .hi{font-size:2.4rem}.greet p{font-size:1.25rem}
+  .home-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .lc{padding:18px 22px}.lc .ico{width:64px;height:64px}.lc b{font-size:1.45rem}.lc small{font-size:1.08rem}
+  .trio .hc{font-size:1.15rem;padding:18px 8px}
+  .mapa{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+  .mw{min-height:158px}.mw b{font-size:1.1rem}
+  .piedras-g{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+  /* Ejercicio: dos columnas a toda altura */
+  #app[data-sc="ej"]{min-height:100dvh}
+  #app[data-sc="ej"] .ej-lado{flex:1;display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:stretch}
+  #app[data-sc="ej"] .ej-cuerpo{justify-content:center;gap:22px}
+  #app[data-sc="ej"] .ops .opc{min-height:clamp(100px,19vh,170px);font-size:clamp(2.6rem,8vh,4.4rem)}
+  #app[data-sc="ej"] .kp button{height:clamp(60px,10.5vh,100px)}
+  #app[data-sc="ej"] .ops.una .opc{min-height:84px;font-size:1.6rem}
+  #app[data-sc="duelo"]{min-height:100dvh}
+  #app[data-sc="duelo"] .duelo{flex:1}
+  #app[data-sc="duelo"]>.card{padding:clamp(20px,5vh,56px)}
+  #app[data-sc="duelo"] .dl{justify-content:space-around}
+  #app[data-sc="ej"] .ej-cuerpo:first-child .card{flex:1;justify-content:center}
+  #app[data-sc="ej"] .vis svg{max-width:none;max-height:48vh;width:100%}
+  #app[data-sc="ej"] .say .mas,#app[data-sc="tut"] .say .mas{transform:scale(1.2);transform-origin:bottom left}
+  #app[data-sc="ej"] .kp,#app[data-sc="ej"] .ops{max-width:none}
+  #app[data-sc="ej"] .ops{gap:14px}
+  /* Tutorial: dibujo a la izquierda, mascota y botones a la derecha */
+  #app[data-sc="tut"]{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto 1fr auto;column-gap:28px;row-gap:18px;min-height:100dvh}
+  #app[data-sc="tut"]>.top{grid-column:1/-1}
+  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4}
+  #app[data-sc="tut"]>.say{grid-column:2;grid-row:2;align-self:center;flex-direction:column;align-items:center;gap:14px}
+  #app[data-sc="tut"]>.say .bub{width:100%;box-sizing:border-box}
+  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3}
+  #app[data-sc="tut"] .tutt{font-size:clamp(1.5rem,3.6vh,2.1rem)}
+  #app[data-sc="tut"] .vis svg{max-width:none;max-height:56vh}
+  /* Proyector y duelo */
+  #app[data-sc="proy"],#app[data-sc="duelo"]{max-width:none;padding-left:40px;padding-right:40px}
+  .proy-op .op{font-size:clamp(4rem,18vh,11rem)!important}
+  .proy-txt{font-size:clamp(1.4rem,4vh,2.6rem)}
+  .proy-op .vis svg{max-height:50vh;max-width:none}
+  .proy .acts .bt{min-height:72px;font-size:1.5rem}
+  .dl .opc{min-height:clamp(100px,18vh,190px);font-size:clamp(2.4rem,8vh,4.6rem)}
+  .dl-h b{font-size:1.5rem}.dl-p{font-size:2.6rem;min-width:68px;height:68px}
+  .dl-m{font-size:1.2rem}
+  /* Zona del tutor */
+  #app[data-sc="tz"],#app[data-sc="aulacfg"]{max-width:1100px}
+  .tz{font-size:16px}
+}
+@media (min-width:1500px) and (orientation:landscape){#app[data-sc="ej"],#app[data-sc="tut"],#app[data-sc="inicio"]{max-width:1400px}}
+/* Tablet vertical */
+@media (min-width:700px) and (min-height:900px) and (orientation:portrait){
+  body{font-size:20px}
+  #app{max-width:860px;gap:20px}
+  .bt{min-height:64px;font-size:1.3rem}
+  .opc{min-height:96px;font-size:2.6rem}.ops.una .opc{font-size:1.5rem}
+  .kp{max-width:480px;gap:10px}.kp button{height:78px;font-size:2rem}
+  .op{font-size:clamp(3.4rem,10vw,5.4rem)}.op.larga{font-size:clamp(2.6rem,8vw,4.2rem)}.op.muy{font-size:clamp(2rem,6vw,3.2rem)}
+  .bub{font-size:1.25rem}.tutt{font-size:1.7rem}
+  .card{padding:26px 22px}
+  .lc b{font-size:1.45rem}.lc small{font-size:1.08rem}.lc .ico{width:64px;height:64px}
+  .mapa{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  #app[data-sc="tut"] .vis svg{max-width:640px;max-height:44vh}
+  #app[data-sc="ej"] .vis svg{max-width:560px;max-height:34vh}
+  .proy-op .vis svg{max-height:40vh;max-width:none}
+  .dl .opc{min-height:86px;font-size:2.4rem}
+}

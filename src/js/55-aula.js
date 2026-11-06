@@ -41,6 +41,17 @@ function aulaToggle(id) {
 
 /* ---------- Modo proyector ---------- */
 let PRY = null;
+function pantallaCompleta() { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { } }
+/* Atajos para mando presentador: Espacio, →, AvPág, Intro = respuesta / siguiente; D = dibujo. */
+document.addEventListener('keydown', ev => {
+  if (scr !== 'proy' || !PRY || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  const t = ev.target; if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+  if (t && t.tagName === 'BUTTON' && (ev.key === ' ' || ev.key === 'Enter')) return;
+  if ([' ', 'ArrowRight', 'PageDown', 'Enter'].includes(ev.key)) {
+    ev.preventDefault();
+    if (PRY.ver) proySig(); else { PRY.ver = true; SON.bien(); pintar(); }
+  } else if (ev.key === 'd' || ev.key === 'D') { PRY.dib = !PRY.dib; pintar(); }
+});
 function empezarProy() { PRY = { it: aulaItem(), n: 1, ver: false, dib: false, t0: Date.now() }; go('proy'); proyReloj(); }
 function proyReloj() {
   clearInterval(PRY && PRY.int); if (!PRY || !AULA.tiempo) return;
@@ -51,7 +62,7 @@ function proySig() { PRY = Object.assign(PRY, { it: aulaItem(AULA.nivel, PRY.it)
 SC.proy = () => {
   const it = PRY.it, q = AULA.tiempo ? Math.max(0, AULA.tiempo - Math.floor((Date.now() - PRY.t0) / 1000)) : null;
   return `<div class="proy"><div class="top"><button class="rnd" onclick="clearInterval(PRY.int);go('aulacfg')" aria-label="Salir">${ico('x', 20, 2.4)}</button>
-  <span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span>${q !== null ? `<span class="pill" id="prt">${q}</span>` : ''}<span class="pill" style="background:var(--card);color:var(--mu)">${PRY.n}</span></div>
+  <span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span>${document.fullscreenEnabled ? `<button class="rnd" onclick="pantallaCompleta()" aria-label="Pantalla completa">${ico('expand', 20, 2.2)}</button>` : ''}${q !== null ? `<span class="pill" id="prt">${q}</span>` : ''}<span class="pill" style="background:var(--card);color:var(--mu)">${PRY.n}</span></div>
   <div class="proy-op">${it.txt ? `<div class="proy-txt">${esc(it.txt)}</div>` : ''}<div class="op">${huecoHTML(it.q, PRY.ver ? fmt(it.r) : '')}</div>
   ${PRY.dib && it.vis ? `<div class="vis">${VIS.dibujar(Object.assign({ ocultarFin: !PRY.ver }, it.vis))}</div>` : ''}</div>${retoHTML(true)}
   <div class="acts">${it.vis ? `<button class="bt sec" onclick="PRY.dib=!PRY.dib;pintar()">${ico('bulb', 20)}${PRY.dib ? 'Quitar dibujo' : 'Dibujo'}</button>` : ''}
@@ -71,7 +82,7 @@ SC.duelo = () => {
   };
   if (DUE.gana !== null) return `<div class="res pop">${mascota(150, 'feliz')}<h2>¡Gana el ${['equipo azul', 'equipo naranja'][DUE.gana]}!</h2><p class="mut" style="margin:0;font-size:1.2rem">${DUE.p[0]} – ${DUE.p[1]}</p></div>
     <div class="acts"><button class="bt sec" onclick="go('aulacfg')">Ajustes</button><button class="bt" onclick="empezarDuelo()">${ico('refresh', 20)}Revancha</button></div>`;
-  return `<div class="top"><button class="rnd" onclick="go('aulacfg')" aria-label="Salir">${ico('x', 20, 2.4)}</button><span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span><span class="pill">A ${AULA.meta}</span></div>
+  return `<div class="top"><button class="rnd" onclick="go('aulacfg')" aria-label="Salir">${ico('x', 20, 2.4)}</button><span class="pill" style="background:var(--acs);color:var(--aci)">${esc(it.nombre)}</span><span style="flex:1"></span>${document.fullscreenEnabled ? `<button class="rnd" onclick="pantallaCompleta()" aria-label="Pantalla completa">${ico('expand', 20, 2.2)}</button>` : ''}<span class="pill">A ${AULA.meta}</span></div>
   <div class="card"><div class="op">${huecoHTML(it.q, DUE.ganaRonda !== null || (DUE.bloq[0] && DUE.bloq[1]) ? fmt(it.r) : '')}</div></div>
   <div class="duelo">${lado(0)}${lado(1)}</div>
   ${DUE.ganaRonda !== null || (DUE.bloq[0] && DUE.bloq[1]) ? `<button class="bt" onclick="dueloRonda();pintar()">Siguiente${ico('chev', 20, 2.4)}</button>` : ''}`;
