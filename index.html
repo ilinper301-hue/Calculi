@@ -1852,7 +1852,7 @@ async function fbLogin() {
   } catch (e) { SYNC.err = fbErr(e); accRefresh(); if (scr === 'wel') toast(SYNC.err); }
 }
 async function fbLogout() { try { if (FB) await FB.auth.signOut(); } catch (e) {} FBU = null; try { localStorage.removeItem('calc.sync.uid'); } catch (e) {} accRefresh(); }
-const fbErr = e => { const c = e && e.code || ''; return c.includes('unauthorized-domain') ? 'Este dominio no está autorizado en Firebase (Authentication › Configuración › Dominios autorizados).' : c.includes('permission-denied') ? 'Firebase rechaza el acceso: revise las reglas de Firestore (docs/firebase.md).' : c.includes('popup-closed') || c.includes('cancelled-popup') ? 'Se cerró la ventana de Google antes de terminar.' : c.includes('network') ? 'Sin conexión. Se sincronizará cuando vuelva internet.' : (e && e.message) || 'Error desconocido'; };
+const fbErr = e => { const c = e && e.code || ''; return c.includes('unauthorized-domain') ? 'Este dominio no está autorizado en Firebase (Authentication › Configuración › Dominios autorizados).' : c.includes('permission-denied') ? 'Firebase rechaza el acceso: revisa las reglas de Firestore (docs/firebase.md).' : c.includes('popup-closed') || c.includes('cancelled-popup') ? 'Se cerró la ventana de Google antes de terminar.' : c.includes('network') ? 'Sin conexión. Se sincronizará cuando vuelva internet.' : (e && e.message) || 'Error desconocido'; };
 
 /* Ajustes generales que viajan a la nube (los de este dispositivo, como voz, sonido o tema, no) */
 const metaOf = () => { const A = EST.ajustes; return { aj: { pin: A.pin || '', perfil: A.perfil || '', curso: A.curso || 1, abierto: !!A.abierto, reto: A.reto | 0 }, gmt: EST.gmt || 0, del: EST.del || {} }; };
@@ -1883,7 +1883,7 @@ async function syncNow(force) {
     const R = {}; cs.forEach(d => { try { const o = cleanAlu(JSON.parse(d.data().d)); o.id = d.id; R[d.id] = o; } catch (e) {} });
     const RM = md.exists ? JSON.parse(md.data().meta || '{}') : null, first = localStorage.getItem('calc.sync.uid') !== u, remoteEmpty = !RM && !Object.keys(R).length;
     let mode = 'merge';
-    if (first && !remoteEmpty) mode = isBlank() ? 'down' : (force || confirm('Su cuenta ya tiene datos de otro dispositivo.\n\nAceptar: usar los datos de la cuenta (se sustituyen los de este dispositivo).\nCancelar: subir los de este dispositivo a la cuenta (se sustituyen los de la cuenta).')) ? 'down' : 'up';
+    if (first && !remoteEmpty) mode = isBlank() ? 'down' : (force || confirm('Tu cuenta ya tiene datos de otro dispositivo.\n\nAceptar: usar los datos de la cuenta (se sustituyen los de este dispositivo).\nCancelar: subir los de este dispositivo a la cuenta (se sustituyen los de la cuenta).')) ? 'down' : 'up';
     const L = {}; EST.alu.forEach(q => { L[q.id] = q; });
     const del = Object.assign({}, mode === 'up' ? {} : RM && RM.del || {}, EST.del || {}), push = {}, kill = [];
     if (mode === 'down') {
@@ -1921,11 +1921,11 @@ function accRefresh() { try { const e = document.getElementById('acc'); if (e) e
 function accSec() {
   const ago = SYNC.last ? Math.round((Date.now() - SYNC.last) / 60000) : null, when = ago === null ? 'aún no' : ago < 1 ? 'hace un momento' : ago < 60 ? `hace ${ago} min` : `hace ${Math.round(ago / 60)} h`;
   const er = SYNC.err ? `<p class="note" style="margin:8px 0 0;color:var(--no)">${esc(SYNC.err)}</p>` : '';
-  if (!FBU) return `<div id="acc"><div class="gt">Cuenta</div><div class="list" style="padding:14px"><p class="note" style="margin:0 0 10px">Entre con su cuenta de Google para guardar el progreso en la nube y tenerlo igual en todos sus dispositivos.</p><button class="bt ggl" onclick="fbLogin()">${GLG} Entrar con Google</button>${er}</div></div>`;
+  if (!FBU) return `<div id="acc"><div class="gt">Cuenta</div><div class="list" style="padding:14px"><p class="note" style="margin:0 0 10px">Entra con tu cuenta de Google para guardar el progreso en la nube y tenerlo igual en todos tus dispositivos.</p><button class="bt ggl" onclick="fbLogin()">${GLG} Entrar con Google</button>${er}</div></div>`;
   return `<div id="acc"><div class="gt">Cuenta</div><div class="list" style="padding:14px"><div class="accu"><span class="av" style="background:var(--ac);color:var(--on)">${esc(((FBU.displayName || FBU.email || 'D')[0] || 'D').toUpperCase())}</span><div><b>${esc(FBU.displayName || 'Docente')}</b><small>${esc(FBU.email || '')}</small></div></div>
   <p class="note" style="margin:10px 0">${SYNC.busy ? 'Sincronizando…' : 'Última sincronización: ' + when}. Se sincroniza sola al usar la app y al cerrarla.</p>${er}
   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="bt" onclick="syncNow()"${SYNC.busy ? ' disabled' : ''}>Sincronizar ahora</button><button class="bt sec" onclick="fbLogout()">Cerrar sesión</button></div>
-  <p class="note" style="margin:10px 0 0">Los datos se guardan en la nube de forma privada: solo su cuenta puede leerlos.</p></div></div>`;
+  <p class="note" style="margin:10px 0 0">Los datos se guardan en la nube de forma privada: solo tu cuenta puede leerlos.</p></div></div>`;
 }
 /* ---- Bienvenida: botón «Entrar con Google» ---- */
 function welGo() { fbLogin(); }
