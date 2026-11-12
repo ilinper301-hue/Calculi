@@ -491,3 +491,9 @@ svg.toca{touch-action:manipulation}
   .proy-op .vis svg{max-height:40vh;max-width:none}
   .dl .opc{min-height:86px;font-size:2.4rem}
 }
+
+/* Cuenta de Google: botón blanco con logo (claro y oscuro) y ficha de la cuenta */
+.bt.ggl{background:#fff;color:#1F1F1F;border:1px solid #747775;box-shadow:none;font-weight:500;font-size:1rem;gap:10px}
+.tz .bt.ggl{min-height:44px}
+.ggl .glogo{flex:none}
+.accu{display:flex;align-items:center;gap:10px}.accu small{display:block;color:var(--mu);font-size:.85rem}

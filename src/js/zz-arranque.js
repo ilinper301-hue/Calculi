@@ -1,5 +1,6 @@
 /* ===== Arranque ===== */
 cargar();
+cuentaArranque();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => pintar());
 let primeraVez = false; try { primeraVez = !localStorage.getItem('calc.wel') && !EST.alu.length; } catch (e) {}
 if (primeraVez) { scr = 'wel'; WEL = 0; }

@@ -9,7 +9,7 @@ const AVATARES = [['🦊','#FED7AA'],['🐢','#BBF7D0'],['🐼','#E2E8F0'],['�
 function avLibre() { const usados = new Set(EST.alu.map(a => a.av)); for (let i = 0; i < AVATARES.length; i++) if (!usados.has(i)) return i; return EST.alu.length % AVATARES.length; }
 
 /** Estado por defecto. Cada alumno: {id,n,av,mt,e:{[idEstrategia]:{tut,est,h,ult,n}},dias} */
-function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false, curso: 1, dalton: false, reto: 0 }, gmt: 0 }; }
+function estadoVacio() { return { v: VERSION_DATOS, alu: [], act: null, ajustes: { voz: true, sonido: true, tema: 'auto', pin: '', perfil: '', abierto: false, curso: 1, dalton: false, reto: 0 }, gmt: 0, del: {} }; }
 
 const limpiarDias = o => Object.fromEntries(Object.entries(o && typeof o === 'object' ? o : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)]));
 const limpiarErr = o => Object.fromEntries(Object.entries(o && typeof o === 'object' ? o : {}).filter(([k]) => /^[a-z0-9]{2,20}$/.test(k)).map(([k, v]) => [k, Object.fromEntries(Object.entries(v && typeof v === 'object' ? v : {}).filter(([t, n]) => t.length <= 100 && n > 0).sort((x, y) => y[1] - x[1]).slice(0, 8).map(([t, n]) => [t, Math.min(9999, n | 0)]))]));
@@ -30,18 +30,20 @@ function limpiarAlu(a) {
     /* fecha de la prueba inicial */ diag: /^\d{4}-\d\d-\d\d$/.test(a.diag || '') ? a.diag : '',
     /* ejercicios por día (para la Zona del tutor) */ dia: Object.fromEntries(Object.entries(a.dia && typeof a.dia === 'object' ? a.dia : {}).filter(([d, n]) => /^\d{4}-\d\d-\d\d$/.test(d) && n > 0).sort().slice(-90).map(([d, n]) => [d, Math.min(9999, n | 0)])) };
 }
+/** Alumnos borrados {id: fecha} para la sincronización (los antiguos no lo tenían: se crea vacío, sin perder nada). */
+const limpiarDel = o => Object.fromEntries(Object.entries(o && typeof o === 'object' ? o : {}).filter(([k, v]) => /^[a-z0-9]{6,20}$/.test(k) && +v > 0).sort((x, y) => y[1] - x[1]).slice(0, 200).map(([k, v]) => [k, +v]));
 /** Migraciones: nunca se pierde el progreso. Añadir aquí un paso por cada cambio de VERSION_DATOS. */
 function migrar(d) {
   if (!d || typeof d !== 'object') return estadoVacio();
   const base = estadoVacio();
-  const out = { v: VERSION_DATOS, alu: (Array.isArray(d.alu) ? d.alu : []).map(limpiarAlu).slice(0, 60), act: d.act || null, ajustes: Object.assign(base.ajustes, d.ajustes || {}), gmt: +d.gmt || 0 };
+  const out = { v: VERSION_DATOS, alu: (Array.isArray(d.alu) ? d.alu : []).map(limpiarAlu).slice(0, 60), act: d.act || null, ajustes: Object.assign(base.ajustes, d.ajustes || {}), gmt: +d.gmt || 0, del: limpiarDel(d.del) };
   if (!out.alu.some(a => a.id === out.act)) out.act = null;
   return out;
 }
 let EST = estadoVacio();
 function cargar() { try { EST = migrar(JSON.parse(localStorage.getItem(KEY) || 'null')); } catch (e) { EST = estadoVacio(); } }
 let tPub = null;
-function guardar() { if (MODO_DOCENTE) return; try { localStorage.setItem(KEY, JSON.stringify(EST)); } catch (e) {} clearTimeout(tPub); tPub = setTimeout(() => typeof publicarTabula === 'function' && publicarTabula(), 2000); }
+function guardar() { if (MODO_DOCENTE) return; const ac = EST.alu.find(a => a.id === EST.act), t = Date.now(); if (ac) ac.mt = t; EST.gmt = t; try { localStorage.setItem(KEY, JSON.stringify(EST)); } catch (e) {} if (typeof syncSoon === 'function') syncSoon(); clearTimeout(tPub); tPub = setTimeout(() => typeof publicarTabula === 'function' && publicarTabula(), 2000); }
 
 /** Modo Docente: todo abierto, no se guarda nada (como en Lectori y Barri). */
 let MODO_DOCENTE = false;

@@ -111,12 +111,12 @@ function anadirTz() { const n = $('#nn').value.trim(); if (!n) return $('#nn').f
 function cambiarAnimal(i) { const al = EST.alu.find(x => x.id === TZ.sub.slice(7)); if (al) { al.av = i; al.mt = Date.now(); guardarAjustes(); } TZ.sub = ''; pintar(); }
 function cambiarCurso(id, c) { const a = EST.alu.find(x => x.id === id); a.curso = c; a.mt = Date.now(); guardarAjustes(); pintar(); }
 function renombrar(id) { const a = EST.alu.find(x => x.id === id), n = prompt('Nuevo nombre', a.n); if (n && n.trim()) { a.n = ss(n, 20); a.mt = Date.now(); guardarAjustes(); pintar(); } }
-function borrarAlu(id) { const a = EST.alu.find(x => x.id === id); if (!confirm(`¿Borrar a ${a.n} y todo su progreso?`)) return; EST.alu = EST.alu.filter(x => x.id !== id); if (EST.act === id) EST.act = EST.alu[0] ? EST.alu[0].id : null; guardarAjustes(); pintar(); }
+function borrarAlu(id) { const a = EST.alu.find(x => x.id === id); if (!confirm(`¿Borrar a ${a.n} y todo su progreso?`)) return; EST.alu = EST.alu.filter(x => x.id !== id); EST.del[id] = Date.now(); if (EST.act === id) EST.act = EST.alu[0] ? EST.alu[0].id : null; guardarAjustes(); pintar(); }
 
 function tzAjustes() {
   const A = EST.ajustes, sw = (k, t, s) => fila('', t, s, `EST.ajustes.${k}=!EST.ajustes.${k};guardarAjustes();pintar()`, `<span class="sw${A[k] ? ' on' : ''}"></span>`);
   const tema = { auto: 'Automático', light: 'Claro', dark: 'Oscuro' }[A.tema];
-  return `<div class="gt">Aula</div><div class="list">
+  return `${accSec()}<div class="gt">Aula</div><div class="list">
   ${fila('users', 'Perfil', A.perfil === 'docente' ? 'Docente: toda la clase' : 'Familias: en casa', "EST.ajustes.perfil=EST.ajustes.perfil==='docente'?'familia':'docente';guardarAjustes();pintar()", `<span class="val">Cambiar</span>`)}
   ${fila('grad', 'Curso de la clase', 'Para los alumnos nuevos y la pestaña Clase', "EST.ajustes.curso=(EST.ajustes.curso||1)%6+1;guardarAjustes();pintar()", `<span class="val">${nomCurso(EST.ajustes.curso || 1)}</span>`)}
   ${sw('abierto', 'Todos los trucos abiertos', 'También los de cursos superiores')}
@@ -128,7 +128,7 @@ function tzAjustes() {
   ${fila('download', 'Guardar copia de seguridad', 'Archivo con todos los alumnos y su progreso', 'exportar()')}
   ${fila('upload', 'Restaurar copia', '', 'importar()')}
   ${fila('trash', 'Borrar todos los datos', 'No se puede deshacer', 'borrarTodo()', '', 'dz')}</div>
-  <p class="note">Calculi · Los datos se guardan solo en este dispositivo. La sincronización con Google llegará pronto.</p>`;
+  <p class="note">Calculi · Los datos se guardan en este dispositivo y, si entra con Google, también en la nube.</p>`;
 }
 function exportar() { const b = new Blob([JSON.stringify(EST, null, 1)], { type: 'application/json' }), u = URL.createObjectURL(b), l = document.createElement('a'); l.href = u; l.download = `calculi-copia-${hoy()}.json`; l.click(); setTimeout(() => URL.revokeObjectURL(u), 2000); try { localStorage.setItem('calc.bk', Date.now()); } catch (e) {} toast('Copia descargada'); }
 function importar() {
@@ -136,7 +136,7 @@ function importar() {
   i.onchange = () => { const f = i.files[0]; if (!f) return; f.text().then(t => { try { const d = migrar(JSON.parse(t)); if (confirm(`La copia tiene ${d.alu.length} alumnos. ¿Sustituir los datos actuales?`)) { EST = d; guardarAjustes(); pintar(); toast('Copia restaurada'); } } catch (e) { alert('Ese archivo no es una copia de Calculi.'); } }); };
   i.click();
 }
-function borrarTodo() { if (!confirm('¿Borrar todos los alumnos, el progreso y los ajustes de Calculi?')) return; EST = estadoVacio(); guardarAjustes(); try { localStorage.removeItem('calc.wel'); } catch (e) {} WEL = 0; go('wel'); }
+function borrarTodo() { if (!confirm('¿Borrar todos los alumnos, el progreso y los ajustes de Calculi?')) return; const del = Object.assign({}, EST.del); EST.alu.forEach(a => { del[a.id] = Date.now(); }); EST = estadoVacio(); EST.del = limpiarDel(del); guardarAjustes(); try { localStorage.removeItem('calc.wel'); } catch (e) {} WEL = 0; go('wel'); }
 
 /* ---------- Resumen para las familias ---------- */
 function textoResumen(a) {

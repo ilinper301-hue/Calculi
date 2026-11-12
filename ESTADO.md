@@ -36,7 +36,7 @@
 - [x] Resumen para familias
 
 ## Fase 4 · Ecosistema
-- [ ] Sincronización con Firebase (colección `calculo`, subcolección `alu`)
+- [x] Sincronización con Firebase (colección `calculo`, subcolección `alu`)
 - [ ] Importar alumnos de Lectori (`ar2`) y Barri (`barri.v1`) del mismo dispositivo
 - [ ] Resumen de evaluación en formato común para Tabula
 
@@ -53,7 +53,7 @@
 - [x] Colores para daltonismo (Ajustes)
 - [x] Resumen para Tabula en `calc.tabula` y CSV de evaluación
 - [x] Lector en Tabula: botón «Calculi» en el Cuaderno (PR #15 de Tabula, pendiente de fusionar)
-- [ ] Sincronización con Firebase
+- [x] Sincronización con Firebase
 
 ## Mejoras (v1.4)
 - [x] Animalitos como avatar (30), elegibles al crear y en la Zona del tutor

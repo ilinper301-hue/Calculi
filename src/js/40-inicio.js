@@ -46,7 +46,8 @@ SC.wel = () => {
   if (WEL === 0) return `${cabecera()}<div class="wel"><div class="gcard pop">${mascota(124)}<h2>¡Bienvenido a Calculi!</h2>
     <p class="mut">Trucos de cálculo mental explicados paso a paso y practicados jugando. Sin anuncios y sin conexión.</p>
     <button class="bt w" onclick="WEL=1;pintar()">Empezar</button>
-    <p class="mut" style="font-size:.85rem">El progreso se guarda en este dispositivo. Más adelante podrás sincronizarlo con tu cuenta de Google.</p></div></div>`;
+    <button class="bt w ggl" onclick="welGo()">${GLG} Entrar con Google</button>
+    <p class="mut" style="font-size:.85rem">El progreso se guarda en este dispositivo. Con tu cuenta de Google también se guarda en la nube.</p></div></div>`;
   if (WEL === 1) return `${cabecera()}<div class="wel"><div class="gcard pop">${pasos}<h2>¿Quién usa Calculi?</h2>
     <p class="mut">Elige tu perfil. Podrás cambiarlo en la Zona del tutor.</p>
     <button class="prf" onclick="EST.ajustes.perfil='docente';WEL=2;pintar()">${ico('grad', 26)}<span><b>Perfil Docente</b><small>Toda la clase, dominio de cada truco e informes</small></span></button>
