@@ -1841,6 +1841,7 @@ async function fbInit() {
     FB = { auth: firebase.auth(), db: firebase.firestore() };
     FB.auth.onAuthStateChanged(u => { FBU = u; if (u) syncNow().catch(() => {}); accRefresh(); });
     try { await FB.auth.getRedirectResult(); } catch (e) { SYNC.err = fbErr(e); }
+    try { localStorage.removeItem('calc.fb.redir'); } catch (e) {}
   }
   return FB;
 }
@@ -1848,7 +1849,7 @@ async function fbLogin() {
   SYNC.err = '';
   try {
     const f = await fbInit(), pv = new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({ prompt: 'select_account' });
-    try { await f.auth.signInWithPopup(pv); } catch (e) { if (/popup|operation-not-supported/.test(e.code || '')) await f.auth.signInWithRedirect(pv); else throw e; }
+    try { await f.auth.signInWithPopup(pv); } catch (e) { if (/popup|operation-not-supported/.test(e.code || '')) { try { localStorage.setItem('calc.fb.redir', '1'); } catch (e2) {} await f.auth.signInWithRedirect(pv); } else throw e; }
   } catch (e) { SYNC.err = fbErr(e); accRefresh(); if (scr === 'wel') toast(SYNC.err); }
 }
 async function fbLogout() { try { if (FB) await FB.auth.signOut(); } catch (e) {} FBU = null; try { localStorage.removeItem('calc.sync.uid'); } catch (e) {} accRefresh(); }
@@ -1911,6 +1912,7 @@ async function syncNow(force) {
     SYNC.busy = false; accRefresh();
     try {
       if (scr === 'wel' && FBU && EST.alu.length) { localStorage.setItem('calc.wel', '1'); go('inicio'); }
+      else if (scr === 'wel' && FBU && WEL === 0) { WEL = EST.ajustes.perfil ? 2 : 1; pintar(); toast('Sesión iniciada con Google'); }
       else if (['inicio', 'mapa', 'logros', 'tz'].includes(scr) && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || '')) pintar();
     } catch (e) {}
   }
@@ -1931,7 +1933,7 @@ function accSec() {
 function welGo() { fbLogin(); }
 /* ---- Arranque: si ya había sesión, se reconecta; y se sincroniza al cerrar o ocultar la app ---- */
 function cuentaArranque() {
-  try { if (localStorage.getItem('calc.sync.uid') && navigator.onLine !== false) fbInit().catch(() => {}); document.addEventListener('visibilitychange', () => { if (document.hidden && FBU && !MODO_DOCENTE) { clearTimeout(SYNC.t); syncNow().catch(() => {}); } }); } catch (e) {}
+  try { if ((localStorage.getItem('calc.sync.uid') || localStorage.getItem('calc.fb.redir')) && navigator.onLine !== false) fbInit().catch(() => {}); document.addEventListener('visibilitychange', () => { if (document.hidden && FBU && !MODO_DOCENTE) { clearTimeout(SYNC.t); syncNow().catch(() => {}); } }); } catch (e) {}
 }
 
 /* ---- js/55-aula.js ---- */
