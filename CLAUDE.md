@@ -55,3 +55,6 @@ Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/Calculi/` (lo q
 
 ## Cómo probar
 `python3 tools/build.py && python3 -m http.server` y abrir en el navegador (también en móvil horizontal y vertical). Sin errores en consola; crear perfil, hacer una actividad y entrar en la Zona del tutor. Si hay cambios para móviles instalados, subir la versión de `sw.js`.
+
+## Ecosistema
+Antes de tocar algo que una app lea o deje para otra (alumnado, resultados, enlaces entre apps), lee `ECOSISTEMA.md`: es el contrato común de las seis apps.
