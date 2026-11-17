@@ -1,7 +1,7 @@
 // Calculi: funciona sin conexión. Abre al instante con la copia guardada y la actualiza por detrás;
 // si la página ha cambiado, avisa a la app («Hay una versión nueva»).
 // Prefijo propio «calc-pwa-»: comparte dominio con Lectori y Barri y solo borra sus propias cachés.
-const V="calc-pwa-20",CORE=["./","index.html","manifest.webmanifest","icon-192.png","icon-512.png","fonts/fredoka.woff","fonts/fredoka-ext.woff","fonts/inter-400.woff","fonts/inter-500.woff","fonts/inter-600.woff"];
+const V="calc-pwa-21",CORE=["./","index.html","manifest.webmanifest","icon-192.png","icon-512.png","fonts/fredoka.woff","fonts/fredoka-ext.woff","fonts/inter-400.woff","fonts/inter-500.woff","fonts/inter-600.woff"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>Promise.all(CORE.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x.startsWith("calc-pwa-")&&x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 const esPagina=u=>/\/(index\.html)?$/.test(u.pathname);
