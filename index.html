@@ -116,8 +116,12 @@ h1,h2,h3{margin:0;font-weight:500}
 .mw.t1{background:var(--t1b)}.mw.t1 .gl{background:#2563EB}.mw.t1 .br i{background:#2563EB}
 .mw.t2{background:var(--t2b)}.mw.t2 .gl{background:#16A34A}.mw.t2 .br i{background:#16A34A}
 .mw.t3{background:var(--t3b)}.mw.t3 .gl{background:#7C3AED}.mw.t3 .br i{background:#7C3AED}
-.mw.lock{opacity:.5}.mw.lock .gl{background:var(--mu)!important}
-.mw.sug{outline:3px solid var(--pill);outline-offset:2px}
+/* Bloqueados: fondo neutro y texto legible (antes se apagaba toda la tarjeta con opacidad) */
+.mw.lock{background:var(--soft)!important;box-shadow:inset 0 0 0 2px var(--bd2);color:var(--mu)}.mw.lock .gl{background:var(--bd2)!important;color:var(--mu)}.mw.lock b{color:var(--mu);font-weight:500}.mw.lock .br{background:var(--bd)}.mw.lock .br i{background:var(--bd2)}
+.mw.lock .lk{color:var(--mu);opacity:1}
+/* Siguiente truco: contorno, sombra y etiqueta */
+.mw.sug{outline:3px solid var(--pill);outline-offset:2px;box-shadow:0 8px 18px rgba(251,191,36,.35)}
+.mw.sug::after{content:'Ahora';position:absolute;top:-10px;right:10px;background:var(--pill);color:var(--onpill);font-weight:700;font-size:.72rem;line-height:1;padding:5px 9px;border-radius:999px}
 .mw .lk{position:absolute;top:10px;right:10px;color:var(--mu)}
 :root[data-theme="dark"] .mw .br{background:rgba(255,255,255,.1)}
 
