@@ -103,8 +103,12 @@ h1,h2,h3{margin:0;font-weight:500}
 .mw.t1{background:var(--t1b)}.mw.t1 .gl{background:#2563EB}.mw.t1 .br i{background:#2563EB}
 .mw.t2{background:var(--t2b)}.mw.t2 .gl{background:#16A34A}.mw.t2 .br i{background:#16A34A}
 .mw.t3{background:var(--t3b)}.mw.t3 .gl{background:#7C3AED}.mw.t3 .br i{background:#7C3AED}
-.mw.lock{opacity:.5}.mw.lock .gl{background:var(--mu)!important}
-.mw.sug{outline:3px solid var(--pill);outline-offset:2px}
+/* Bloqueados: fondo neutro y texto legible (antes se apagaba toda la tarjeta con opacidad) */
+.mw.lock{background:var(--soft)!important;box-shadow:inset 0 0 0 2px var(--bd2);color:var(--mu)}.mw.lock .gl{background:var(--bd2)!important;color:var(--mu)}.mw.lock b{color:var(--mu);font-weight:500}.mw.lock .br{background:var(--bd)}.mw.lock .br i{background:var(--bd2)}
+.mw.lock .lk{color:var(--mu);opacity:1}
+/* Siguiente truco: contorno, sombra y etiqueta */
+.mw.sug{outline:3px solid var(--pill);outline-offset:2px;box-shadow:0 8px 18px rgba(251,191,36,.35)}
+.mw.sug::after{content:'Ahora';position:absolute;top:-10px;right:10px;background:var(--pill);color:var(--onpill);font-weight:700;font-size:.72rem;line-height:1;padding:5px 9px;border-radius:999px}
 .mw .lk{position:absolute;top:10px;right:10px;color:var(--mu)}
 :root[data-theme="dark"] .mw .br{background:rgba(255,255,255,.1)}
 
@@ -121,6 +125,9 @@ h1,h2,h3{margin:0;font-weight:500}
 .lvr .tx2{flex:1;min-width:0}.lvr b{font-weight:500;font-size:1.15rem;display:block}.lvr small{color:var(--mu);font-size:.92rem}
 .lvr .go{width:44px;height:44px;border-radius:50%;background:var(--ac);color:var(--on);display:grid;place-items:center;flex:none}
 .lvr .es{color:var(--pill);font-size:.95rem;letter-spacing:-1px}
+/* Pantalla del truco: destaca solo el paso que toca; el resto, más suave */
+.lvr.now{border-color:var(--pill);box-shadow:0 8px 20px rgba(251,191,36,.3);padding:18px 16px 18px 18px}.lvr.now b{font-size:1.3rem}.lvr.now .n{background:var(--pill);color:var(--onpill)}.lvr.now .go{width:52px;height:52px}
+.lvr.hecho,.lvr.luego{box-shadow:none;background:var(--soft);border-color:transparent}.lvr.hecho .go,.lvr.luego .go{background:var(--bd2);color:var(--mu)}.lvr.luego .n{background:var(--bd);color:var(--mu)}
 
 /* ================= Ejercicio ================= */
 .top{display:flex;align-items:center;gap:10px}
@@ -278,10 +285,13 @@ h1,h2,h3{margin:0;font-weight:500}
 .gl{display:flex!important;align-items:center;justify-content:center;gap:1px;white-space:nowrap}
 .acts .bt{white-space:nowrap;font-size:1.08rem;padding:0 14px}
 .txa{min-height:300px}
-#app[data-sc="ej"] .ej-lado,#app[data-sc="tut"] .card{flex:1}
+#app[data-sc="ej"] .ej-lado{flex:1}
 #app[data-sc="ej"] .ej-lado{display:flex;flex-direction:column;justify-content:space-between;gap:12px}
 #app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:auto}
 #app[data-sc="tut"] .card{justify-content:center}
+/* Tutorial en vertical: dibujo y explicación juntos, centrados; el botón abajo */
+#app[data-sc="tut"]>.card{flex:none;margin-top:auto}#app[data-sc="tut"]>.acts{margin-top:auto}
+#app[data-sc="tut"] .tutt{font-size:clamp(1.4rem,5.8vw,1.9rem)}#app[data-sc="tut"] .say .bub{padding:14px 16px}
 @media (orientation:landscape) and (min-width:820px){#app[data-sc="ej"] .ej-lado{display:grid;grid-template-columns:1.1fr 1fr;align-items:center}#app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:0}}
 #app[data-sc="tut"] .vis svg{width:100%;max-width:480px;max-height:46vh}
 #app[data-sc="ej"] .vis svg{width:100%;max-width:380px;max-height:30vh}
@@ -459,10 +469,10 @@ svg.toca{touch-action:manipulation}
   /* Tutorial: dibujo a la izquierda, mascota y botones a la derecha */
   #app[data-sc="tut"]{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto 1fr auto;column-gap:28px;row-gap:18px;min-height:100dvh}
   #app[data-sc="tut"]>.top{grid-column:1/-1}
-  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4}
+  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4;flex:none;margin:0}
   #app[data-sc="tut"]>.say{grid-column:2;grid-row:2;align-self:center;flex-direction:column;align-items:center;gap:14px}
   #app[data-sc="tut"]>.say .bub{width:100%;box-sizing:border-box}
-  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3}
+  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3;margin-top:0}
   #app[data-sc="tut"] .tutt{font-size:clamp(1.5rem,3.6vh,2.1rem)}
   #app[data-sc="tut"] .vis svg{max-width:none;max-height:56vh}
   /* Proyector y duelo */
@@ -506,3 +516,10 @@ svg.toca{touch-action:manipulation}
 .tz .bt.ggl{min-height:44px}
 .ggl .glogo{flex:none}
 .accu{display:flex;align-items:center;gap:10px}.accu small{display:block;color:var(--mu);font-size:.85rem}
+
+/* Resultado: operaciones para repasar */
+.malas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:6px}.malas b{width:100%;font-size:.9rem;color:var(--mu);font-weight:600}
+.malas span{background:var(--card);border:1.5px solid var(--bd);border-radius:12px;padding:6px 12px;font-weight:600;font-size:1.05rem}
+/* Aviso de versión nueva */
+.upd{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;max-width:460px;margin:auto;display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--tx);color:var(--bg);padding:10px 12px 10px 16px;border-radius:16px;font-weight:500;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.upd button{background:var(--pill);color:var(--onpill);border:0;border-radius:12px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}

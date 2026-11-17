@@ -51,7 +51,7 @@ Se publicará en GitHub Pages: `https://ilinper301-hue.github.io/Calculi/` (lo q
 - `tests/test_motor.js` (`node tests/test_motor.js`): comprueba todas las estrategias (cuentas, opciones, coherencia dibujo ↔ pregunta, juegos, repaso).
 - `tests/muestras.js` (`node tests/muestras.js c4`): describe en palabras cada ejercicio para revisarlo a mano.
 - `tests/estres.js`: llama miles de veces a cada generador para detectar bucles lentos.
-- `ESTADO.md` lista de pasos; si escribo «Continúa», léela y sigue por el primer paso sin marcar.
+- `ESTADO.md` lista de pasos; si escribo «Continúa», lee SOLO la sección «▶ SIGUIENTE» (arriba del todo) y haz la primera tarea sin marcar. Las fases antiguas son historial. Si estás en una rama de mejoras sin fusionar, ESTADO.md de `main` puede estar desactualizado: léelo de la rama más reciente.
 
 ## Cómo probar
 `python3 tools/build.py && python3 -m http.server` y abrir en el navegador (también en móvil horizontal y vertical). Sin errores en consola; crear perfil, hacer una actividad y entrar en la Zona del tutor. Si hay cambios para móviles instalados, subir la versión de `sw.js`.

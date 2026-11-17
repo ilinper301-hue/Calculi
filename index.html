@@ -116,8 +116,12 @@ h1,h2,h3{margin:0;font-weight:500}
 .mw.t1{background:var(--t1b)}.mw.t1 .gl{background:#2563EB}.mw.t1 .br i{background:#2563EB}
 .mw.t2{background:var(--t2b)}.mw.t2 .gl{background:#16A34A}.mw.t2 .br i{background:#16A34A}
 .mw.t3{background:var(--t3b)}.mw.t3 .gl{background:#7C3AED}.mw.t3 .br i{background:#7C3AED}
-.mw.lock{opacity:.5}.mw.lock .gl{background:var(--mu)!important}
-.mw.sug{outline:3px solid var(--pill);outline-offset:2px}
+/* Bloqueados: fondo neutro y texto legible (antes se apagaba toda la tarjeta con opacidad) */
+.mw.lock{background:var(--soft)!important;box-shadow:inset 0 0 0 2px var(--bd2);color:var(--mu)}.mw.lock .gl{background:var(--bd2)!important;color:var(--mu)}.mw.lock b{color:var(--mu);font-weight:500}.mw.lock .br{background:var(--bd)}.mw.lock .br i{background:var(--bd2)}
+.mw.lock .lk{color:var(--mu);opacity:1}
+/* Siguiente truco: contorno, sombra y etiqueta */
+.mw.sug{outline:3px solid var(--pill);outline-offset:2px;box-shadow:0 8px 18px rgba(251,191,36,.35)}
+.mw.sug::after{content:'Ahora';position:absolute;top:-10px;right:10px;background:var(--pill);color:var(--onpill);font-weight:700;font-size:.72rem;line-height:1;padding:5px 9px;border-radius:999px}
 .mw .lk{position:absolute;top:10px;right:10px;color:var(--mu)}
 :root[data-theme="dark"] .mw .br{background:rgba(255,255,255,.1)}
 
@@ -134,6 +138,9 @@ h1,h2,h3{margin:0;font-weight:500}
 .lvr .tx2{flex:1;min-width:0}.lvr b{font-weight:500;font-size:1.15rem;display:block}.lvr small{color:var(--mu);font-size:.92rem}
 .lvr .go{width:44px;height:44px;border-radius:50%;background:var(--ac);color:var(--on);display:grid;place-items:center;flex:none}
 .lvr .es{color:var(--pill);font-size:.95rem;letter-spacing:-1px}
+/* Pantalla del truco: destaca solo el paso que toca; el resto, más suave */
+.lvr.now{border-color:var(--pill);box-shadow:0 8px 20px rgba(251,191,36,.3);padding:18px 16px 18px 18px}.lvr.now b{font-size:1.3rem}.lvr.now .n{background:var(--pill);color:var(--onpill)}.lvr.now .go{width:52px;height:52px}
+.lvr.hecho,.lvr.luego{box-shadow:none;background:var(--soft);border-color:transparent}.lvr.hecho .go,.lvr.luego .go{background:var(--bd2);color:var(--mu)}.lvr.luego .n{background:var(--bd);color:var(--mu)}
 
 /* ================= Ejercicio ================= */
 .top{display:flex;align-items:center;gap:10px}
@@ -291,10 +298,13 @@ h1,h2,h3{margin:0;font-weight:500}
 .gl{display:flex!important;align-items:center;justify-content:center;gap:1px;white-space:nowrap}
 .acts .bt{white-space:nowrap;font-size:1.08rem;padding:0 14px}
 .txa{min-height:300px}
-#app[data-sc="ej"] .ej-lado,#app[data-sc="tut"] .card{flex:1}
+#app[data-sc="ej"] .ej-lado{flex:1}
 #app[data-sc="ej"] .ej-lado{display:flex;flex-direction:column;justify-content:space-between;gap:12px}
 #app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:auto}
 #app[data-sc="tut"] .card{justify-content:center}
+/* Tutorial en vertical: dibujo y explicación juntos, centrados; el botón abajo */
+#app[data-sc="tut"]>.card{flex:none;margin-top:auto}#app[data-sc="tut"]>.acts{margin-top:auto}
+#app[data-sc="tut"] .tutt{font-size:clamp(1.4rem,5.8vw,1.9rem)}#app[data-sc="tut"] .say .bub{padding:14px 16px}
 @media (orientation:landscape) and (min-width:820px){#app[data-sc="ej"] .ej-lado{display:grid;grid-template-columns:1.1fr 1fr;align-items:center}#app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:0}}
 #app[data-sc="tut"] .vis svg{width:100%;max-width:480px;max-height:46vh}
 #app[data-sc="ej"] .vis svg{width:100%;max-width:380px;max-height:30vh}
@@ -472,10 +482,10 @@ svg.toca{touch-action:manipulation}
   /* Tutorial: dibujo a la izquierda, mascota y botones a la derecha */
   #app[data-sc="tut"]{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto 1fr auto;column-gap:28px;row-gap:18px;min-height:100dvh}
   #app[data-sc="tut"]>.top{grid-column:1/-1}
-  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4}
+  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4;flex:none;margin:0}
   #app[data-sc="tut"]>.say{grid-column:2;grid-row:2;align-self:center;flex-direction:column;align-items:center;gap:14px}
   #app[data-sc="tut"]>.say .bub{width:100%;box-sizing:border-box}
-  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3}
+  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3;margin-top:0}
   #app[data-sc="tut"] .tutt{font-size:clamp(1.5rem,3.6vh,2.1rem)}
   #app[data-sc="tut"] .vis svg{max-width:none;max-height:56vh}
   /* Proyector y duelo */
@@ -519,6 +529,13 @@ svg.toca{touch-action:manipulation}
 .tz .bt.ggl{min-height:44px}
 .ggl .glogo{flex:none}
 .accu{display:flex;align-items:center;gap:10px}.accu small{display:block;color:var(--mu);font-size:.85rem}
+
+/* Resultado: operaciones para repasar */
+.malas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:6px}.malas b{width:100%;font-size:.9rem;color:var(--mu);font-weight:600}
+.malas span{background:var(--card);border:1.5px solid var(--bd);border-radius:12px;padding:6px 12px;font-weight:600;font-size:1.05rem}
+/* Aviso de versión nueva */
+.upd{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;max-width:460px;margin:auto;display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--tx);color:var(--bg);padding:10px 12px 10px 16px;border-radius:16px;font-weight:500;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.upd button{background:var(--pill);color:var(--onpill);border:0;border-radius:12px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
@@ -1030,7 +1047,29 @@ function aplicarTema() {
 }
 function cambiarTema() { EST.ajustes.tema = temaOscuro() ? 'light' : 'dark'; guardar(); pintar(); }
 function go(s) { scr = s; VOZ.callar(); pintar(); window.scrollTo(0, 0); }
-function pintar() { aplicarTema(); aplicarDalton(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; }
+function pintar() { aplicarTema(); aplicarDalton(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; avisoVersion(); }
+/* ---------- Botón «atrás» del móvil: sube un nivel en vez de salir de la app ---------- */
+const PADRE = { tut: 'estr', juego: 'estr', estr: 'mapa', mapa: 'inicio', piedras: 'inicio', logros: 'inicio', quien: 'inicio', tablas: 'inicio', pin: 'inicio', res: 'estr', aulacfg: 'tz', proy: 'aulacfg', duelo: 'aulacfg', ficha: 'aulacfg', bingo: 'aulacfg', bingocart: 'bingo', bingojuego: 'bingo', informe: 'tz' };
+function atrasMovil() {
+  if (scr === 'ej' && SES) { const s = salirSesion(); SES = null; (0, eval)(s.replace('SES=null;', '')); return true; }
+  if (scr === 'wel' && WEL > 0) { WEL--; pintar(); return true; }
+  if (scr === 'tz' && TZ.sub) { TZ.sub = ''; pintar(); return true; }
+  if (scr === 'res' && RES && (RES.tipo === 'repaso' || RES.tipo === 'diario' || RES.tipo === 'diag')) { go('inicio'); return true; }
+  if (scr === 'res' && RES && RES.tipo === 'tablas') { go('tablas'); return true; }
+  if (scr === 'inicio' || scr === 'wel' || scr === 'tz' && !TZ.sub) { if (scr === 'tz') { go('inicio'); return true; } return false; }
+  go(PADRE[scr] || 'inicio'); return true;
+}
+function iniciarHistorial() {
+  try { history.replaceState({ c: 0 }, ''); history.pushState({ c: 1 }, ''); } catch (e) { return; }
+  addEventListener('popstate', () => { if (atrasMovil()) { try { history.pushState({ c: 1 }, ''); } catch (e) {} } else { try { history.back(); } catch (e) {} } });
+}
+/* ---------- Aviso de versión nueva (lo manda el service worker) ---------- */
+let HAY_NUEVA = false;
+function avisoVersion() {
+  if (!HAY_NUEVA || scr !== 'inicio' || document.querySelector('.upd')) return;
+  const d = document.createElement('div'); d.className = 'upd'; d.setAttribute('role', 'status');
+  d.innerHTML = '<span>Hay una versión nueva</span><button onclick="location.reload()">Actualizar</button>'; document.body.appendChild(d);
+}
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
 const colorAv = a => (AVATARES[a.av] || AVATARES[0])[1];
@@ -1151,7 +1190,8 @@ SC.mapa = () => {
 /* ---------- Un truco ---------- */
 SC.estr = () => {
   const e = est(), a = alumno(), p = a.e[e.id] || {};
-  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
+  const cur = !p.tut ? 1 : !p.n ? 2 : (p.est || 0) < 3 ? 3 : 0; /* el paso que toca ahora */
+  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr ${n === cur ? 'now' : ok ? 'hecho' : 'luego'}" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
   return `${atras('Mapa de trucos', "go('mapa')")}
   <div class="shead"><span class="gl t${e.tri}">${glifo(e)}</span><span><b>${esc(e.n)}</b><small>${esc(e.desc)}</small></span></div>
   ${fila(1, p.tut, 'Aprender', 'Mira cómo funciona el truco', "TUT=0;go('tut')")}
@@ -1196,7 +1236,7 @@ function finTutorial() { const a = alumno(); progreso(a, EID).tut = true; a.mt =
 /* ---------- Sesiones ---------- */
 function empezar(tipo) {
   const a = alumno(), e = est();
-  SES = { tipo, id: EID, i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '', porTruco: {} };
+  SES = { tipo, id: EID, malas: [], i: 0, ok: 0, paso: 0, fallos: 0, ayuda: false, bloq: false, resp: '', hechos: [], t0: Date.now(), msg: '', porTruco: {} };
   if (tipo === 'guiada') { SES.items = guiadas(e, 4); SES.n = 4; }
   else if (tipo === 'repaso') { SES.items = itemsRepaso(a, 10); SES.n = SES.items.length; if (!SES.n) return go('inicio'); }
   else if (tipo === 'diario') { SES.n = 999; SES.lim = 120; SES.items = [itemDiario(a)]; }
@@ -1285,7 +1325,7 @@ function responder(v, btn) {
     }
     const limpio = SES.fallos === 0 && !SES.ayuda;
     if (SES.tipo === 'diag') { SES.ultBien = true; SES.ok++; despues(450, siguiente); return; }
-    registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++;
+    registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++; if (!limpio) anotarMala(c);
     registrarTabla(alumno(), c.q, limpio); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(limpio ? 1 : 0);
     if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
     despues(SES.tipo === 'diario' ? 450 : 850, siguiente);
@@ -1297,7 +1337,7 @@ function responder(v, btn) {
     if (hueco) { hueco.classList.add('no'); setTimeout(() => hueco.classList.remove('no'), 400); }
     SES.resp = ''; if (hueco && !c.ops) hueco.innerHTML = '&nbsp;';
     if (SES.fallos >= 2 || c.truco || SES.tipo === 'diario') {
-      SES.bloq = true;
+      SES.bloq = true; if (!c.truco && SES.tipo !== 'guiada') anotarMala(c);
       if (SES.tipo !== 'guiada') { registrar(it.id, false); registrarTabla(alumno(), c.q, false); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(0); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
       if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.remove('no'); hueco.classList.add('ok'); }
       feedback(c.truco ? `Era: «${c.r}»` : `Era ${fmt(c.r)}. ¡La próxima sale!`, 'no');
@@ -1311,6 +1351,10 @@ function responder(v, btn) {
     }
   }
 }
+/** Guarda las operaciones falladas (o con ayuda) para enseñarlas en el resultado. */
+function anotarMala(c) { const t = String(c.q).replace('?', fmt(c.r)); if (SES.malas && !SES.malas.includes(t)) SES.malas.push(t); }
+/** Ir a un truco: tutorial si es nuevo, práctica guiada si aún no ha practicado, o su pantalla. */
+function irTruco(id) { const a = alumno(); EID = id; const p = a.e[id] || {}; if (!p.tut) { TUT = 0; go('tut'); } else if (!p.n) empezar('guiada'); else go('estr'); }
 function siguiente() {
   SES.i++; SES.paso = 0; SES.ayuda = false; SES.hechos = []; SES.errLog = false; limpiarPaso();
   if (SES.tipo === 'diag') { const nx = avanzarDiag(SES.ultBien); if (!nx) return terminarDiag(alumno()); SES.items.push(nx); SES.msg = pick(['Otra.', '¿Y esta?', 'Sigue así.']); return pintar(); }
@@ -1331,7 +1375,7 @@ function terminar() {
   if (SES.tipo === 'reto') { agendar(a, SES.id, estrellas >= 2); guardar(); }
   if (SES.tipo === 'repaso' || SES.tipo === 'problemas') { for (const [id, h] of Object.entries(SES.porTruco)) if (ESTR.get(id)) agendar(a, id, h.reduce((x, y) => x + y, 0) / h.length >= .75); guardar(); }
   if (SES.tipo === 'guiada') { const p = progreso(a, SES.id); if (!p.n) p.n = 1; guardar(); }
-  RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, mejora, nuevas: piedrasDe(a) - antes, desde: antes };
+  RES = { estrellas, ok: SES.ok, n: SES.n, tipo: SES.tipo, mejora, malas: (SES.malas || []).slice(0, 4), id: SES.id, nuevas: piedrasDe(a) - antes, desde: antes };
   SON.fin(); go('res');
 }
 
@@ -1367,9 +1411,11 @@ SC.res = () => {
   const det = r.tipo === 'juego' ? `Parejas encontradas con ${r.err} ${r.err === 1 ? 'fallo' : 'fallos'}.` : r.tipo === 'guiada' ? 'Has practicado el truco paso a paso.' : `${r.ok} de ${r.n} a la primera.${r.mejora ? ' ¡Nuevo récord de estrellas!' : ''}`;
   setTimeout(() => { if (scr === 'res') decir(titulo); }, 300);
   const otra = r.tipo === 'juego' ? 'empezarJuego()' : `empezar('${r.tipo}')`, volver = r.tipo === 'repaso' ? "go('inicio')" : r.tipo === 'tablas' ? "go('tablas')" : "go('estr')";
-  const sig = r.tipo === 'guiada' ? `<button class="bt w" onclick="empezar('reto')">${ico('star', 20)}Hacer el reto</button>` : '';
+  let sig = r.tipo === 'guiada' ? `<button class="bt w" onclick="empezar('reto')">${ico('star', 20)}Hacer el reto</button>` : '';
+  if (r.tipo === 'reto' && r.estrellas >= 2) { const e0 = ESTR.get(r.id), L = e0 ? ESTR.delCurso(e0.curso) : [], nx = L[L.indexOf(e0) + 1]; if (nx && abierta(alumno(), nx)) sig = `<button class="bt w" onclick="irTruco('${nx.id}')">${ico('play', 20)}Siguiente truco: ${esc(nx.n)}</button>`; }
+  const malas = r.malas && r.malas.length && r.tipo !== 'juego' && r.tipo !== 'guiada' ? `<div class="malas"><b>Para repasar</b>${r.malas.map(m => `<span>${esc(m)}</span>`).join('')}</div>` : '';
   return `<div class="res pop">${mascota(140, r.estrellas >= 2 ? 'feliz' : 'normal')}<div class="estr">${estrellasHTML(r.estrellas, 3, 50)}</div>
-  <h2>${titulo}</h2><p class="mut" style="margin:0;font-size:1.1rem">${det}</p>${nuevaPiedra(r)}</div>
+  <h2>${titulo}</h2><p class="mut" style="margin:0;font-size:1.1rem">${det}</p>${nuevaPiedra(r)}${malas}</div>
   <div style="display:flex;flex-direction:column;gap:10px">${sig}<div class="acts"><button class="bt sec" onclick="${otra}">${ico('refresh', 20)}Otra vez</button><button class="bt${sig ? ' sec' : ''}" onclick="${volver}">Seguir${ico('chev', 20, 2.4)}</button></div></div>`;
 };
 
@@ -6436,7 +6482,11 @@ if (primeraVez) { scr = 'wel'; WEL = 0; }
 pintar();
 // Presentación: mascota y nombre durante un momento, con fundido (como Lectori y Barri)
 (() => { const s = document.createElement('div'); s.className = 'splash'; s.innerHTML = mascota(150) + '<div class="wm">Calculi</div>'; document.body.appendChild(s); setTimeout(() => s.remove(), 1900); })();
-if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+iniciarHistorial();
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.addEventListener('message', e => { if (e.data === 'calc-nueva') { HAY_NUEVA = true; avisoVersion(); } });
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>

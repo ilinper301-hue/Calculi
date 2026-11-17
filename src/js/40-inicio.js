@@ -14,7 +14,29 @@ function aplicarTema() {
 }
 function cambiarTema() { EST.ajustes.tema = temaOscuro() ? 'light' : 'dark'; guardar(); pintar(); }
 function go(s) { scr = s; VOZ.callar(); pintar(); window.scrollTo(0, 0); }
-function pintar() { aplicarTema(); aplicarDalton(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; }
+function pintar() { aplicarTema(); aplicarDalton(); const A = $('#app'); A.innerHTML = SC[scr](); A.dataset.sc = scr; avisoVersion(); }
+/* ---------- Botón «atrás» del móvil: sube un nivel en vez de salir de la app ---------- */
+const PADRE = { tut: 'estr', juego: 'estr', estr: 'mapa', mapa: 'inicio', piedras: 'inicio', logros: 'inicio', quien: 'inicio', tablas: 'inicio', pin: 'inicio', res: 'estr', aulacfg: 'tz', proy: 'aulacfg', duelo: 'aulacfg', ficha: 'aulacfg', bingo: 'aulacfg', bingocart: 'bingo', bingojuego: 'bingo', informe: 'tz' };
+function atrasMovil() {
+  if (scr === 'ej' && SES) { const s = salirSesion(); SES = null; (0, eval)(s.replace('SES=null;', '')); return true; }
+  if (scr === 'wel' && WEL > 0) { WEL--; pintar(); return true; }
+  if (scr === 'tz' && TZ.sub) { TZ.sub = ''; pintar(); return true; }
+  if (scr === 'res' && RES && (RES.tipo === 'repaso' || RES.tipo === 'diario' || RES.tipo === 'diag')) { go('inicio'); return true; }
+  if (scr === 'res' && RES && RES.tipo === 'tablas') { go('tablas'); return true; }
+  if (scr === 'inicio' || scr === 'wel' || scr === 'tz' && !TZ.sub) { if (scr === 'tz') { go('inicio'); return true; } return false; }
+  go(PADRE[scr] || 'inicio'); return true;
+}
+function iniciarHistorial() {
+  try { history.replaceState({ c: 0 }, ''); history.pushState({ c: 1 }, ''); } catch (e) { return; }
+  addEventListener('popstate', () => { if (atrasMovil()) { try { history.pushState({ c: 1 }, ''); } catch (e) {} } else { try { history.back(); } catch (e) {} } });
+}
+/* ---------- Aviso de versión nueva (lo manda el service worker) ---------- */
+let HAY_NUEVA = false;
+function avisoVersion() {
+  if (!HAY_NUEVA || scr !== 'inicio' || document.querySelector('.upd')) return;
+  const d = document.createElement('div'); d.className = 'upd'; d.setAttribute('role', 'status');
+  d.innerHTML = '<span>Hay una versión nueva</span><button onclick="location.reload()">Actualizar</button>'; document.body.appendChild(d);
+}
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
 const colorAv = a => (AVATARES[a.av] || AVATARES[0])[1];
@@ -135,7 +157,8 @@ SC.mapa = () => {
 /* ---------- Un truco ---------- */
 SC.estr = () => {
   const e = est(), a = alumno(), p = a.e[e.id] || {};
-  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
+  const cur = !p.tut ? 1 : !p.n ? 2 : (p.est || 0) < 3 ? 3 : 0; /* el paso que toca ahora */
+  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr ${n === cur ? 'now' : ok ? 'hecho' : 'luego'}" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
   return `${atras('Mapa de trucos', "go('mapa')")}
   <div class="shead"><span class="gl t${e.tri}">${glifo(e)}</span><span><b>${esc(e.n)}</b><small>${esc(e.desc)}</small></span></div>
   ${fila(1, p.tut, 'Aprender', 'Mira cómo funciona el truco', "TUT=0;go('tut')")}
