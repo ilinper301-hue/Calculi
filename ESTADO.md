@@ -10,6 +10,7 @@ Todas las tareas de esta lista están hechas; propón la siguiente mejora a Ivá
 - [x] 6. Inicio de 1.º-2.º con menos texto y lectura en voz alta al tocar. Sonnet · medio
 - [x] 7. Tablet apaisada: letra y tarjetas del mapa más grandes. Sonnet · medio
 - [x] 8. Acción de GitHub que pase los tests, genere `index.html` y suba la versión de `sw.js`. Sonnet · medio
+- [x] 9. Dificultad adaptada a cada niño (18-nov-2026): nivel inicial según semáforo × ritmo (`nivelPara`, `ritmo`, `tObj` en `30-motor.js`); en el reto sube con 2 aciertos no lentos y baja con fallo o 2 aciertos lentos; repaso y diario usan mínimo nivel 2; la Zona del tutor muestra nivel y tiempo medio. Pendiente opcional: enviar nivel y tiempo a Tabula (exige subir `v` de `calc.tabula`).
 
 ### Solo puede hacerlo Iván (no las tomes tú)
 - Probar en el aula y ajustar; probar en tablet y pizarra digital reales; decidir el nombre de la mascota.
