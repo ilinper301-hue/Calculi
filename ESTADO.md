@@ -1,13 +1,13 @@
 # Plan de ejecución · Calculi
 
 ## ▶ SIGUIENTE (si Iván escribe «Continúa», empieza aquí y NO por las fases antiguas)
-Haz la primera tarea sin marcar (ahora la 6). Chat nuevo recomendado: Sonnet · medio. Antes de empezar, di en una línea: modelo + esfuerzo + motivo. Al acabar: marca [x], commit pequeño y avisa si conviene chat nuevo.
+Haz la primera tarea sin marcar (ahora la 7). Chat nuevo recomendado: Sonnet · medio. Antes de empezar, di en una línea: modelo + esfuerzo + motivo. Al acabar: marca [x], commit pequeño y avisa si conviene chat nuevo.
 - [x] 1. Tutorial: dibujo más grande y el texto pegado al dibujo (`SC.tut` en `45-ejercicio.js`, CSS). Sonnet · medio
 - [x] 2. Mapa de trucos: más contraste en los bloqueados y destacar el siguiente truco (`SC.mapa` en `40-inicio.js`). Sonnet · medio
 - [x] 3. Pantalla del truco: resaltar solo el paso que toca y atenuar el resto (`SC.estr`). Sonnet · medio
 - [x] 4. Guardar el tiempo de respuesta por ejercicio (con migración de datos; no romper `calc.tabula` ni la sincronización). Sonnet · alto
 - [x] 5. Desbloqueo: DECIDIDO (Claude, por encargo de Iván, 17-nov-2026): se queda con **1 estrella** para abrir el siguiente truco; sin cambios de código. Motivo: con 6-12 años, pedir 2 estrellas frena y frustra; el dominio real lo miden el semáforo, el repaso espaciado y el tiempo de respuesta. Si en el aula se ve que avanzan sin dominar, probar 2 estrellas solo en 3.º-6.º (cambio de 1 línea en `30-motor.js`, línea 39-42).
-- [ ] 6. Inicio de 1.º-2.º con menos texto y lectura en voz alta al tocar. Sonnet · medio
+- [x] 6. Inicio de 1.º-2.º con menos texto y lectura en voz alta al tocar. Sonnet · medio
 - [ ] 7. Tablet apaisada: letra y tarjetas del mapa más grandes. Sonnet · medio
 - [ ] 8. Acción de GitHub que pase los tests, genere `index.html` y suba la versión de `sw.js`. Sonnet · medio
 

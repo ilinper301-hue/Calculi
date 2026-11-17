@@ -75,6 +75,7 @@ h1,h2,h3{margin:0;font-weight:500}
 .lc .tx2{flex:1;min-width:0;display:flex;flex-direction:column}
 .lc b{font-weight:500;font-size:1.28rem;line-height:1.15}
 .lc small{font-size:.97rem;color:var(--mu);line-height:1.3;margin-top:2px}
+.peque .lc small{display:none}.peque .lc{min-height:84px}.peque .lc b{font-size:1.4rem}.greet[onclick]{cursor:pointer}
 .lc.hero{background:linear-gradient(135deg,var(--hero1),var(--hero2));border-color:transparent;color:var(--onhero)}
 .lc.hero .ico{background:rgba(30,26,10,.12);color:var(--onhero)}
 .lc.hero small{color:rgba(30,26,10,.75)}

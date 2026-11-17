@@ -102,6 +102,8 @@ function continuar() {
   const a = alumno(), e = sugerida(a); EID = e.id; const p = a.e[e.id] || {};
   if (!p.tut) { TUT = 0; go('tut'); } else if (!p.n) empezar('guiada'); else empezar('reto');
 }
+/* 1.º-2.º: al tocar una tarjeta del inicio se lee su título en voz alta (y sigue su acción) */
+document.addEventListener('click', ev => { const c = ev.target.closest && ev.target.closest('.peque .lc'); if (c) { const b = c.querySelector('b'); b && VOZ.decir(b.textContent); } }, true);
 SC.inicio = () => {
   const a = alumno();
   if (!a) return EST.alu.length ? SC.quien() : `${cabecera()}<div class="wel"><div class="gcard">${mascota(110)}<h2>¡Hola!</h2><p class="mut">Crea un alumno para empezar a practicar.</p>
@@ -109,11 +111,12 @@ SC.inicio = () => {
     <button class="tzb" onclick="abrirTutor()">${ico('lock', 18)}Zona del tutor</button></div>`;
   const e = sugerida(a), p = a.e[e.id] || {}, hayRepaso = ESTR.lista.some(x => (a.e[x.id] || {}).n > 0);
   const sigTxt = MODO_DOCENTE ? 'Todos los trucos abiertos, sin guardar' : !p.tut ? `Aprender: ${e.n}` : !p.n ? `Practicar: ${e.n}` : `Reto: ${e.n}`;
+  const peque = !MODO_DOCENTE && cursoDe(a) <= 2; /* 1.º-2.º: menos texto y voz al tocar */
   const saludo = MODO_DOCENTE ? '¡Modo Docente!' : `¡Hola, ${esc(a.n)}!`;
   const frase = MODO_DOCENTE ? 'Proyecta y practica con la clase' : pick(['¿Practicamos un truco?', '¿Seguimos aprendiendo?', '¡Vamos a calcular!']);
   return `${cabecera()}
-  <div class="greet">${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>${EST.ajustes.perfil === 'docente' ? retoHTML() : ''}
-  <div class="home-grid">
+  <div class="greet"${peque ? ` onclick="VOZ.decir('${saludo.replace(/<[^>]*>|&[a-z]+;|'/g, '')}. ${frase.replace(/'/g, '')}')"` : ''}>${mascota(96)}<div><div class="hi">${saludo}</div><p>${frase}</p></div></div>${EST.ajustes.perfil === 'docente' ? retoHTML() : ''}
+  <div class="home-grid${peque ? ' peque' : ''}">
   <button class="lc hero" onclick="${MODO_DOCENTE ? "VCURSO=cursoDe(alumno());go('mapa')" : 'continuar()'}"><span class="ico">${ico('play', 26)}</span><span class="tx2"><b>${MODO_DOCENTE ? 'Trucos' : 'Seguir'}</b><small>${esc(sigTxt)}</small></span></button>
   ${!MODO_DOCENTE && !a.diag && !ESTR.delCurso(cursoDe(a)).some(x => (a.e[x.id] || {}).n) ? `<button class="lc" onclick="empezar('diag')"><span class="ico">${ico('target', 24)}</span><span class="tx2"><b>Prueba inicial</b><small>5 minutos para empezar por tu nivel</small></span></button>` : ''}
   <button class="lc" onclick="${hayRepaso ? "empezar('repaso')" : "toast('Primero practica algún truco')"}" ${hayRepaso ? '' : 'style="opacity:.6"'}><span class="ico">${ico('shuffle', 24)}</span><span class="tx2"><b>Repaso del día</b><small>${!hayRepaso ? 'Se abre cuando practiques un truco' : (() => { const t = tocaRepasar(a); return t.length ? `Hoy toca: ${esc(t.slice(0, 3).map(x => x.n).join(', '))}${t.length > 3 ? '…' : ''}` : 'Mezcla de los trucos que ya conoces'; })()}</small></span></button>
