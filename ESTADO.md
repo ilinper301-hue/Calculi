@@ -5,7 +5,7 @@ Haz la primera tarea sin marcar. Antes de empezar, di en una línea: modelo + es
 - [x] 1. Tutorial: dibujo más grande y el texto pegado al dibujo (`SC.tut` en `45-ejercicio.js`, CSS). Sonnet · medio
 - [x] 2. Mapa de trucos: más contraste en los bloqueados y destacar el siguiente truco (`SC.mapa` en `40-inicio.js`). Sonnet · medio
 - [x] 3. Pantalla del truco: resaltar solo el paso que toca y atenuar el resto (`SC.estr`). Sonnet · medio
-- [ ] 4. Guardar el tiempo de respuesta por ejercicio (con migración de datos; no romper `calc.tabula` ni la sincronización). Sonnet · alto
+- [x] 4. Guardar el tiempo de respuesta por ejercicio (con migración de datos; no romper `calc.tabula` ni la sincronización). Sonnet · alto
 - [ ] 5. Desbloqueo: ¿1 o 2 estrellas para abrir el siguiente truco? Es decisión pedagógica: explica las opciones a Iván y espera su respuesta. Opus · alto (solo decidir)
 - [ ] 6. Inicio de 1.º-2.º con menos texto y lectura en voz alta al tocar. Sonnet · medio
 - [ ] 7. Tablet apaisada: letra y tarjetas del mapa más grandes. Sonnet · medio

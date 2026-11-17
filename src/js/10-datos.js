@@ -1,5 +1,5 @@
 /* ===== Datos guardados (solo claves con prefijo calc.: comparte dominio con Lectori y Barri) ===== */
-const KEY = 'calc.v1', VERSION_DATOS = 1;
+const KEY = 'calc.v1', VERSION_DATOS = 2; /* v2: tiempo de respuesta por ejercicio (e[id].tm) */
 /* Avatares: animalitos sobre un color suave (30 distintos para que cada niño de la clase tenga el suyo) */
 const AVATARES = [['🦊','#FED7AA'],['🐢','#BBF7D0'],['🐼','#E2E8F0'],['🦁','#FDE68A'],['🐸','#D9F99D'],['🐙','#F5D0FE'],['🐳','#BAE6FD'],['🦉','#E7D3B5'],
   ['🐝','#FEF08A'],['🐞','#FECACA'],['🦄','#FBCFE8'],['🐨','#CBD5E1'],['🐶','#FDE2C4'],['🐱','#FFE4B5'],['🐰','#FCE7F3'],['🐻','#E8CBA8'],
@@ -19,7 +19,8 @@ function limpiarAlu(a) {
   const e = {};
   for (const [k, v] of Object.entries(a.e && typeof a.e === 'object' ? a.e : {})) {
     if (!/^[a-z0-9]{2,20}$/.test(k) || !v || typeof v !== 'object') continue;
-    e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0),
+    e[k] = { tut: !!v.tut, est: Math.max(0, Math.min(3, v.est | 0)), h: (Array.isArray(v.h) ? v.h : []).map(x => x ? 1 : 0).slice(-20),
+      /* tiempo de respuesta en décimas de segundo (máx. 600), uno por resultado de h; las partidas antiguas no lo tienen: queda [] */ tm: (Array.isArray(v.tm) ? v.tm : []).map(x => Math.max(0, Math.min(600, x | 0))).slice(-20), ult: String(v.ult || '').slice(0, 10), n: Math.max(0, v.n | 0),
       /* repaso espaciado: caja 0-5 y fecha del próximo repaso */ caja: Math.max(0, Math.min(5, v.caja | 0)), prox: /^\d{4}-\d\d-\d\d$/.test(v.prox || '') ? v.prox : '' };
   }
   return { id: /^[a-z0-9]{6,20}$/.test(a.id || '') ? a.id : nid(), n: ss(a.n, 20) || 'Alumno', curso: [1, 2, 3, 4, 5, 6].includes(a.curso) ? a.curso : 1, av: Math.max(0, Math.min(AVATARES.length - 1, a.av | 0)), mt: +a.mt > 0 ? +a.mt : 0, e, dias: (Array.isArray(a.dias) ? a.dias : []).filter(d => /^\d{4}-\d\d-\d\d$/.test(d)).slice(-400),
@@ -51,12 +52,15 @@ const ALU_DOCENTE = limpiarAlu({ id: 'docente00', n: 'Docente', av: 5 });
 const alumno = () => MODO_DOCENTE ? ALU_DOCENTE : EST.alu.find(a => a.id === EST.act) || null;
 
 function crearAlumno(nombre, av, curso) { const a = limpiarAlu({ n: nombre, av, curso: curso || EST.ajustes.curso || 1, mt: Date.now() }); EST.alu.push(a); EST.act = a.id; guardar(); return a; }
-function progreso(a, id) { return a.e[id] || (a.e[id] = { tut: false, est: 0, h: [], ult: '', n: 0, caja: 0, prox: '' }); }
+function progreso(a, id) { return a.e[id] || (a.e[id] = { tut: false, est: 0, h: [], tm: [], ult: '', n: 0, caja: 0, prox: '' }); }
+/** Tiempo medio de respuesta (en segundos, 1 decimal) con los últimos 10 ejercicios con tiempo; null si no hay datos. */
+function tiempoMedio(a, id) { const t = ((a.e[id] || {}).tm || []).filter(x => x > 0).slice(-10); return t.length ? Math.round(t.reduce((s, x) => s + x, 0) / t.length) / 10 : null; }
 
 /** Registra un resultado (1 acierto sin ayuda, 0 fallo o con ayuda) para el dominio y el repaso. */
-function registrar(id, ok) {
+function registrar(id, ok, dseg) {
   const a = alumno(); if (!a) return;
   const p = progreso(a, id); p.h.push(ok ? 1 : 0); p.h = p.h.slice(-20); p.ult = hoy(); p.n++;
+  p.tm = (p.tm || []).concat(Math.max(0, Math.min(600, dseg | 0))).slice(-20);
   if (ok) a.aci[hoy()] = (a.aci[hoy()] || 0) + 1;
   if (!a.dias.includes(hoy())) a.dias.push(hoy());
   a.dia[hoy()] = (a.dia[hoy()] || 0) + 1;

@@ -47,6 +47,7 @@ const huecoHTML = (q, val) => esc(q).split('?').join(`<span class="hueco">${val 
 const salirSesion = () => !SES ? "go('inicio')" : SES.tipo === 'tablas' ? "SES=null;go('tablas')" : ['repaso', 'diario', 'diag'].includes(SES.tipo) ? "SES=null;go('inicio')" : "SES=null;go('estr')";
 
 SC.ej = () => {
+  if (!SES.tq) SES.tq = Date.now();
   const c = actual(), it = SES.items[SES.i], nivel = it.nivel || 1, guiada = SES.tipo === 'guiada';
   const verVis = c.vis && (c.visSiempre || guiada || nivel === 1 || SES.ayuda || SES.fallos > 0);
   const teclado = !c.ops;
@@ -107,7 +108,7 @@ function responder(v, btn) {
     }
     const limpio = SES.fallos === 0 && !SES.ayuda;
     if (SES.tipo === 'diag') { SES.ultBien = true; SES.ok++; despues(450, siguiente); return; }
-    registrar(it.id, limpio); if (SES.fallos === 0) SES.ok++; if (!limpio) anotarMala(c);
+    registrar(it.id, limpio, tiempoEj()); if (SES.fallos === 0) SES.ok++; if (!limpio) anotarMala(c);
     registrarTabla(alumno(), c.q, limpio); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(limpio ? 1 : 0);
     if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
     despues(SES.tipo === 'diario' ? 450 : 850, siguiente);
@@ -120,7 +121,7 @@ function responder(v, btn) {
     SES.resp = ''; if (hueco && !c.ops) hueco.innerHTML = '&nbsp;';
     if (SES.fallos >= 2 || c.truco || SES.tipo === 'diario') {
       SES.bloq = true; if (!c.truco && SES.tipo !== 'guiada') anotarMala(c);
-      if (SES.tipo !== 'guiada') { registrar(it.id, false); registrarTabla(alumno(), c.q, false); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(0); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
+      if (SES.tipo !== 'guiada') { registrar(it.id, false, tiempoEj()); registrarTabla(alumno(), c.q, false); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(0); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
       if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.remove('no'); hueco.classList.add('ok'); }
       feedback(c.truco ? `Era: «${c.r}»` : `Era ${fmt(c.r)}. ¡La próxima sale!`, 'no');
       despues(SES.tipo === 'diario' ? 1100 : 2000, () => {
@@ -137,8 +138,10 @@ function responder(v, btn) {
 function anotarMala(c) { const t = String(c.q).replace('?', fmt(c.r)); if (SES.malas && !SES.malas.includes(t)) SES.malas.push(t); }
 /** Ir a un truco: tutorial si es nuevo, práctica guiada si aún no ha practicado, o su pantalla. */
 function irTruco(id) { const a = alumno(); EID = id; const p = a.e[id] || {}; if (!p.tut) { TUT = 0; go('tut'); } else if (!p.n) empezar('guiada'); else go('estr'); }
+/** Tiempo desde que se ve el ejercicio hasta que se responde, en décimas de segundo (máx. 60 s). */
+const tiempoEj = () => SES.tq ? Math.min(600, Math.round((Date.now() - SES.tq) / 100)) : 0;
 function siguiente() {
-  SES.i++; SES.paso = 0; SES.ayuda = false; SES.hechos = []; SES.errLog = false; limpiarPaso();
+  SES.tq = 0; SES.i++; SES.paso = 0; SES.ayuda = false; SES.hechos = []; SES.errLog = false; limpiarPaso();
   if (SES.tipo === 'diag') { const nx = avanzarDiag(SES.ultBien); if (!nx) return terminarDiag(alumno()); SES.items.push(nx); SES.msg = pick(['Otra.', '¿Y esta?', 'Sigue así.']); return pintar(); }
   if (SES.i >= SES.n) return terminar();
   SES.msg = pick(['¿Y esta?', 'Otra más.', 'Piensa en el truco.', '¡Sigue así!']);
