@@ -1,7 +1,7 @@
 # Plan de ejecución · Calculi
 
 ## ▶ SIGUIENTE (si Iván escribe «Continúa», empieza aquí y NO por las fases antiguas)
-Haz la primera tarea sin marcar (ahora la 6). Chat nuevo recomendado: Sonnet · medio.. Antes de empezar, di en una línea: modelo + esfuerzo + motivo. Al acabar: marca [x], commit pequeño y avisa si conviene chat nuevo.
+Haz la primera tarea sin marcar (ahora la 6). Chat nuevo recomendado: Sonnet · medio. Antes de empezar, di en una línea: modelo + esfuerzo + motivo. Al acabar: marca [x], commit pequeño y avisa si conviene chat nuevo.
 - [x] 1. Tutorial: dibujo más grande y el texto pegado al dibujo (`SC.tut` en `45-ejercicio.js`, CSS). Sonnet · medio
 - [x] 2. Mapa de trucos: más contraste en los bloqueados y destacar el siguiente truco (`SC.mapa` en `40-inicio.js`). Sonnet · medio
 - [x] 3. Pantalla del truco: resaltar solo el paso que toca y atenuar el resto (`SC.estr`). Sonnet · medio
