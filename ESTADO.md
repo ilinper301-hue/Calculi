@@ -17,7 +17,7 @@
 - [x] T1: ver sin contar · ±1 · descomponer hasta 10 · amigos del 10 · el orden no importa
 - [x] T2: contar desde el mayor · contar hacia atrás · usar el 5 · dobles · casi dobles · familias de operaciones
 - [x] T3: completar la decena · +9 · restar pensando en sumar · ±10 · decenas completas
-- [ ] Prueba inicial que sitúa a cada alumno (pendiente)
+- [x] Prueba inicial que sitúa a cada alumno (hecha en v1.4)
 - [x] Repaso espaciado (lo que falla vuelve más) y actividad «¿Qué truco usarías?»
 - [x] Lectura en voz alta de las instrucciones (voz del navegador, como Lectori)
 
@@ -32,13 +32,13 @@
 - [x] Zona de adultos sencilla: ajustes, semáforo de dominio por alumno, copia de seguridad, importar alumnos de Lectori/Barri
 - [x] Zona del tutor con PIN, Modo Docente y copia de seguridad
 - [x] Panel por alumno: semáforo de dominio de cada estrategia (y tabla de clase)
-- [ ] Modo pizarra/proyector: «5 minutos de cálculo» para toda la clase
+- [x] Modo pizarra/proyector con tiempo configurable para toda la clase
 - [x] Resumen para familias
 
 ## Fase 4 · Ecosistema
 - [x] Sincronización con Firebase (colección `calculo`, subcolección `alu`)
-- [ ] Importar alumnos de Lectori (`ar2`) y Barri (`barri.v1`) del mismo dispositivo
-- [ ] Resumen de evaluación en formato común para Tabula
+- [x] Importar alumnos de Lectori (`ar2`) y Barri (`barri.v1`) del mismo dispositivo
+- [x] Resumen de evaluación en formato común para Tabula (`calc.tabula`)
 
 ## Fase 5 · Ampliar a 2.º–6.º
 - [x] Motor multicurso: curso por alumno, selector en mapa y Zona del tutor, decimales con coma, dibujos matriz/barra/cien/centenas/recta decimal
