@@ -1,0 +1,48 @@
+name: Tests y construcción
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'tools/**', 'tests/**']
+  pull_request:
+    paths: ['src/**', 'tools/**', 'tests/**']
+
+permissions:
+  contents: write
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Tests del motor
+        run: node tests/test_motor.js
+
+      - name: Generar index.html
+        run: python3 tools/build.py
+
+      # Solo en main: si index.html cambió, sube la versión de la caché (sw.js) y lo guarda
+      - name: Subir versión de sw.js y guardar
+        if: github.event_name == 'push'
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "index.html sin cambios: nada que guardar"
+            exit 0
+          fi
+          python3 - <<'PY'
+          import re, pathlib
+          p = pathlib.Path('sw.js')
+          t = p.read_text(encoding='utf8')
+          t, n = re.subn(r'calc-pwa-(\d+)(?=",CORE)', lambda m: f'calc-pwa-{int(m.group(1))+1}', t, count=1)
+          assert n == 1, 'No encuentro la versión de caché en sw.js'
+          p.write_text(t, encoding='utf8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js
+          git commit -m "Construir index.html y subir versión de sw.js [skip ci]"
+          git push
