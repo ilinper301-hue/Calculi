@@ -58,11 +58,37 @@ function nuevaPiedra(r) {
   const ks = Array.from({ length: Math.min(3, r.nuevas) }, (_, i) => r.desde + i);
   return `<button class="nueva-p" onclick="go('piedras')">${ks.map(k => piedra(k, 52)).join('')}<span><b>${r.nuevas === 1 ? '¡Nueva piedrecita!' : `¡${r.nuevas} piedrecitas nuevas!`}</b><small>${esc(ks.map(nombrePiedra).join(', '))} · Ver mi colección</small></span></button>`;
 }
+const PDES = ['Se forma dentro de las rocas de los volcanes, capa a capa. Si la cortas, ¡aparecen rayas de colores!',
+  'Es muy dura y la luz no la atraviesa. Hace miles de años se usaba para hacer collares y sellos.',
+  '¡No es una piedra de verdad! Es resina de árboles antiquísimos que se endureció. A veces guarda un insecto dentro.',
+  'Es tan dura que antiguamente se hacían hachas con ella. En China es un símbolo de buena suerte.',
+  'Es verde con rayas que parecen olas. Molida, se usaba para pintar de verde hace miles de años.',
+  'Su color es tan bonito que un color lleva su nombre. Los antiguos egipcios la ponían en sus joyas.',
+  'Es azul intenso con puntitos dorados, como un cielo con estrellas. Con ella se hacía la pintura azul más cara.',
+  'Es un cuarzo morado. Crece en cristales con punta dentro de rocas huecas llamadas geodas.',
+  'Es un cuarzo de color rosa suave. El cuarzo es uno de los minerales que más hay en la Tierra.',
+  'Nace de lava que se enfría muy despacio bajo tierra. Tiene puntitos de colores y es tan fuerte que se usa en edificios.',
+  'Está hecha de granos de arena pegados durante millones de años. Muchas catedrales están construidas con ella.'];
+const descPiedra = k => (k + 1) % 10 === 0 ? 'Una piedra muy especial: se gana cada 10 piedrecitas. ¡Brilla porque has trabajado mucho!' : PDES[k % PDES.length];
+function verPiedra(k) {
+  const n = piedrasDe(alumno()); if (k < 0 || k >= n) return;
+  let o = document.getElementById('pzv'); if (o) o.remove();
+  o = document.createElement('div'); o.id = 'pzv'; o.className = 'pzv';
+  o.innerHTML = `<div class="pzv-c" role="dialog" aria-label="${nombrePiedra(k)}">
+  <button class="pzv-x" onclick="cerrarPiedra()" aria-label="Cerrar">${ico('x', 22)}</button>
+  <div class="pzv-p">${piedra(k, 190)}</div><small class="pzv-n">Piedrecita n.º ${k + 1}</small><h2>${nombrePiedra(k)}</h2><p>${descPiedra(k)}</p>
+  <div class="pzv-nav"><button onclick="verPiedra(${k - 1})" ${k ? '' : 'disabled'} aria-label="Anterior">‹</button><button onclick="VOZ.decir(nombrePiedra(${k}) + '. ' + descPiedra(${k}))" aria-label="Escuchar">${ico('vol', 22)}</button><button onclick="verPiedra(${k + 1})" ${k + 1 < n ? '' : 'disabled'} aria-label="Siguiente">›</button></div></div>`;
+  o.onclick = e => { if (e.target === o) cerrarPiedra(); };
+  document.body.appendChild(o); SON.tono(880, .12); SON.tono(1320, .18, 'sine', .08, .08);
+  VOZ.decir(nombrePiedra(k) + '. ' + descPiedra(k));
+}
+function cerrarPiedra() { const o = document.getElementById('pzv'); if (o) o.remove(); VOZ.callar(); }
+document.addEventListener('keydown', e => { if (!document.getElementById('pzv')) return; if (e.key === 'Escape') cerrarPiedra(); });
 SC.piedras = () => {
   const a = alumno(), n = piedrasDe(a), hasta = Math.max(20, Math.ceil((n + 1) / 10) * 10);
   return `${atras('Inicio', "go('inicio')", 'home')}<h1 class="ttl">Mis piedrecitas</h1>
   <div class="greet" style="justify-content:flex-start">${mascota(70, 'feliz')}<div><div class="hi" style="font-size:1.4rem">${n} ${n === 1 ? 'piedrecita' : 'piedrecitas'}</div><p>Los romanos contaban con piedrecitas: los <i>calculi</i>. Gana más con estrellas y con el cálculo diario.</p></div></div>
-  <div class="piedras-g">${Array.from({ length: hasta }, (_, k) => k < n ? `<div class="pz" title="${nombrePiedra(k)}">${piedra(k, 58)}<small>${nombrePiedra(k)}</small></div>` : `<div class="pz no">${ico('lock', 18)}<small>${(k + 1) % 10 === 0 ? 'Dorada' : '?'}</small></div>`).join('')}</div>`;
+  <div class="piedras-g">${Array.from({ length: hasta }, (_, k) => k < n ? `<button class="pz" onclick="verPiedra(${k})" aria-label="${nombrePiedra(k)}">${piedra(k, 58)}<small>${nombrePiedra(k)}</small></button>` : `<div class="pz no">${ico('lock', 18)}<small>${(k + 1) % 10 === 0 ? 'Dorada' : '?'}</small></div>`).join('')}</div>`;
 };
 
 /* ---------- Modo daltonismo: correcto en azul y error en bermellón (paleta Okabe-Ito), semáforo con letras ---------- */

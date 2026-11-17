@@ -312,6 +312,15 @@ svg.toca{touch-action:manipulation}
 .piedras-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
 .pz{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:16px;background:var(--card);border:2px solid var(--bd);color:var(--tx)}
 .pz small{font-size:.68rem;color:var(--mu);text-align:center;line-height:1.1;min-height:1.5em}
+.pz{font:inherit;cursor:pointer;transition:transform .15s}.pz:not(.no):active{transform:scale(.92)}
+.pzv{position:fixed;inset:0;z-index:25;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:16px;animation:spIn .2s ease}
+.pzv-c{position:relative;width:min(380px,100%);max-height:100%;overflow:auto;background:var(--card);color:var(--tx);border-radius:28px;padding:22px 20px 18px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:pzIn .45s cubic-bezier(.2,1.4,.4,1)}
+.pzv-p{display:flex;justify-content:center;animation:pzFlo 3s ease-in-out .5s infinite}.pzv-p svg{width:min(190px,45vw);height:auto}
+.pzv-n{color:var(--mu);font-size:.9rem}.pzv-c h2{font:600 1.8rem var(--fd);margin:2px 0 8px}.pzv-c p{font-size:1.1rem;line-height:1.4;margin:0 0 14px}
+.pzv-x{position:absolute;top:10px;right:10px;width:42px;height:42px;border-radius:50%;background:var(--bg);color:var(--tx);display:flex;align-items:center;justify-content:center}
+.pzv-nav{display:flex;justify-content:center;gap:14px}.pzv-nav button{width:56px;height:56px;border-radius:50%;background:var(--ac);color:var(--on);font-size:2rem;line-height:1;display:flex;align-items:center;justify-content:center}.pzv-nav button:disabled{opacity:.25}
+@keyframes pzIn{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}@keyframes pzFlo{50%{transform:translateY(-8px) rotate(-3deg)}}
+@media (prefers-reduced-motion:reduce){.pzv-c,.pzv-p{animation:none}}
 .pz.no{border-style:dashed;background:transparent;color:var(--bd2);justify-content:center;min-height:96px}
 
 /* ===== Modo proyector ===== */
