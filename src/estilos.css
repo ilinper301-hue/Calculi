@@ -278,10 +278,13 @@ h1,h2,h3{margin:0;font-weight:500}
 .gl{display:flex!important;align-items:center;justify-content:center;gap:1px;white-space:nowrap}
 .acts .bt{white-space:nowrap;font-size:1.08rem;padding:0 14px}
 .txa{min-height:300px}
-#app[data-sc="ej"] .ej-lado,#app[data-sc="tut"] .card{flex:1}
+#app[data-sc="ej"] .ej-lado{flex:1}
 #app[data-sc="ej"] .ej-lado{display:flex;flex-direction:column;justify-content:space-between;gap:12px}
 #app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:auto}
 #app[data-sc="tut"] .card{justify-content:center}
+/* Tutorial en vertical: dibujo y explicación juntos, centrados; el botón abajo */
+#app[data-sc="tut"]>.card{flex:none;margin-top:auto}#app[data-sc="tut"]>.acts{margin-top:auto}
+#app[data-sc="tut"] .tutt{font-size:clamp(1.4rem,5.8vw,1.9rem)}#app[data-sc="tut"] .say .bub{padding:14px 16px}
 @media (orientation:landscape) and (min-width:820px){#app[data-sc="ej"] .ej-lado{display:grid;grid-template-columns:1.1fr 1fr;align-items:center}#app[data-sc="ej"] .ej-cuerpo:last-child{margin-top:0}}
 #app[data-sc="tut"] .vis svg{width:100%;max-width:480px;max-height:46vh}
 #app[data-sc="ej"] .vis svg{width:100%;max-width:380px;max-height:30vh}
@@ -459,10 +462,10 @@ svg.toca{touch-action:manipulation}
   /* Tutorial: dibujo a la izquierda, mascota y botones a la derecha */
   #app[data-sc="tut"]{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto 1fr auto;column-gap:28px;row-gap:18px;min-height:100dvh}
   #app[data-sc="tut"]>.top{grid-column:1/-1}
-  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4}
+  #app[data-sc="tut"]>.card{grid-column:1;grid-row:2/4;flex:none;margin:0}
   #app[data-sc="tut"]>.say{grid-column:2;grid-row:2;align-self:center;flex-direction:column;align-items:center;gap:14px}
   #app[data-sc="tut"]>.say .bub{width:100%;box-sizing:border-box}
-  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3}
+  #app[data-sc="tut"]>.acts{grid-column:2;grid-row:3;margin-top:0}
   #app[data-sc="tut"] .tutt{font-size:clamp(1.5rem,3.6vh,2.1rem)}
   #app[data-sc="tut"] .vis svg{max-width:none;max-height:56vh}
   /* Proyector y duelo */
