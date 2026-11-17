@@ -9,7 +9,7 @@ vm.createContext(ctx);
 const files = ['00-util.js', '10-datos.js', '20-visual.js', '30-motor.js'].map(f => path.join(R, f))
   .concat(listar(path.join(R, 'estrategias')));
 for (const f of files) vm.runInContext(fs.readFileSync(f, 'utf8'), ctx, { filename: f });
-vm.runInContext('globalThis.fmt=fmt;globalThis.ESTR=ESTR;globalThis.VIS=VIS;globalThis.prepararItem=prepararItem;globalThis.itemsRepaso=itemsRepaso;globalThis.limpiarAlu=limpiarAlu', ctx);
+vm.runInContext('globalThis.fmt=fmt;globalThis.ESTR=ESTR;globalThis.VIS=VIS;globalThis.prepararItem=prepararItem;globalThis.itemsRepaso=itemsRepaso;globalThis.limpiarAlu=limpiarAlu;globalThis.nivelPara=nivelPara;globalThis.ritmo=ritmo', ctx);
 const { ESTR, VIS, prepararItem } = ctx;
 let err = 0; const fallo = (e, m) => { err++; console.log(`✗ [${e}] ${m}`); };
 const visCoh = (id, it, d) => {
@@ -79,4 +79,16 @@ for (const e of ESTR.lista) {
 const a = ctx.limpiarAlu({ n: 'Prueba' }); ESTR.lista.forEach(e => a.e[e.id] = { tut: true, est: 2, h: [1, 0, 1, 1, 1, 0], ult: '2026-10-01', n: 6 });
 vm.runInContext('MODO_DOCENTE=true', ctx);
 const rep = ctx.itemsRepaso(a, 40); if (rep.length !== 40) fallo('repaso', 'no genera 40 ítems');
+// Dificultad adaptada (semáforo × ritmo)
+{
+  const e1 = ESTR.delCurso(1)[0], b = ctx.limpiarAlu({ n: 'B' });
+  const nv = (h, tm) => { b.e[e1.id] = { tut: true, est: 1, h, n: h.length, tm, ult: '2026-10-01' }; return ctx.nivelPara(b, e1); };
+  const un = (k, n) => Array(n).fill(k), mezcla = pc => Array.from({ length: 10 }, (_, i) => i < pc ? 1 : 0);
+  if (ctx.nivelPara(b, e1) !== 1) fallo('nivelPara', 'sin datos debe ser 1');
+  if (nv(un(1, 10), un(30, 10)) !== 3) fallo('nivelPara', 'verde y rápido debe ser 3');
+  if (nv(un(1, 10), un(200, 10)) !== 2) fallo('nivelPara', 'verde y lento debe ser 2');
+  if (nv(mezcla(6), un(30, 10)) !== 2) fallo('nivelPara', 'ámbar y rápido debe ser 2');
+  if (nv(mezcla(6), un(200, 10)) !== 1) fallo('nivelPara', 'ámbar y lento debe ser 1');
+  if (nv(mezcla(3), un(30, 10)) !== 1) fallo('nivelPara', 'rojo debe ser 1');
+}
 console.log(err ? `\n${err} errores` : 'Todo correcto ✓'); process.exit(err ? 1 : 0);

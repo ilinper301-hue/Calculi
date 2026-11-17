@@ -14,6 +14,7 @@ Cada archivo de src/js/estrategias/ registra UNA estrategia con ESTR.add({...}).
             Práctica guiada: 2-3 pasos pequeños que llevan al resultado. q usa «?» para el hueco: '8 + ? = 10'.
             txt = instrucción corta encima (p. ej. '¿Cuánto le falta al 8 para llegar a 10?') con q:'?' o q:'8 + ? = 10'.
             Pasos y final se responden con 3 botones (opciones automáticas, o ops propias); teclado:true en un paso fuerza teclado.
+  tObj:     6                    (opcional) segundos de una respuesta fluida en este truco; si falta: 6 s en 1.º-2.º y 8 s en 3.º-6.º
   item(nivel): {q, r, txt?, vis?, ops?, voz?, extra?}
             nivel 1: con modelo visual y 3 opciones · nivel 2: sin visual (se puede pedir ayuda), 3 opciones · nivel 3: sin visual, teclado.
             vis se usa en nivel 1 y como «ayuda» en 2 y 3. extra = distractores típicos (errores frecuentes) para las opciones.
@@ -50,6 +51,23 @@ function sugerida(a) {
   return ab.find(e => !((a.e[e.id] || {}).est)) || ab.slice().sort((x, y) => (dominio(a, x.id) ?? 1) - (dominio(a, y.id) ?? 1))[0] || L[0];
 }
 
+/** Segundos de una respuesta fluida para el truco (tObj propio o 6 s en 1.º-2.º / 8 s en 3.º-6.º). */
+const tObj = e => e.tObj || (e.curso <= 2 ? 6 : 8);
+/** Ritmo del alumno en el truco: mediana de los últimos 10 tiempos (>0). null si hay menos de 3. */
+function ritmo(a, e) {
+  const t = ((a.e[e.id] || {}).tm || []).filter(x => x > 0).slice(-10).sort((x, y) => x - y);
+  if (t.length < 3) return null;
+  const k = t.length >> 1, med = (t.length % 2 ? t[k] : (t[k - 1] + t[k]) / 2) / 10;
+  return med <= tObj(e) ? 'rapido' : med >= 2 * tObj(e) ? 'lento' : 'normal';
+}
+/** Nivel de ítem (1 dibujo, 2 sin dibujo, 3 teclado) según semáforo y ritmo. */
+function nivelPara(a, e) {
+  const s = semaforo(a, e.id), lento = ritmo(a, e) === 'lento';
+  return s === 'v' ? (lento ? 2 : 3) : s === 'a' ? (lento ? 1 : 2) : 1;
+}
+/** ¿Respuesta lenta? dseg en décimas de segundo. */
+const esLento = (e, dseg) => dseg > 0 && dseg >= 2 * tObj(e) * 10;
+
 /** Normaliza un ítem: opciones si faltan, enteros, hueco presente. */
 function prepararItem(it, nivel) {
   it = Object.assign({}, it); it.r = Number(it.r);
@@ -69,7 +87,7 @@ function itemsRepaso(a, n = 10) {
   for (let k = 0; k < n; k++) {
     let tot = vistas.reduce((s, e) => s + peso(e), 0), x = Math.random() * tot, e = vistas[0];
     for (const v of vistas) { x -= peso(v); if (x <= 0) { e = v; break; } }
-    const nivel = (dominio(a, e.id) ?? 0) >= .8 ? 3 : 2;
+    const nivel = Math.max(2, nivelPara(a, e));
     // Cada 4.º ítem (si hay ≥3 estrategias): «¿Qué truco usarías?»
     const it = e.item(2);
     if (k % 4 === 3 && vistas.length >= 3 && e.truco && !it.visSiempre && /\d/.test(it.q)) {

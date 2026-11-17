@@ -25,7 +25,7 @@ function empezar(tipo) {
   else if (tipo === 'tablas') { SES.n = 15; SES.items = [itemTabla(a)]; }
   else if (tipo === 'problemas') { SES.n = 6; SES.items = [itemProblema(e)]; }
   else if (tipo === 'diag') { SES.lista = ESTR.delCurso(cursoDe(a)); SES.k = 0; SES.cuenta = []; SES.res = []; SES.n = 999; SES.items = [itemDiag()]; }
-  else { SES.nivel = tipo === 'rapido' ? 2 : (dominio(a, e.id) ?? 0) >= .8 ? 2 : 1; SES.racha = 0; SES.n = 10; SES.items = [nuevoItem()]; }
+  else { SES.nivel = tipo === 'rapido' ? 2 : nivelPara(a, e); SES.racha = 0; SES.lentas = 0; SES.n = 10; SES.items = [nuevoItem()]; }
   SES.msg = { guiada: 'Vamos paso a paso.', reto: '¡Tú puedes!', repaso: 'Mezclamos trucos. ¿Te acuerdas?', rapido: '¡A por todas!', diario: '¡Dos minutos! Responde todas las que puedas.', tablas: 'Practicamos las que más te cuestan.', problemas: 'Lee bien: ¿qué truco te ayuda?', diag: 'Vamos a ver qué trucos ya sabes. Sin prisa.' }[tipo];
   go('ej'); if (tipo === 'diario') relojDiario();
 }
@@ -108,9 +108,13 @@ function responder(v, btn) {
     }
     const limpio = SES.fallos === 0 && !SES.ayuda;
     if (SES.tipo === 'diag') { SES.ultBien = true; SES.ok++; despues(450, siguiente); return; }
-    registrar(it.id, limpio, tiempoEj()); if (SES.fallos === 0) SES.ok++; if (!limpio) anotarMala(c);
+    const tej = tiempoEj(); registrar(it.id, limpio, tej); if (SES.fallos === 0) SES.ok++; if (!limpio) anotarMala(c);
     registrarTabla(alumno(), c.q, limpio); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(limpio ? 1 : 0);
-    if (SES.tipo === 'reto') { if (limpio) { if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } } else SES.racha = 0; }
+    if (SES.tipo === 'reto') {
+      if (!limpio) SES.racha = 0;
+      else if (!esLento(est(), tej)) { SES.lentas = 0; if (++SES.racha >= 2 && SES.nivel < 3) { SES.nivel++; SES.racha = 0; } }
+      else if (++SES.lentas >= 2 && SES.nivel > 1) { SES.nivel--; SES.lentas = 0; SES.racha = 0; } // dos aciertos lentos seguidos: baja un nivel
+    }
     despues(SES.tipo === 'diario' ? 450 : 850, siguiente);
   } else {
     SON.mal(); SES.fallos++; if (btn) { btn.classList.add('no'); btn.disabled = true; }
@@ -121,7 +125,7 @@ function responder(v, btn) {
     SES.resp = ''; if (hueco && !c.ops) hueco.innerHTML = '&nbsp;';
     if (SES.fallos >= 2 || c.truco || SES.tipo === 'diario') {
       SES.bloq = true; if (!c.truco && SES.tipo !== 'guiada') anotarMala(c);
-      if (SES.tipo !== 'guiada') { registrar(it.id, false, tiempoEj()); registrarTabla(alumno(), c.q, false); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(0); if (SES.tipo === 'reto') { SES.racha = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
+      if (SES.tipo !== 'guiada') { registrar(it.id, false, tiempoEj()); registrarTabla(alumno(), c.q, false); (SES.porTruco[it.id] = SES.porTruco[it.id] || []).push(0); if (SES.tipo === 'reto') { SES.racha = 0; SES.lentas = 0; SES.nivel = Math.max(1, SES.nivel - 1); } }
       if (hueco) { hueco.textContent = fmt(c.r); hueco.classList.remove('no'); hueco.classList.add('ok'); }
       feedback(c.truco ? `Era: «${c.r}»` : `Era ${fmt(c.r)}. ¡La próxima sale!`, 'no');
       despues(SES.tipo === 'diario' ? 1100 : 2000, () => {

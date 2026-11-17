@@ -47,6 +47,12 @@ SC.tz = () => {
   <div class="seg">${tabs.map(([k, t]) => `<button class="${TZ.tab === k ? 'on' : ''}" onclick="TZ.tab='${k}';pintar()">${t}</button>`).join('')}</div><div class="tzc">${cuerpo}</div></div>`;
 };
 const fila = (icono, t, s, act, der = `<span class="chev">${ico('chev', 18)}</span>`, cls = '') => `<button class="row ${cls}" onclick="${act}">${icono ? ico(icono, 20) : ''}<span class="tx2"><span>${t}</span>${s ? `<small>${s}</small>` : ''}</span>${der}</button>`;
+/** Nivel actual y tiempo medio, en texto discreto (vacío si el semáforo es gris). */
+function nivelTxt(a, e) {
+  if (semaforo(a, e.id) === 'g') return '';
+  const tm = tiempoMedio(a, e.id);
+  return ` · Nivel: ${['', 'con dibujo', 'sin dibujo', 'teclado'][nivelPara(a, e)]}${tm === null ? '' : ' · ' + fmt(tm) + ' s'}`;
+}
 function barraDom(a, e) {
   const d = dominio(a, e.id), s = semaforo(a, e.id);
   return `<span class="dom"><span class="bar"><i class="${s}" style="width:${d === null ? 0 : Math.max(6, Math.round(d * 100))}%"></i></span><span class="pc">${d === null ? '—' : Math.round(d * 100) + '%'}</span></span>`;
@@ -64,8 +70,8 @@ function tzProgreso(a) {
   return `<div class="stats"><div><b>${sem.reduce((s, x) => s + x.n, 0)}</b><small>Esta semana</small></div><div><b>${racha(a)} ${racha(a) === 1 ? 'día' : 'días'}</b><small>Racha</small></div>
   <div><b>${totalEstrellas(a)}</b><small>Estrellas</small></div><div><b>${dom}/${L.length}</b><small>Dominados ${nomCurso(cursoDe(a))}</small></div></div>
   <div class="wk">${sem.map(x => `<div><i class="${x.n ? 'on' : ''}" style="height:${Math.round((x.n / max) * 100)}%"></i><small>${x.l}</small></div>`).join('')}</div>
-  <div class="gt">Para reforzar</div><div class="list">${reforzar.length ? reforzar.map(e => fila('', esc(e.n), `Truco: ${esc(e.truco)}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('') : `<div class="row"><span class="tx2"><span>Nada pendiente</span><small>Aparecen aquí los trucos con menos del 80 % de aciertos.</small></span></div>`}</div>
-  <div class="gt">Dominio por truco · ${nomCurso(cursoDe(a))}</div><div class="list">${L.map(e => fila('', esc(e.n), `${['', '1.er', '2.º', '3.er'][e.tri]} trimestre · ${'★'.repeat((a.e[e.id] || {}).est || 0) || 'sin estrellas'}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('')}</div>
+  <div class="gt">Para reforzar</div><div class="list">${reforzar.length ? reforzar.map(e => fila('', esc(e.n), `Truco: ${esc(e.truco)}${nivelTxt(a, e)}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('') : `<div class="row"><span class="tx2"><span>Nada pendiente</span><small>Aparecen aquí los trucos con menos del 80 % de aciertos.</small></span></div>`}</div>
+  <div class="gt">Dominio por truco · ${nomCurso(cursoDe(a))}</div><div class="list">${L.map(e => fila('', esc(e.n), `${['', '1.er', '2.º', '3.er'][e.tri]} trimestre · ${'★'.repeat((a.e[e.id] || {}).est || 0) || 'sin estrellas'}${nivelTxt(a, e)}`, `EID='${e.id}';go('estr')`, barraDom(a, e))).join('')}</div>
   ${(() => { const E = erroresClase([a]).slice(0, 4); return E.length ? `<div class="gt">Sus errores más repetidos</div><div class="list">${E.map(x => `<div class="row"><span class="tx2"><span>${esc(x.pista)}</span><small>${esc(x.truco)} · ${x.veces} ${x.veces === 1 ? 'vez' : 'veces'}</small></span></div>`).join('')}</div>` : ''; })()}
   <div class="gt">Seguimiento</div><div class="list">
   ${fila('target', 'Prueba inicial', a.diag ? `Hecha el ${a.diag.split('-').reverse().join('/')}. Se puede repetir.` : 'Decide por qué truco empieza', "EST.act='" + a.id + "';guardarAjustes();empezar('diag')")}

@@ -7,7 +7,7 @@ function trucosDiario(a) {
 }
 function itemDiario(a, prev) {
   const L = trucosDiario(a); let e, it, nivel;
-  for (let k = 0; k < 10; k++) { e = pick(L); nivel = (dominio(a, e.id) ?? 0) >= .8 ? 3 : 2; it = e.item(nivel); if (!prev || it.q !== prev.q) break; }
+  for (let k = 0; k < 10; k++) { e = pick(L); nivel = Math.max(2, nivelPara(a, e)); it = e.item(nivel); if (!prev || it.q !== prev.q) break; }
   return Object.assign({ id: e.id, nivel }, prepararItem(it, nivel));
 }
 const tiempoDiario = () => { const q = Math.max(0, SES.lim - Math.floor((Date.now() - SES.t0) / 1000)); return `${Math.floor(q / 60)}:${String(q % 60).padStart(2, '0')}`; };
