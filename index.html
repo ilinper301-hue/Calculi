@@ -328,9 +328,9 @@ svg.toca{touch-action:manipulation}
 .pz{font:inherit;cursor:pointer;transition:transform .15s}.pz:not(.no):active{transform:scale(.92)}
 .pzv{position:fixed;inset:0;z-index:25;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:16px;animation:spIn .2s ease}
 .pzv-c{position:relative;width:min(380px,100%);max-height:100%;overflow:auto;background:var(--card);color:var(--tx);border-radius:28px;padding:22px 20px 18px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:pzIn .45s cubic-bezier(.2,1.4,.4,1)}
-.pzv-p{display:flex;justify-content:center;animation:pzFlo 3s ease-in-out .5s infinite}.pzv-p svg{width:min(190px,45vw);height:auto}
+.pzv-p{pointer-events:none;display:flex;justify-content:center;animation:pzFlo 3s ease-in-out .5s infinite}.pzv-p svg{width:min(190px,45vw);height:auto}
 .pzv-n{color:var(--mu);font-size:.9rem}.pzv-c h2{font:600 1.8rem var(--fd);margin:2px 0 8px}.pzv-c p{font-size:1.1rem;line-height:1.4;margin:0 0 14px}
-.pzv-x{position:absolute;top:10px;right:10px;width:42px;height:42px;border-radius:50%;background:var(--bg);color:var(--tx);display:flex;align-items:center;justify-content:center}
+.pzv-x{position:absolute;z-index:2;top:10px;right:10px;width:42px;height:42px;border-radius:50%;background:var(--bg);color:var(--tx);display:flex;align-items:center;justify-content:center}
 .pzv-nav{display:flex;justify-content:center;gap:14px}.pzv-nav button{width:56px;height:56px;border-radius:50%;background:var(--ac);color:var(--on);font-size:2rem;line-height:1;display:flex;align-items:center;justify-content:center}.pzv-nav button:disabled{opacity:.25}
 @keyframes pzIn{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}@keyframes pzFlo{50%{transform:translateY(-8px) rotate(-3deg)}}
 @media (prefers-reduced-motion:reduce){.pzv-c,.pzv-p{animation:none}}
@@ -1524,12 +1524,11 @@ function verPiedra(k) {
   o.innerHTML = `<div class="pzv-c" role="dialog" aria-label="${nombrePiedra(k)}">
   <button class="pzv-x" onclick="cerrarPiedra()" aria-label="Cerrar">${ico('x', 22)}</button>
   <div class="pzv-p">${piedra(k, 190)}</div><small class="pzv-n">Piedrecita n.º ${k + 1}</small><h2>${nombrePiedra(k)}</h2><p>${descPiedra(k)}</p>
-  <div class="pzv-nav"><button onclick="verPiedra(${k - 1})" ${k ? '' : 'disabled'} aria-label="Anterior">‹</button><button onclick="VOZ.decir(nombrePiedra(${k}) + '. ' + descPiedra(${k}))" aria-label="Escuchar">${ico('vol', 22)}</button><button onclick="verPiedra(${k + 1})" ${k + 1 < n ? '' : 'disabled'} aria-label="Siguiente">›</button></div></div>`;
+  <div class="pzv-nav"><button onclick="verPiedra(${k - 1})" ${k ? '' : 'disabled'} aria-label="Anterior">‹</button><button onclick="verPiedra(${k + 1})" ${k + 1 < n ? '' : 'disabled'} aria-label="Siguiente">›</button></div></div>`;
   o.onclick = e => { if (e.target === o) cerrarPiedra(); };
   document.body.appendChild(o); SON.tono(880, .12); SON.tono(1320, .18, 'sine', .08, .08);
-  VOZ.decir(nombrePiedra(k) + '. ' + descPiedra(k));
 }
-function cerrarPiedra() { const o = document.getElementById('pzv'); if (o) o.remove(); VOZ.callar(); }
+function cerrarPiedra() { const o = document.getElementById('pzv'); if (o) o.remove(); }
 document.addEventListener('keydown', e => { if (!document.getElementById('pzv')) return; if (e.key === 'Escape') cerrarPiedra(); });
 SC.piedras = () => {
   const a = alumno(), n = piedrasDe(a), hasta = Math.max(20, Math.ceil((n + 1) / 10) * 10);

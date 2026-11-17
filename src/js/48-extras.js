@@ -77,12 +77,11 @@ function verPiedra(k) {
   o.innerHTML = `<div class="pzv-c" role="dialog" aria-label="${nombrePiedra(k)}">
   <button class="pzv-x" onclick="cerrarPiedra()" aria-label="Cerrar">${ico('x', 22)}</button>
   <div class="pzv-p">${piedra(k, 190)}</div><small class="pzv-n">Piedrecita n.º ${k + 1}</small><h2>${nombrePiedra(k)}</h2><p>${descPiedra(k)}</p>
-  <div class="pzv-nav"><button onclick="verPiedra(${k - 1})" ${k ? '' : 'disabled'} aria-label="Anterior">‹</button><button onclick="VOZ.decir(nombrePiedra(${k}) + '. ' + descPiedra(${k}))" aria-label="Escuchar">${ico('vol', 22)}</button><button onclick="verPiedra(${k + 1})" ${k + 1 < n ? '' : 'disabled'} aria-label="Siguiente">›</button></div></div>`;
+  <div class="pzv-nav"><button onclick="verPiedra(${k - 1})" ${k ? '' : 'disabled'} aria-label="Anterior">‹</button><button onclick="verPiedra(${k + 1})" ${k + 1 < n ? '' : 'disabled'} aria-label="Siguiente">›</button></div></div>`;
   o.onclick = e => { if (e.target === o) cerrarPiedra(); };
   document.body.appendChild(o); SON.tono(880, .12); SON.tono(1320, .18, 'sine', .08, .08);
-  VOZ.decir(nombrePiedra(k) + '. ' + descPiedra(k));
 }
-function cerrarPiedra() { const o = document.getElementById('pzv'); if (o) o.remove(); VOZ.callar(); }
+function cerrarPiedra() { const o = document.getElementById('pzv'); if (o) o.remove(); }
 document.addEventListener('keydown', e => { if (!document.getElementById('pzv')) return; if (e.key === 'Escape') cerrarPiedra(); });
 SC.piedras = () => {
   const a = alumno(), n = piedrasDe(a), hasta = Math.max(20, Math.ceil((n + 1) / 10) * 10);
