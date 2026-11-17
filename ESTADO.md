@@ -1,5 +1,20 @@
 # Plan de ejecución · Calculi
 
+## ▶ SIGUIENTE (si Iván escribe «Continúa», empieza aquí y NO por las fases antiguas)
+Haz la primera tarea sin marcar. Antes de empezar, di en una línea: modelo + esfuerzo + motivo. Al acabar: marca [x], commit pequeño y avisa si conviene chat nuevo.
+- [ ] 1. Tutorial: dibujo más grande y el texto pegado al dibujo (`SC.tut` en `45-ejercicio.js`, CSS). Sonnet · medio
+- [ ] 2. Mapa de trucos: más contraste en los bloqueados y destacar el siguiente truco (`SC.mapa` en `40-inicio.js`). Sonnet · medio
+- [ ] 3. Pantalla del truco: resaltar solo el paso que toca y atenuar el resto (`SC.estr`). Sonnet · medio
+- [ ] 4. Guardar el tiempo de respuesta por ejercicio (con migración de datos; no romper `calc.tabula` ni la sincronización). Sonnet · alto
+- [ ] 5. Desbloqueo: ¿1 o 2 estrellas para abrir el siguiente truco? Es decisión pedagógica: explica las opciones a Iván y espera su respuesta. Opus · alto (solo decidir)
+- [ ] 6. Inicio de 1.º-2.º con menos texto y lectura en voz alta al tocar. Sonnet · medio
+- [ ] 7. Tablet apaisada: letra y tarjetas del mapa más grandes. Sonnet · medio
+- [ ] 8. Acción de GitHub que pase los tests, genere `index.html` y suba la versión de `sw.js`. Sonnet · medio
+
+### Solo puede hacerlo Iván (no las tomes tú)
+- Probar en el aula y ajustar; probar en tablet y pizarra digital reales; decidir el nombre de la mascota.
+
+---
 ## Fase 0 · Esqueleto del ecosistema
 - [x] Crear repositorio en GitHub y activar Pages (rama `main`, raíz)
 - [x] `src/` + `tools/build.py` → `index.html`; `sw.js` (`calc-pwa-1`), manifest, iconos y fuentes
@@ -78,4 +93,4 @@
 - [x] Botón «atrás» del móvil: sube un nivel (ejercicio → truco → mapa → inicio) y solo sale de la app desde el inicio
 - [x] Service worker (`calc-pwa-18`): abre al instante con la copia guardada, la actualiza por detrás y avisa «Hay una versión nueva»
 - [x] Resultado del reto: con 2-3 estrellas ofrece «Siguiente truco» y muestra las operaciones falladas («Para repasar»)
-- [ ] Pendiente de la revisión: guardar el tiempo de respuesta, endurecer el desbloqueo (2 estrellas), tutorial con dibujo más grande, mapa con camino, inicio simplificado en 1.º-2.º, tablet apaisada, comprobación automática al publicar
+- [x] El resto de la revisión está en la sección «SIGUIENTE» de arriba
