@@ -73,3 +73,9 @@
 - [ ] Probar en tablet y pizarra digital reales (pantalla completa y mando presentador)
 - [x] Tablet vertical: hueco vacío en la tarjeta del ejercicio
 - [x] Zona del tutor a dos columnas en tablet apaisada
+
+## Mejoras (nov 2026 · revisión de estructura y diseño)
+- [x] Botón «atrás» del móvil: sube un nivel (ejercicio → truco → mapa → inicio) y solo sale de la app desde el inicio
+- [x] Service worker (`calc-pwa-18`): abre al instante con la copia guardada, la actualiza por detrás y avisa «Hay una versión nueva»
+- [x] Resultado del reto: con 2-3 estrellas ofrece «Siguiente truco» y muestra las operaciones falladas («Para repasar»)
+- [ ] Pendiente de la revisión: guardar el tiempo de respuesta, endurecer el desbloqueo (2 estrellas), tutorial con dibujo más grande, mapa con camino, inicio simplificado en 1.º-2.º, tablet apaisada, comprobación automática al publicar
