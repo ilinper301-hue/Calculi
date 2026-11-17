@@ -157,7 +157,8 @@ SC.mapa = () => {
 /* ---------- Un truco ---------- */
 SC.estr = () => {
   const e = est(), a = alumno(), p = a.e[e.id] || {};
-  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
+  const cur = !p.tut ? 1 : !p.n ? 2 : (p.est || 0) < 3 ? 3 : 0; /* el paso que toca ahora */
+  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr ${n === cur ? 'now' : ok ? 'hecho' : 'luego'}" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
   return `${atras('Mapa de trucos', "go('mapa')")}
   <div class="shead"><span class="gl t${e.tri}">${glifo(e)}</span><span><b>${esc(e.n)}</b><small>${esc(e.desc)}</small></span></div>
   ${fila(1, p.tut, 'Aprender', 'Mira cómo funciona el truco', "TUT=0;go('tut')")}

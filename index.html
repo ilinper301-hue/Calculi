@@ -138,6 +138,9 @@ h1,h2,h3{margin:0;font-weight:500}
 .lvr .tx2{flex:1;min-width:0}.lvr b{font-weight:500;font-size:1.15rem;display:block}.lvr small{color:var(--mu);font-size:.92rem}
 .lvr .go{width:44px;height:44px;border-radius:50%;background:var(--ac);color:var(--on);display:grid;place-items:center;flex:none}
 .lvr .es{color:var(--pill);font-size:.95rem;letter-spacing:-1px}
+/* Pantalla del truco: destaca solo el paso que toca; el resto, más suave */
+.lvr.now{border-color:var(--pill);box-shadow:0 8px 20px rgba(251,191,36,.3);padding:18px 16px 18px 18px}.lvr.now b{font-size:1.3rem}.lvr.now .n{background:var(--pill);color:var(--onpill)}.lvr.now .go{width:52px;height:52px}
+.lvr.hecho,.lvr.luego{box-shadow:none;background:var(--soft);border-color:transparent}.lvr.hecho .go,.lvr.luego .go{background:var(--bd2);color:var(--mu)}.lvr.luego .n{background:var(--bd);color:var(--mu)}
 
 /* ================= Ejercicio ================= */
 .top{display:flex;align-items:center;gap:10px}
@@ -1187,7 +1190,8 @@ SC.mapa = () => {
 /* ---------- Un truco ---------- */
 SC.estr = () => {
   const e = est(), a = alumno(), p = a.e[e.id] || {};
-  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
+  const cur = !p.tut ? 1 : !p.n ? 2 : (p.est || 0) < 3 ? 3 : 0; /* el paso que toca ahora */
+  const fila = (n, ok, t, s, act, extra = '') => `<button class="lvr ${n === cur ? 'now' : ok ? 'hecho' : 'luego'}" onclick="${act}"><span class="n${ok ? ' ok' : ''}">${ok ? ico('check', 20, 3) : n}</span><span class="tx2"><b>${t}</b><small>${s}</small>${extra}</span><span class="go">${ico('play', 20)}</span></button>`;
   return `${atras('Mapa de trucos', "go('mapa')")}
   <div class="shead"><span class="gl t${e.tri}">${glifo(e)}</span><span><b>${esc(e.n)}</b><small>${esc(e.desc)}</small></span></div>
   ${fila(1, p.tut, 'Aprender', 'Mira cómo funciona el truco', "TUT=0;go('tut')")}

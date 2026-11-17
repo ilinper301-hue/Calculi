@@ -125,6 +125,9 @@ h1,h2,h3{margin:0;font-weight:500}
 .lvr .tx2{flex:1;min-width:0}.lvr b{font-weight:500;font-size:1.15rem;display:block}.lvr small{color:var(--mu);font-size:.92rem}
 .lvr .go{width:44px;height:44px;border-radius:50%;background:var(--ac);color:var(--on);display:grid;place-items:center;flex:none}
 .lvr .es{color:var(--pill);font-size:.95rem;letter-spacing:-1px}
+/* Pantalla del truco: destaca solo el paso que toca; el resto, más suave */
+.lvr.now{border-color:var(--pill);box-shadow:0 8px 20px rgba(251,191,36,.3);padding:18px 16px 18px 18px}.lvr.now b{font-size:1.3rem}.lvr.now .n{background:var(--pill);color:var(--onpill)}.lvr.now .go{width:52px;height:52px}
+.lvr.hecho,.lvr.luego{box-shadow:none;background:var(--soft);border-color:transparent}.lvr.hecho .go,.lvr.luego .go{background:var(--bd2);color:var(--mu)}.lvr.luego .n{background:var(--bd);color:var(--mu)}
 
 /* ================= Ejercicio ================= */
 .top{display:flex;align-items:center;gap:10px}
