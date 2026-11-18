@@ -12,6 +12,8 @@ Todas las tareas de esta lista están hechas; propón la siguiente mejora a Ivá
 - [x] 8. Acción de GitHub que pase los tests, genere `index.html` y suba la versión de `sw.js`. Sonnet · medio
 - [x] 9. Dificultad adaptada a cada niño (18-nov-2026): nivel inicial según semáforo × ritmo (`nivelPara`, `ritmo`, `tObj` en `30-motor.js`); en el reto sube con 2 aciertos no lentos y baja con fallo o 2 aciertos lentos; repaso y diario usan mínimo nivel 2; la Zona del tutor muestra nivel y tiempo medio. Pendiente opcional: enviar nivel y tiempo a Tabula (exige subir `v` de `calc.tabula`).
 
+- [x] 10. Dibujo de las manos (dedos) rediseñado (18-nov-2026): manos enfrentadas con palma, dedos de distinto largo, pulgar, dedos bajados como nudillos y manga del color de cada mano; se levantan índice → meñique → pulgar (`dedos` en `20-visual.js`).
+
 ### Solo puede hacerlo Iván (no las tomes tú)
 - Probar en el aula y ajustar; probar en tablet y pizarra digital reales; decidir el nombre de la mascota.
 

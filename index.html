@@ -892,10 +892,24 @@ const VIS = {
   },
 
   dedos({ n = 5 }) {
-    const mano = (ox, k, color) => { let s = `<path d="M${ox + 10} 150 Q${ox} 110 ${ox + 12} 92 L${ox + 108} 92 Q${ox + 120} 110 ${ox + 110} 150 Z" style="fill:var(--soft);stroke:var(--marco);stroke-width:3"/>`;
-      for (let i = 0; i < 5; i++) { const up = i < k, h = up ? 70 : 18, x = ox + 14 + i * 19; s += `<rect x="${x}" y="${92 - h}" width="16" height="${h + 6}" rx="8" style="fill:${up ? `var(${color})` : 'var(--vacio)'};stroke:var(--marco);stroke-width:2.5"/>`; }
-      return s; };
-    return `<svg viewBox="0 0 260 160" width="300" role="img" aria-label="${n} dedos">${mano(5, Math.min(5, n), '--f1')}${mano(135, Math.max(0, n - 5), '--f2')}</svg>`;
+    // Mano dibujada con el pulgar a la izquierda; la primera se refleja para que los pulgares miren hacia dentro.
+    // Orden al contar: índice, corazón, anular, meñique y pulgar.
+    const ln = 'stroke:var(--marco);stroke-width:2.5;stroke-linejoin:round', piel = 'var(--card)';
+    const DEDOS = [[24, 24], [44, 14], [64, 22], [84, 38]]; // [x, punta] de índice → meñique
+    const mano = (tr, k, color) => {
+      const col = `var(${color})`, up = i => i < k;
+      let s = '';
+      if (up(4)) s += `<rect x="20" y="66" width="19" height="56" rx="9.5" transform="rotate(-38 30 120)" style="fill:${col};${ln}"/>`;
+      DEDOS.forEach(([x, y], i) => { s += up(i)
+        ? `<rect x="${x}" y="${y}" width="18" height="${96 - y}" rx="9" style="fill:${col};${ln}"/>`
+        : `<rect x="${x}" y="72" width="18" height="24" rx="9" style="fill:${piel};${ln}"/>`; });
+      s += `<path d="M22 84 H102 V126 Q102 146 81 146 H43 Q22 146 22 126 Z" style="fill:${piel}"/>`
+        + `<path d="M22 80 V126 Q22 146 43 146 H81 Q102 146 102 126 V80" style="fill:none;${ln}"/>`
+        + `<rect x="34" y="144" width="56" height="16" rx="5" style="fill:${col};${ln}"/>`;
+      if (!up(4)) s += `<rect x="24" y="92" width="18" height="44" rx="9" transform="rotate(58 33 132)" style="fill:${piel};${ln}"/>`;
+      return `<g transform="${tr}">${s}</g>`;
+    };
+    return `<svg viewBox="0 0 260 166" width="300" role="img" aria-label="${n} dedos">${mano('translate(104 2) scale(-1 1)', Math.min(5, n), '--f1')}${mano('translate(156 2)', Math.max(0, n - 5), '--f2')}</svg>`;
   },
 
   matriz({ filas = 3, cols = 4, partir = 0, tachar = 0 }) {
